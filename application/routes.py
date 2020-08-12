@@ -7,21 +7,49 @@ import random, string
 @app.route("/")
 def index():
     
-    return render_template("Llogin.html")
+    return render_template("login.html")
 
-@app.route("/dashboard/<user_id>"):
-    def dashboard(user_id=None):
+@app.route("/dashboard/<user_Id>"):
+    def dashboard(user_Id=None):
         if not session.get('Lsession'):
             return redirect(url_for('login'))
         
-        user = User.query.filter_by(userId=user_id).first();
+        user = User.query.filter_by(userId==user_Id).first();
         
         if(user.role == 'Admin'):
-            #some code
+            dashboardData = [{
+                            "totalT" : Ticket.query.order_by(id).count(),
+                            "newT" : Ticket.query.where(status=='New').count(),
+                            "closedT" : Ticket.query.where(status == 'Closed').count(),
+                            "solvedT" : Ticket.query.where(status == 'Solved').count(),
+                            "unsolvedT" : Ticket.query.where(status == 'unsolved').count(),
+                            "assignedT" : Ticket.query.where(status == 'Assigned').count(),
+                            "unassignedT" : Ticket.query.where(status == 'unassigned').count()
+                            }]
+           return render_template("dashboard.html", dashboardData=dashboardData)
+    
         elif(user.role == 'Technician'):
-            #some code
+            dashboardData = [{
+                            "totalT" : Ticket.query.filter_by(user_id == user_Id).count(),
+                            "newT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'New').count(),
+                            "closedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'Closed').count(),
+                            "solvedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'Solved').count(),
+                            "unsolvedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'unsolved').count(),
+                            "assignedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'Assigned').count(),
+                            "unassignedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'unassigned').count()
+                            }]
+           return render_template("dashboard.html", dashboardData=dashboardData)
+    
         elif(user.role == 'User'):
-            some code
+            dashboardData = [{
+                            "totalT" : Ticket.query.filter_by(user_id == user_Id).count(),
+                            "closedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'Closed').count(),
+                            "solvedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'Solved').count(),
+                            "unsolvedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'unsolved').count(),
+                            "assignedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'Assigned').count(),
+                            "unassignedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'unassigned').count()
+                            }]
+           return render_template("dashboard.html", dashboardData=dashboardData)
         
         
         
