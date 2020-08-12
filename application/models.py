@@ -13,6 +13,7 @@ class User(db.Model):
  class Ticket(db.Model):
   user_id = db.Column(db.String(20), db.foreignKey('User.userId'), nullable=False)
   id = db.Column(db.Integer)
+  ticketId=db.Column(db.String(20), primary_key=True, nullable=False, unique=True)
   status = db.Column(db.String(15), nullable=False)
   image = db.Column(db.String(100), nullable=True)
   comment = db.Column(db.Text)
