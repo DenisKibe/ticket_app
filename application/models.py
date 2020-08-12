@@ -1,6 +1,7 @@
 import flask
 from application import db
 from werkzeug.security import generate_password_hash, check_password_hash
+from SQLAlchemy import Column, Integer, String, Float
 
 class User(db.Model):
   id= db.Column(db.Integer)
