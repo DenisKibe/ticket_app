@@ -71,8 +71,15 @@ def index():
             flash("Sorry, something went wrong.", "danger")
             
             
-@app.route("/<user>/<urlto>"):
-    def urlto(user=None, urlto=None):
+@app.route("/<user_Id>/<urlto>"):
+    def urlto(user_Id=None, urlto=None):
+        Nuser=User.query.filter_by(userId==user_Id).first()
+        if Nuser.role == 'Admin':
+            data=Ticket.query.where(status == urlto).all()
+            return render_template("/", user_Id=user_Id, data=data)
+        else:
+            data=Ticket.query.filter_by(userId==user_Id).where(status==urlto).all()
+            return render_template("/", user_Id=user_Id, data=data)
         
             
     
