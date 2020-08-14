@@ -1,5 +1,5 @@
 from application import app, db
-from flask import render_template, session, request, flash, url_for, json, Response
+from flask import render_template, session, request, flash, url_for, json, Response,redirect
 from application.models import User, Ticket
 from application.forms import LoginForm
 import random, string
@@ -9,12 +9,12 @@ def index():
     
     return render_template("login.html")
 
-@app.route("/dashboard/<user_Id>"):
-    def dashboard(user_Id=None):
+@app.route("/dashboard/<user_Id>")
+def dashboard(user_Id=None):
         if not session.get('Lsession'):
             return redirect(url_for('login'))
         
-        user = User.query.filter_by(userId==user_Id).first();
+        user = User.query.filter_by(userId==user_Id).first()
         
         if(user.role == 'Admin'):
             dashboardData = [{
@@ -26,11 +26,11 @@ def index():
                             "assignedT" : Ticket.query.where(status == 'Assigned').count(),
                             "unassignedT" : Ticket.query.where(status == 'unassigned').count()
                             }]
-           return render_template("dashboard.html", dashboardData=dashboardData)
+            return render_template("dashboard.html", dashboardData=dashboardData)
     
         elif(user.role == 'Technician'):
             dashboardData = [{
-                            "totalT" : Ticket.query.filter_by(user_id == user_Id).count(),
+                            "totalT" : Ticket.query.filter_by(user_id == user_Id).count()},
                             "newT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'New').count(),
                             "closedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'Closed').count(),
                             "solvedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'Solved').count(),
@@ -38,7 +38,7 @@ def index():
                             "assignedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'Assigned').count(),
                             "unassignedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'unassigned').count()
                             }]
-           return render_template("dashboard.html", dashboardData=dashboardData)
+            return render_template("dashboard.html", dashboardData=dashboardData)
     
         elif(user.role == 'User'):
             dashboardData = [{
@@ -49,11 +49,12 @@ def index():
                             "assignedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'Assigned').count(),
                             "unassignedT" : Ticket.query.filter_by(user_id == user_Id).where(status == 'unassigned').count()
                             }]
-           return render_template("dashboard.html", dashboardData=dashboardData)
+            return render_template("dashboard.html", dashboardData=dashboardData)
         
         
         
-@app.route("/login"):
+@app.route("/login")
+def login():
     if session.get('Lsession'):
         return redirect(url_for('dashboard'))
     
@@ -69,17 +70,18 @@ def index():
             return redirect("dashboard")
         else:
             flash("Sorry, something went wrong.", "danger")
+    return render_template("login.html", title="login", form=form)
             
             
-@app.route("/<user_Id>/<urlto>"):
-    def urlto(user_Id=None, urlto=None):
+@app.route("/dash/<user_Id>/<urlto>")
+def dash(user_Id=None, urlto=None):
         Nuser=User.query.filter_by(userId==user_Id).first()
         if Nuser.role == 'Admin':
             data=Ticket.query.where(status == urlto).all()
-            return render_template("/", user_Id=user_Id, data=data)
+            return render_template("/dash", user_Id=user_Id, data=data)
         else:
             data=Ticket.query.filter_by(userId==user_Id).where(status==urlto).all()
-            return render_template("/", user_Id=user_Id, data=data)
+            return render_template("/dash", user_Id=user_Id, data=data)
         
             
     
