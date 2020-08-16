@@ -8,35 +8,48 @@
         <fieldset class="form-group">
             <legend>{{title}}</legend>     
             {{ form.hidden_tag() }}       
-                <p> {{ form.email.label }}</br>
+                <p> {{ form.subject.label }}</br>
                     {{ form.email }}
                     {% for error in form.email.errors %}
                      <span class="error-message">{{ error }}</span>
                     {% endfor %}
                 </p>
-                <p> {{ form.password.label }}</br>
-                    {{ form.password }}
-                    {% for error in form.password.errors %}
+            
+                <p> {{ form.category.label }}</br>
+                    {{ form.userId }}
+                    {% for error in form.userId.errors %}
                      <span class="error-message">{{ error }}</span>
                     {% endfor %}
                 </p>
             
-            
-                <p> {{ form.role.label }}</br>
+                <p> {{ form.priority.label }}</br>
                     {{ form.role }}
                     {% for error in form.role.errors %}
                      <span class="error-message">{{ error }}</span>
                     {% endfor %}
                 </p>
             
-                <p> {{ form.username.label }}</br>
+                <p> {{ form.comment.label }}</br>
                     {{ form.username }}
                     {% for error in form.username.errors %}
                      <span class="error-message">{{ error }}</span>
                     {% endfor %}
                 </p>
             
-            
+                <form name="imageupload" action="{{url_for('createTicket')}}" method="post" enctype=multipart/form-data>
+                    <p>{{form.image.labe}}br>
+                        {{ form.image }}
+                        {% for error in form.image.errors %}
+                        <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                    </p>
+                    <input type="hidden" name="fileUpload" value="True">
+
+                    <p> 
+                        {{ form.submit() }}
+                    </p>
+                </form>
+                
             
                 <p> 
                     {{ form.submit() }}

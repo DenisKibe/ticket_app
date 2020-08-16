@@ -6,6 +6,8 @@ class Config(object):
     CSRF_ENABLED=True
     DEBUG = False
     TESTING = False
+    UPLOAD_FOLDER = 'uploads'
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
     
     
 class ProductionConfig(Config):

@@ -2,7 +2,14 @@ from application import app, db
 from flask import render_template, session, request, flash, url_for, json, Response,redirect
 from application.models import UserModel, TicketModel
 from application.forms import LoginForm, RegisterForm
-import random, string
+from werkzeug.security import generate_password_hash, check_password_hash
+import random, string,logging
+from datetime import datetime
+from werkzeug.utils import secure_filename
+
+#FOR FILE UPLOAD
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.',1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 @app.route("/")
 @app.route("/index.html")
@@ -87,19 +94,50 @@ def dash(user_Id=None, urlto=None):
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        #user_id     = User.objects.count()
-        #user_id     += 1
-
+        passwd=form.password.data
+        password = generate_password_hash(passwd)
         email       = form.email.data
         role    = form.role.data
         username  = form.username.data
-        userId   = form.userId.data
+        userId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
 
-        new_user = UserModel(id=2,role=role, email=email, username=username, userId=userId)
+        new_user = UserModel(role=role, email=email, username=username, userId=userId, password=password)
         db.session.add(new_user)
         db.session.commit()
         flash("You are successfully registered!","success")
         return redirect(url_for('index'))
     return render_template("register.html", title="Register", form=form, register=True)
            
+image=''  
+@app.route("/createTicket", methods=['POST','GET'])
+def CreateTicket():
     
+    form1 = ImageUploadForm()
+    if form1.validate_on_submit():
+        if 'file' not in request.files:
+            flash('No file part')
+        file = request.files['file']
+        
+        if file.filename=='':
+            flash('No selected file')
+        if file and allowed_file(file.filename):
+            filename= secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            image=os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        
+    form2 = NewTicketForm()
+    if form2.validate_on_submit():
+        status = 'NEW'
+        comment   = form.comment.data
+        category  = form.category.data
+        priority  = form.priority.data
+        subject  = form.subject.data
+        updated_at = datetime.now()
+        ticketId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+
+        new_ticket = TicketModel(status=status,image=image, comment=comment,category=category, priority=priority, subject=subject,updated_at=updated_at, ticketId=ticketId)
+        db.session.add(new_ticket)
+        db.session.commit()
+        flash("Ticket has been created successfuly","success")
+        return redirect(url_for('dashboard'))
+    return render_template("createTicket.html", title="Create Ticket", form1=form1, form2=form2 )
