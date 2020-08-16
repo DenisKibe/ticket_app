@@ -16,17 +16,17 @@ class UserModel(db.Model):
   role = db.Column(db.String(30), nullable=False)
   ticketer=relationship("TicketModel")
   
-  def __init__(self,id, userId, username,password, email, role):
+  def __init__(self, userId, username,password, email, role):
     self.userId = userId
     self.username = username
     self.password = password
     self.email = email
     self.role = role
     
-  def __repr__(self):
-    jdata=f"['userId':{self.userId},'username':{self.username},'email':{self.email},'role':{self.role}]"
+  """ def __repr__(self):
+    jdata={'userId':self.userId,'username':self.username,'email':self.email,'role':self.role}
     
-    return Response(jsonify(jdata))
+    return jdata """
   
   
   
@@ -59,5 +59,5 @@ class TicketModel(db.Model):
   def __repr__(self):
   
     jdata=f"['user':{self.user_id},'ticketId':{self.ticketId},'status':{self.status},'image':{self.image},'comment':{self.comment}],'category':{self.category},'priority':{self.priority},'subject':{self.subject},'created_at':{self.created_at},'updated_at':{self.updated_at}]"
-    return Response(json.dumps(jdata), mimetype="application/json")
+    return jsonify(jdata)
     

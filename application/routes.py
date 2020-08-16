@@ -17,22 +17,23 @@ def index():
     
     return redirect("login")
 
+@app.route("/dashboard")
 @app.route("/dashboard/<user_Id>")
 def dashboard(user_Id=None):
         if not session.get('Lsession'):
             return redirect(url_for('login'))
         
-        user = User.query.filter_by(userId==user_Id).first()
+        user = UserModel.query.filter_by(userId==user_Id).first()
         
         if(user.role == 'Admin'):
             dashboardData = [{
-                            "totalT" : Ticket.query.order_by(id).count(),
-                            "newT" : Ticket.query.where(status=='New').count(),
-                            "closedT" : Ticket.query.where(status == 'Closed').count(),
-                            "solvedT" : Ticket.query.where(status == 'Solved').count(),
-                            "unsolvedT" : Ticket.query.where(status == 'unsolved').count(),
-                            "assignedT" : Ticket.query.where(status == 'Assigned').count(),
-                            "unassignedT" : Ticket.query.where(status == 'unassigned').count()
+                            "totalT" : TicketModel.query.order_by().count(),
+                            "newT" : TicketModel.query.filter(TicketModel.status=='New').count(),
+                            "closedT" : TicketModel.query.filter(TicketModel.status == 'Closed').count(),
+                            "solvedT" : TicketModel.query.filter(TicketModel.status == 'Solved').count(),
+                            "unsolvedT" : TicketModel.query.filter(TicketModel.status == 'unsolved').count(),
+                            "assignedT" : TicketModel.query.filter(TicketModel.status == 'Assigned').count(),
+                            "unassignedT" : TicketModel.query.filter(TicketModel.status == 'unassigned').count()
                             }]
             return render_template("dashboard.html", dashboardData=dashboardData)
     
@@ -73,8 +74,11 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        user=UserModel.query.filter(UserModel.id==2).all()
+        checkPassword=generate_password_hash(password)
         
+        
+        
+       
         return render_template("login.html", title="login", form=form, datax=user, login=True)
         
     return render_template("login.html", title="login", form=form, login=True)
