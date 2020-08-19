@@ -1,9 +1,9 @@
 from application import app, db
 from flask import render_template, session, request, flash, url_for, json, Response,redirect
 from application.models import UserModel, TicketModel
-from application.forms import LoginForm, RegisterForm
+from application.forms import LoginForm, RegisterForm, NewTicketForm, ImageUploadForm
 from werkzeug.security import generate_password_hash, check_password_hash
-import random, string,logging
+import random, string,logging, os
 from datetime import datetime
 from werkzeug.utils import secure_filename
 
@@ -23,10 +23,10 @@ def dashboard(user_Id=None):
         if not session.get('Lsession'):
             return redirect(url_for('login'))
         
-        user = UserModel.query.filter_by(userId==user_Id).first()
+        user = UserModel.query.filter(UserModel.userId==user_Id).first()
         
         if(user.role == 'Admin'):
-            dashboardData = [{
+            dashboardData = {
                             "totalT" : TicketModel.query.order_by().count(),
                             "newT" : TicketModel.query.filter(TicketModel.status=='New').count(),
                             "closedT" : TicketModel.query.filter(TicketModel.status == 'Closed').count(),
@@ -34,7 +34,7 @@ def dashboard(user_Id=None):
                             "unsolvedT" : TicketModel.query.filter(TicketModel.status == 'unsolved').count(),
                             "assignedT" : TicketModel.query.filter(TicketModel.status == 'Assigned').count(),
                             "unassignedT" : TicketModel.query.filter(TicketModel.status == 'unassigned').count()
-                            }]
+                            }
             return render_template("dashboard.html", dashboardData=dashboardData)
     
         elif(user.role == 'Technician'):
@@ -74,12 +74,17 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        checkPassword=generate_password_hash(password)
         
+        user=UserModel.query.filter(UserModel.email==email).first()
         
-        
-       
-        return render_template("login.html", title="login", form=form, datax=user, login=True)
+        if user is not None:
+            if check_password_hash(user.password,password):
+                session['Lsession'] = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(64))
+                return redirect(f"dashboard/{user.userId}")
+            else:
+                 return render_template("login.html", title="login", form=form, datax="wrong password", login=True)
+        else:
+            return render_template("login.html", title="login", form=form, datax='None', login=True)
         
     return render_template("login.html", title="login", form=form, login=True)
             
@@ -88,7 +93,7 @@ def login():
 def dash(user_Id=None, urlto=None):
         Nuser=User.query.filter_by(userId==user_Id).first()
         if Nuser.role == 'Admin':
-            data=Ticket.query.where(status == urlto).all()
+            data=TicketModel.query.where(status == urlto).all()
             return render_template("/dash", user_Id=user_Id, data=data)
         else:
             data=Ticket.query.filter_by(userId==user_Id).where(status==urlto).all()
@@ -114,34 +119,31 @@ def register():
            
 image=''  
 @app.route("/createTicket", methods=['POST','GET'])
-def CreateTicket():
+def createTicket():
     
-    form1 = ImageUploadForm()
+    """ form1 = ImageUploadForm()
     if form1.validate_on_submit():
         if 'file' not in request.files:
             flash('No file part')
-        file = request.files['file']
+        file = request.files['image']
         
         if file.filename=='':
             flash('No selected file')
         if file and allowed_file(file.filename):
             filename= secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            image=os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        
+            image=os.path.join([app.config['UPLOAD_FOLDER'], filename])
+            flash('file uploaded')
+         """
     form2 = NewTicketForm()
     if form2.validate_on_submit():
         status = 'NEW'
-        comment   = form.comment.data
-        category  = form.category.data
-        priority  = form.priority.data
-        subject  = form.subject.data
+        comment   = request.form2['comment']
+        category  = request.form2['category']
+        priority  = request.form2['priority']
+        subject  = request.form2['subject']
         updated_at = datetime.now()
         ticketId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
-
-        new_ticket = TicketModel(status=status,image=image, comment=comment,category=category, priority=priority, subject=subject,updated_at=updated_at, ticketId=ticketId)
-        db.session.add(new_ticket)
-        db.session.commit()
-        flash("Ticket has been created successfuly","success")
-        return redirect(url_for('dashboard'))
-    return render_template("createTicket.html", title="Create Ticket", form1=form1, form2=form2 )
+        
+        return render_template("createTicket.html", title1="bad request", title2="Image Upload", form2=form2 )
+    return render_template("createTicket.html", title1="Create Ticket", title2="Image Upload", form2=form2 )

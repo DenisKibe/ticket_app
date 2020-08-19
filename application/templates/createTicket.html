@@ -4,58 +4,48 @@
     {% block content %}
     
     <div class="container">
-         <form name="login" action="" method="post" novalidate>
+         <form name="login" action="" method="post" novalidate >
         <fieldset class="form-group">
-            <legend>{{title}}</legend>     
-            {{ form.hidden_tag() }}       
-                <p> {{ form.subject.label }}</br>
-                    {{ form.email }}
-                    {% for error in form.email.errors %}
+            <legend>{{title1}}</legend>     
+            {{ form2.hidden_tag() }}       
+                <p> {{ form2.subject.label }}</br>
+                    {{ form2.subject }}
+                    {% for error in form2.subject.errors %}
                      <span class="error-message">{{ error }}</span>
                     {% endfor %}
                 </p>
             
-                <p> {{ form.category.label }}</br>
-                    {{ form.userId }}
-                    {% for error in form.userId.errors %}
+                <p> {{ form2.category.label }}</br>
+                    {{ form2.category }}
+                    {% for error in form2.category.errors %}
                      <span class="error-message">{{ error }}</span>
                     {% endfor %}
                 </p>
             
-                <p> {{ form.priority.label }}</br>
-                    {{ form.role }}
-                    {% for error in form.role.errors %}
+                <p> {{ form2.priority.label }}</br>
+                    {{ form2.priority }}
+                    {% for error in form2.priority.errors %}
                      <span class="error-message">{{ error }}</span>
                     {% endfor %}
                 </p>
             
-                <p> {{ form.comment.label }}</br>
-                    {{ form.username }}
-                    {% for error in form.username.errors %}
+                <p> {{ form2.comment.label }}</br>
+                    {{ form2.comment }}
+                    {% for error in form2.comment.errors %}
                      <span class="error-message">{{ error }}</span>
                     {% endfor %}
                 </p>
             
-                <form name="imageupload" action="{{url_for('createTicket')}}" method="post" enctype=multipart/form-data>
-                    <p>{{form.image.labe}}br>
-                        {{ form.image }}
-                        {% for error in form.image.errors %}
-                        <span class="error-message">{{ error }}</span>
-                        {% endfor %}
-                    </p>
-                    <input type="hidden" name="fileUpload" value="True">
-
-                    <p> 
-                        {{ form.submit() }}
-                    </p>
-                </form>
-                
-            
+ 
                 <p> 
-                    {{ form.submit() }}
+                    {{ form2.submit() }}
                 </p>
+            
+               
             
         </fieldset>
         </form>
+
+
     </div>
     {% endblock %}

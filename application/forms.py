@@ -13,16 +13,19 @@ class RegisterForm(FlaskForm):
     email   = StringField("Email", validators=[DataRequired()])
     role = StringField("Role", validators=[DataRequired()])
     username = StringField("userName", validators=[DataRequired()])
-    #userId = StringField("userId", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Register Now")
     
 class NewTicketForm(FlaskForm):
     status = StringField("Status", validators=[DataRequired()])
-    image = FileField("Image", validators=[DataRequired()])
     comment = StringField("Comment", validators=[DataRequired()])
     category = StringField("Category", validators=[DataRequired()])
     priority = StringField("Priority", validators=[DataRequired()])
     subject = StringField("Subject", validators=[DataRequired()])
     
-    submit = SubmitField("Register Now")
+    submit = SubmitField("Create New")
+    
+class ImageUploadForm(FlaskForm):
+    image = FileField("Image")
+    
+    submit = SubmitField("Upload")

@@ -6,7 +6,7 @@ class Config(object):
     CSRF_ENABLED=True
     DEBUG = False
     TESTING = False
-    UPLOAD_FOLDER = 'uploads'
+    UPLOAD_FOLDER = 'application/uploads'
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
     
     

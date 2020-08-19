@@ -4,57 +4,59 @@
 
     
     <div class="tile is-ancestor">
-        {% for data in dashbordData %}
+        
 
         <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">{{data[totalT]}}</p>
+              <p class="title">{{dashboardData[totalT]}}</p>
               <p class="subtitle">Total Tickets</p>
             </article>
           </div>
 
           <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">{{data[newT]}}</p>
+              <p class="title">{{dashboardData[newT]}}</p>
               <p class="subtitle">New Tickets</p>
             </article>
           </div>
 
           <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">{{data[closedT]}}</p>
+              <p class="title">{{dashboardData[closedT]}}</p>
               <p class="subtitle">Closed Tickets</p>
             </article>
           </div>
 
           <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">{{data[solvedT]}}</p>
+              <p class="title">{{dashboardData[solvedT]}}</p>
               <p class="subtitle">Solved Tickets</p>
             </article>
           </div>
 
           <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">{{data[unsolvedT]}}</p>
+              <p class="title">{{dashboardData[unsolvedT]}}</p>
               <p class="subtitle">Unsolved Tickets</p>
             </article>
           </div>
 
           <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">{{data[assignedT]}}</p>
+              <p class="title">{{dashboardData[assignedT]}}</p>
               <p class="subtitle">Assigned Tickets</p>
             </article>
           </div>
 
           <div class="tile is-parent">
             <article class="tile is-child box">
-              <p class="title">{{data[unassignedT]}}</p>
+              <p class="title">{{dashboardData[unassignedT]}}</p>
               <p class="subtitle">Unassigned Tickets</p>
             </article>
           </div>
-          {% endfor %}
+        
     </div>
+
+    <p><a href={{ url_for('createTicket') }}>try</a></p>
 
 {% endblock %}

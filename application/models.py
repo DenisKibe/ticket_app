@@ -23,10 +23,10 @@ class UserModel(db.Model):
     self.email = email
     self.role = role
     
-  """ def __repr__(self):
-    jdata={'userId':self.userId,'username':self.username,'email':self.email,'role':self.role}
+  def __repr__(self):
+    #jdata={'userId':self.userId,'username':self.username,'email':self.email,'role':self.role}
     
-    return jdata """
+    return self.name
   
   
   
@@ -58,6 +58,6 @@ class TicketModel(db.Model):
     
   def __repr__(self):
   
-    jdata=f"['user':{self.user_id},'ticketId':{self.ticketId},'status':{self.status},'image':{self.image},'comment':{self.comment}],'category':{self.category},'priority':{self.priority},'subject':{self.subject},'created_at':{self.created_at},'updated_at':{self.updated_at}]"
-    return jsonify(jdata)
+    #jdata=f"['user':{self.user_id},'ticketId':{self.ticketId},'status':{self.status},'image':{self.image},'comment':{self.comment}],'category':{self.category},'priority':{self.priority},'subject':{self.subject},'created_at':{self.created_at},'updated_at':{self.updated_at}]"
+    return self.ticketId
     
