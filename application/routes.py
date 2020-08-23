@@ -62,7 +62,7 @@ def dashboard(user_Id):
                             "assignedT" : TicketModel.query.filter(TicketModel.user_id == user_Id , TicketModel.status == 'ASSIGNED').count(),
                             "unassignedT" : TicketModel.query.filter(TicketModel.user_id == user_Id , TicketModel.status == 'UNASSIGNED').count()
                             }
-            return render_template("dashboard.html", dashboardData=dashboardData)
+            return render_template("dashboard.html", dashboardData=dashboardData, user=user)
         
         
         
@@ -152,7 +152,7 @@ def createticket():
             
             filename= secure_filename('.'.join([new_filename,y]))
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            image='/'.join([app.config['UPLOAD_FOLDER'], filename])
+            image='/'.join(['/uploads', filename])
             flash('file uploaded')
         
         status = 'NEW'

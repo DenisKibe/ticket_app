@@ -4,7 +4,7 @@
 <div class="container">
  
   <div class="card">
-    <img class="card-img-top" src="C:\Users\MR. Anonymous\Desktop\ticket_app\ticket_app\application\uploads\uhGITNT.png"" alt="Card image cap">
+    <img class="card-img-top" src="{{ url_for('static', filename=ticket.image) }}" alt="Card image cap">
     <div class="card-body">
       <h5 class="card-title">{{ ticket.subject }}</h5>
       <p class="card-text">{{ ticket.comment}}</p>
@@ -18,7 +18,7 @@
     <div class="card-footer">
       {% for data in comments %}
       <div class="card-text">
-        <p><span class="float-left">{{ data.user_id }}</span><span class="float-right">{{ data.comment_on }}</span></p>
+        <p><span class="float-left"><strong>{{ data.user.username }}</strong>(<i>{{ data.user.role }}</i>)</span><span class="float-right">{{ data.comment_on }}</span></p>
       </br>
         <p>{{ data.comment }}</p>
       </hr>
@@ -40,7 +40,6 @@
         
       </form>
     </div>
-
 
     
   </div>

@@ -14,9 +14,9 @@ class UserModel(db.Model):
   password = db.Column(db.String(200), nullable=False)
   email = db.Column(db.String(120), unique=True, nullable=False)
   role = db.Column(db.String(30), nullable=False)
-  ticketer=relationship("TicketModel", backref='user')
-  assigner=relationship("Assign_ticketModel", backref='user')
-  commentor=relationship("CommentModel", backref='user')
+  ticketer=relationship("TicketModel", backref='user', lazy=True)
+  assigner=relationship("Assign_ticketModel", backref='user', lazy=True)
+  commentor=relationship("CommentModel", backref='user', lazy=True)
   
   
   def __init__(self, userId, username,password, email, role):
@@ -46,8 +46,8 @@ class TicketModel(db.Model):
   subject = db.Column(db.String(100), nullable=False)
   created_at=db.Column(db.DateTime, server_default=text("CURRENT_TIMESTAMP"))
   updated_at = db.Column(db.DateTime)
-  assigned=relationship("Assign_ticketModel", backref='ticket')
-  commented=relationship("CommentModel", backref='ticket')
+  assigned=relationship("Assign_ticketModel", backref='ticket', lazy=True)
+  commented=relationship("CommentModel", backref='ticket', lazy=True)
   
   def __init__(self,user_id, ticketId,status, image,comment, category,priority, subject, updated_at):
     self.user_id=user_id
