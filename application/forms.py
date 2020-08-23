@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, FileField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, FileField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
 from application.models import UserModel, TicketModel
 import email_validator 
@@ -18,14 +18,15 @@ class RegisterForm(FlaskForm):
     
 class NewTicketForm(FlaskForm):
     status = StringField("Status", validators=[DataRequired()])
-    comment = StringField("Comment", validators=[DataRequired()])
+    comment = TextAreaField("Comment", validators=[DataRequired()])
     category = StringField("Category", validators=[DataRequired()])
-    priority = StringField("Priority", validators=[DataRequired()])
+    priority = SelectField("Priority",choices=['LOW','MEDIUM','HIGH'], validators=[DataRequired()])
     subject = StringField("Subject", validators=[DataRequired()])
-    
-    submit = SubmitField("Create New")
-    
-class ImageUploadForm(FlaskForm):
     image = FileField("Image")
     
-    submit = SubmitField("Upload")
+    submitT = SubmitField("Create New")
+    
+class CommentForm(FlaskForm):
+    comment = TextAreaField("comment", validators=[DataRequired()])
+    
+    submit = SubmitField("Post") 

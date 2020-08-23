@@ -5,28 +5,35 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th scope="col">Course ID</th>
-            <th scope="col">Title</th>
-            <th scope="col">Description</th>
-            <th scope="col">Credits</th>
-            <th scope="col">Term</th>
-            <th scope="col">Enroll</th>
+            <th scope="col">Ticket id</th>
+            <th scope="col">User</th>
+            <th scope="col">subject</th>
+            <th scope="col">category</th>
+            <th scope="col">priority</th>
+            <th scope="col">status</th>
+            <th scope="col">created on</th>
+            <th scope="col">updated on</th>
+            <th scope="col">action</th>
         </tr>
         </thead>
         <tbody>
-            {% for data in courseData %}
+            {% for data in data %}
             <tr>
-                <td scope='row'>{{ data["courseID"] }}</td>
-                <td>{{ data["title"] }}</td>
-                <td>{{ data["description"] }}</td>
-                <td>{{ data["credits"] }}</td>
-                <td>{{ data["term"] }}</td>
+                <td scope='row'>{{ data.ticketId }}</td>
+                <td>{{ data.user_id }}</td>
+                <td>{{ data.subject }}</td>
+                <td>{{ data.category }}</td>
+                <td>{{ data.priority }}</td>
+                <td>{{ data.status }}</td>
+                <td>{{ data.created_at }}</td>
+                <td>{{ data.updated_at }}</td>
                 <td>
-                    <form action="{{url_for('enrollment')}}" method="POST">
-                        <input type="hidden" name="courseID" value="{{data['courseID']}}">
-                        <input type="hidden" name="title" value="{{data['title']}}">
-                        <input type="hidden" name="term" value="{{data['term']}}">
-                    <button>Enroll</button>
+                    {% set x=data['ticketId'] %}
+                    <!--<FORM METHOD="POST" name="view" action="{{ url_for('viewticket') }}">
+                        <input type="hidden" name="viewx" value="{{x}}">
+                        <button type="submit">view</button>
+                    </FORM>-->
+                    <a href="{{ url_for('viewticket', ticket_id=x) }}"><button class="btn btn-small">view</button></a>
                 </form>
                 </td>
             </tr>
@@ -34,5 +41,7 @@
             
             </tbody>
         </table>
+
+        <p>{{ data }}</p>
     </div>
 {% endblock %}
