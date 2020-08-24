@@ -21,7 +21,7 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 psycopg2==2.8.5
 pylint==2.5.3
-python==3.8
+python==3.8.5
 python-dateutil==2.8.1
 python-dotenv==0.14.0
 python-editor==1.0.4
