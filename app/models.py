@@ -1,6 +1,6 @@
 import flask
 from flask import json, Response, jsonify
-from application import db
+from app import db
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float, Text, TIMESTAMP, text, ForeignKey
 from sqlalchemy.orm import relationship

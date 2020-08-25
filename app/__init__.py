@@ -12,4 +12,4 @@ migrate=Migrate(app, db)
 #db.init_app(app)
 
 
-from application import routes
+from app import routes
