@@ -2,7 +2,7 @@ import os
 
 class Config(object):
     SECRET_KEY = os.urandom(24)
-    SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://DenisKibe@nyuki:#Wanyugik18@nyuki.postgres.database.azure.com:5432/ticketApp'
+    SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://DenisKibe@nyuki:#Wanyugik18@nyuki.postgres.database.azure.com:5432/ticketApp?ssl=true'
     CSRF_ENABLED=True
     DEBUG = False
     TESTING = False
