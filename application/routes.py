@@ -97,7 +97,7 @@ def login():
             
             
 @app.route("/dash/<urlto>")
-def dash(urlto=None):
+def dash(urlto):
         
         if not session.get('Lsession'):
             return redirect(url_for('login'))
@@ -106,7 +106,7 @@ def dash(urlto=None):
             data=TicketModel.query.filter(TicketModel.status == urlto).all()
             return render_template("dash.html", data=data)
         else:
-            data=TicketModel.query.filter(TicketModel.userId== session.get('user_id') , TicketModel.status==urlto).all()
+            data=TicketModel.query.filter(TicketModel.user_id== session.get('user_id') , TicketModel.status==urlto).all()
             return render_template("dash.html", data=data)
         
         
@@ -225,18 +225,30 @@ def assign(ticketid):
     
 @app.route("/comment", methods=["GET","POST"])
 def comment():
-    global ticket_id
+    global ticket_id,ticketE
     if not session.get('Lsession'):
         return redirect(url_for('login'))
     
     
     if request.method == 'POST':
         comment = request.form.get('comment')
+        status = request.form.get('status')
         
         ticket_id = request.form.get('ticket_id')
         user_id = session.get('user_id')
         commentId = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
         
+        ticketE = TicketModel.query.filter(TicketModel.ticketId  == ticket_id).first()
+        
+        if status == 'No':
+            ticketE.status = 'UNSOLVED'
+        elif status== 'Yes' and session.get('user_role')=='Admin':
+            ticketE.status = 'CLOSED'
+        elif status == 'Yes' and session.get('user_role') == 'Technician':
+            ticketE.status = 'SOLVED'
+        elif status == 'Yes' and session.get('user_role') == 'User':
+            ticketE.status = 'SOLVED' 
+               
         new_comment=CommentModel(comment = comment, ticket_id = ticket_id, user_id = user_id, commentId = commentId)
         
         db.session.add(new_comment)

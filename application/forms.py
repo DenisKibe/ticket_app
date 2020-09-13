@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, FileField, TextAreaField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, FileField, TextAreaField, SelectField, RadioField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
 from application.models import UserModel, TicketModel
 import email_validator 
@@ -28,5 +28,6 @@ class NewTicketForm(FlaskForm):
     
 class CommentForm(FlaskForm):
     comment = TextAreaField("comment", validators=[DataRequired()])
+    status = RadioField('Solved', choices=[('Yes'),('No')])
     
     submit = SubmitField("Post") 

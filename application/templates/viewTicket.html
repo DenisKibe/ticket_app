@@ -9,10 +9,10 @@
       <h5 class="card-title">{{ ticket.subject }}</h5>
       <p class="card-text">{{ ticket.comment}}</p>
       
-      {% if user.role == 'Admin' %}
+      {% if session.get('user_role') == "Admin" %}
     
       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">assign</button>
-
+      
       {% endif %}
     </div>
     <div class="card-footer">
@@ -28,12 +28,19 @@
     <div class="card-footer">
       <form name="commentForm" action="{{ url_for('comment') }}" method="post">
         <input type="hidden" name="ticket_id" value="{{ ticket.ticketId }}">
-        <p>{{ form.comment.labe }} </br>
+        <p>{{ form.comment.label }} </br>
             {{ form.comment}}
             {% for error in form.comment.errors %}
               <span class="error-message">{{ error }}</span>
             {% endfor %}
         </p>
+
+        <p>{{ form.status.label }} </br>
+          {{ form.status}}
+          {% for error in form.status.errors %}
+            <span class="error-message">{{ error }}</span>
+          {% endfor %}
+      </p>
         <p>
           {{ form.submit() }}
         </p>
@@ -78,5 +85,6 @@
         
       </div>
     </div>
+  </div>
   </div>
 {% endblock %}
