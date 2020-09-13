@@ -1,7 +1,7 @@
-from application import app, db
+from app import app, db
 from flask import render_template, session, request, flash, url_for, json, Response,redirect
-from application.models import UserModel, TicketModel, Assign_ticketModel, CommentModel
-from application.forms import LoginForm, RegisterForm, NewTicketForm, CommentForm
+from app.models import UserModel, TicketModel, Assign_ticketModel, CommentModel
+from app.forms import LoginForm, RegisterForm, NewTicketForm, CommentForm
 from werkzeug.security import generate_password_hash, check_password_hash
 import random, string,logging, os
 from datetime import datetime
