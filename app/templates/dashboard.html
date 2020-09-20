@@ -2,69 +2,6 @@
 
 {% block content %}
 
-    
-    <div class="tile is-ancestor">
-        
-
-        <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.totalT}}</p>
-              <p class="subtitle"><a href="">Total Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.newT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='NEW') }}">New Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.openT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='OPEN') }}">Open Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.closedT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='CLOSED') }}">Closed Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.solvedT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='SOLVED') }}">Solved Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.unsolvedT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='UNSOLVED') }}">Unsolved Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.assignedT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='ASSIGNED') }}">Assigned Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.unassignedT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='UNASSIGNED') }}">Unassigned Tickets</a></p>
-            </article>
-          </div>
-        
-    </div>
-
-    <p><a href="{{ url_for('createticket')}}">create new ticket</a></p>
 
     
 
