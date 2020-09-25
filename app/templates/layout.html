@@ -13,8 +13,10 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
   <!-- Material Design Bootstrap -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mdb.min.css') }}">
+  {% if not session.get('user_id') %}
   <!-- Your custom styles (optional) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  {% endif %}
 </head>
 {% if session.get('user_id') %}
 <body class="fixed-sn white-skin">
@@ -37,8 +39,16 @@
     {% endif %}
 
     <!--block content-->
+    {% if session.get('user_id') %}
+      <div class="container-fluid">
+        <main class="pt-mt-0">
+    {% endif %}
     {% block content %}
     {% endblock %}
+    {% if session.get('user_id') %}
+        </main>
+      </div>
+    {% endif %}
 
     <!--include footer-->
     {% if session.get('user_id') %}

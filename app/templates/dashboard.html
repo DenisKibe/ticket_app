@@ -2,70 +2,179 @@
 
 {% block content %}
 
+<!-- Section: Classic admin cards -->
+<section class="mt-md-0 pt-md-0 mb-2 pb-2">
 
-    <div class="tile is-ancestor">
+  <!-- Grid row -->
+  <div class="row">
 
+    <!-- Grid column -->
+    <div class="col-xl-3 col-md-6 mb-xl-0 mb-4">
 
-        <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.totalT}}</p>
-              <p class="subtitle"><a href="">Total Tickets</a></p>
-            </article>
+      <!-- Card Primary -->
+      <div class="card classic-admin-card primary-color">
+        <div class="card-body">
+          <div class="pull-right">
+            <i class="far fa-money-bill-alt"></i>
           </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.newT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='NEW') }}">New Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.openT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='OPEN') }}">Open Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.closedT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='CLOSED') }}">Closed Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.solvedT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='SOLVED') }}">Solved Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.unsolvedT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='UNSOLVED') }}">Unsolved Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.assignedT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='ASSIGNED') }}">Assigned Tickets</a></p>
-            </article>
-          </div>
-
-          <div class="tile is-parent">
-            <article class="tile is-child box">
-              <p class="title">{{dashboardData.unassignedT}}</p>
-              <p class="subtitle"><a href="{{ url_for('dash',urlto='UNASSIGNED') }}">Unassigned Tickets</a></p>
-            </article>
-          </div>
+          <p ><a href="" class="black-text">Total Tickets</a></p>
+          <h4 class="check">{{dashboardData.totalT}}</h4>
+        </div>
+        
+      </div>
+      <!-- Card Primary -->
 
     </div>
+    <!-- Grid column -->
 
-    <p><a href="{{ url_for('createticket')}}">create new ticket</a></p>
+    <!-- Grid column -->
+    <div class="col-xl-3 col-md-6 mb-xl-0 mb-4">
 
+      <!-- Card Yellow -->
+      <div class="card classic-admin-card warning-color">
+        <div class="card-body">
+          <div class="pull-right">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <p><a href="{{ url_for('dash',urlto='NEW') }}" class="black-text">New Tickets</a></p>
+          <h4 class="check">{{dashboardData.newT}}</h4>
+        </div>
+        
+      </div>
+      <!-- Card Yellow -->
 
+    </div>
+    <!-- Grid column -->
 
+    <!-- Grid column -->
+    <div class="col-xl-3 col-md-6 mb-md-0 mb-4">
+
+      <!-- Card Blue -->
+      <div class="card classic-admin-card light-blue lighten-1">
+        <div class="card-body">
+          <div class="pull-right">
+            <i class="fas fa-chart-pie"></i>
+          </div>
+          <p><a href="{{ url_for('dash',urlto='OPEN') }}" class="black-text">Open Tickets</a></p>
+          <h4 class="check">{{dashboardData.openT}}</h4>
+        </div>
+        
+      </div>
+      <!-- Card Blue -->
+
+    </div>
+    <!-- Grid column -->
+
+    <!-- Grid column -->
+    <div class="col-xl-3 col-md-6 mb-0">
+
+      <!-- Card Red -->
+      <div class="card classic-admin-card red accent-2">
+        <div class="card-body">
+          <div class="pull-right">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <p><a href="{{ url_for('dash',urlto='CLOSED') }}" class="black-text">Closed Tickets</a></p>
+          <h4 class="check">{{dashboardData.closedT}}</h4>
+        </div>
+        
+      </div>
+      <!-- Card Red -->
+
+    </div>
+    <!-- Grid column -->
+
+  </div>
+  <!-- Grid row -->
+
+</section>
+<!-- Section: Classic admin cards -->
+
+<!-- Section: Classic admin cards -->
+<section class="mt-md-0 pt-md-0 mb-5 pb-4">
+
+  <!-- Grid row -->
+  <div class="row">
+
+    <!-- Grid column -->
+    <div class="col-xl-3 col-md-6 mb-xl-0 mb-4">
+
+      <!-- Card Primary -->
+      <div class="card classic-admin-card primary-color">
+        <div class="card-body">
+          <div class="pull-right">
+            <i class="far fa-money-bill-alt"></i>
+          </div>
+          <p class="white-text"><a href="{{ url_for('dash',urlto='SOLVED') }}" class="black-text">Solved Tickets</a></p>
+          <h4 class="check">{{dashboardData.solvedT}}</h4>
+        </div>
+        
+      </div>
+      <!-- Card Primary -->
+
+    </div>
+    <!-- Grid column -->
+
+    <!-- Grid column -->
+    <div class="col-xl-3 col-md-6 mb-xl-0 mb-4">
+
+      <!-- Card Yellow -->
+      <div class="card classic-admin-card warning-color">
+        <div class="card-body">
+          <div class="pull-right">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <p><a href="{{ url_for('dash',urlto='UNSOLVED') }}" class="black-text">Unsolved Tickets</a></p>
+          <h4 class="check">{{dashboardData.unsolvedT}}</h4>
+        </div>
+        
+      </div>
+      <!-- Card Yellow -->
+
+    </div>
+    <!-- Grid column -->
+
+    <!-- Grid column -->
+    <div class="col-xl-3 col-md-6 mb-md-0 mb-4">
+
+      <!-- Card Blue -->
+      <div class="card classic-admin-card light-blue lighten-1">
+        <div class="card-body">
+          <div class="pull-right">
+            <i class="fas fa-chart-pie"></i>
+          </div>
+          <p><a href="{{ url_for('dash',urlto='ASSIGNED') }}" class="black-text">Assigned Tickets</a></p>
+          <h4 class="check">{{dashboardData.assignedT}}</h4>
+        </div>
+        
+      </div>
+      <!-- Card Blue -->
+
+    </div>
+    <!-- Grid column -->
+
+    <!-- Grid column -->
+    <div class="col-xl-3 col-md-6 mb-0">
+
+      <!-- Card Red -->
+      <div class="card classic-admin-card red accent-2">
+        <div class="card-body">
+          <div class="pull-right">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <p><a href="{{ url_for('dash',urlto='UNASSIGNED') }}" class="black-text">Unassigned Tickets</a></p>
+          <h4 class="check">{{dashboardData.unassignedT}}</h4>
+        </div>
+        
+      </div>
+      <!-- Card Red -->
+
+    </div>
+    <!-- Grid column -->
+
+  </div>
+  <!-- Grid row -->
+
+</section>
+<!-- Section: Classic admin cards -->
 {% endblock %}
