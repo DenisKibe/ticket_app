@@ -30,9 +30,15 @@
               <a href="{{ url_for('createticket')}}" class="collapsible-header waves-effect"><i
                   class="w-fa fas fa-chart-pie"></i>Create new ticket</a>
             </li>
-  
+
+            {% if session.get('user_role')=='Admin' %}
+            <li>
+              <a href="{{ url_for('register')}}" class="collapsible-header waves-effect"><i
+                  class="w-fa fas fa-chart-pie"></i>Register User</a>
+            </li>
+            {% endif %}
             <!-- Simple link -->
-            
+
           </ul>
         </li>
         <!-- Side navigation links -->
@@ -65,7 +71,7 @@
       aria-controls="navbarSupportedContent-7" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    
+
   </div>
 </nav>
 {% endif %}

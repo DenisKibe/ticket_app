@@ -68,6 +68,9 @@
   <script type="text/javascript" src="{{  url_for('static',filename='js/mdb.min.js') }}"></script>
   <!-- Your custom scripts (optional) -->
   <script type="text/javascript" src="{{  url_for('static',filename='js/custom.js') }}"></script>
-
+  <script type="text/JavaScript">
+  {% block script %}
+  {% endblock %}
+  </script>
 </body>
 </html>

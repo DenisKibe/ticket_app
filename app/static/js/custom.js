@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
 // SideNav Initialization
 $(".button-collapse").sideNav();
 
@@ -8,4 +9,5 @@ wheelSpeed: 2,
 wheelPropagation: true,
 minScrollbarLength: 20
 });
+
 });

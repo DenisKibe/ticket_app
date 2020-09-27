@@ -1,55 +1,83 @@
 
     {% extends "layout.html" %}
-   
-    {% block content %}
-    
-    <div class="container">
-         <form name="createticket"  method="post" enctype="multipart/form-data" novalidate >
-        <fieldset class="form-group">
-            <legend>{{title}}</legend>     
-            {{ form.hidden_tag() }}       
-                <p> {{ form.subject.label }}</br>
-                    {{ form.subject }}
-                    {% for error in form.subject.errors %}
-                     <span class="error-message">{{ error }}</span>
-                    {% endfor %}
-                </p>
-                <p> {{ form.category.label }}</br>
-                    {{ form.category }}
-                    {% for error in form.category.errors %}
-                     <span class="error-message">{{ error }}</span>
-                    {% endfor %}
-                </p>
-            
-            
-                <p> {{ form.priority.label }}</br>
-                    {{ form.priority }}
-                    {% for error in form.priority.errors %}
-                     <span class="error-message">{{ error }}</span>
-                    {% endfor %}
-                </p>
-            
-                <p> {{ form.comment.label }}</br>
-                    {{ form.comment }}
-                    {% for error in form.comment.errors %}
-                     <span class="error-message">{{ error }}</span>
-                    {% endfor %}
-                </p>
 
-                <p> {{ form.image.label }}</br>
-                    {{ form.image }}
-                    {% for error in form.image.errors %}
-                     <span class="error-message">{{ error }}</span>
-                    {% endfor %}
-                </p>
-            
-            
-            
-                <p> 
-                    {{ form.submitT() }}
-                </p>
-            
-        </fieldset>
-        </form>
+    {% block content %}
+
+    <div class="container">
+      <div class="row">
+        <div class="col">
+      <div class="card text-dark">
+
+          <h5 class="card-header info-color white-text text-center py-4">
+              <strong>{{title}}</strong>
+          </h5>
+
+          <!--Card content-->
+          <div class="card-body px-lg-5 pt-0">
+
+              <!-- Form -->
+              <form class="text-center text-body" name="login" action="" method="post" novalidate>
+                  {{ form.hidden_tag() }}
+
+                  <div class="md-form text-body">
+                    {{ form.subject.label }}<br>
+                        {{ form.subject(class_="form-control") }}
+                        {% for error in form.subject.errors %}
+                         <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                  </div>
+
+
+                  <!-- E-mail -->
+                  <div class="md-form text-body">
+                    {{ form.category.label }}<br>
+                        {{ form.category(class_="form-control") }}
+                        {% for error in form.category.errors %}
+                         <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                  </div>
+
+                  <!-- Password -->
+                  <div class="md-form text-body ">
+                    {{ form.priority.label }}<br><br>
+                        {{ form.priority(class_="form-control") }}
+                        {% for error in form.priority.errors %}
+                         <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                  </div>
+
+                  <!-- Phone number -->
+                  <div class="md-form text-body">
+                    {{ form.comment.label }}<br><br>
+                        {{ form.comment(class_="form-control md-textarea") }}
+                        {% for error in form.comment.errors %}
+                         <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                  </div>
+
+                  <!-- Newsletter -->
+                  <div class="md-form text-body">
+                    {{ form.image.label }}<br><br>
+                        {{ form.image(class_="form-control") }}
+                        {% for error in form.image.errors %}
+                         <span class="error-message">{{ error }}</span>
+                        {% endfor %}
+                  </div>
+
+                  <!-- Sign up button -->
+                  <button class="btn btn-outline-info btn-rounded my-4 waves-effect z-depth-0" name="submit" type="submit" Value="Register Now">
+                      Create
+                  </button>
+
+
+              </form>
+              <!-- Form -->
+
+          </div>
+
+      </div>
+      <!-- Material form register -->
+    </div>
+    </div>
     </div>
     {% endblock %}

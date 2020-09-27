@@ -1,47 +1,107 @@
 {% extends "layout.html" %}
-   
-{% block content %}
-<div>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">Ticket id</th>
-            <th scope="col">User</th>
-            <th scope="col">subject</th>
-            <th scope="col">category</th>
-            <th scope="col">priority</th>
-            <th scope="col">status</th>
-            <th scope="col">created on</th>
-            <th scope="col">updated on</th>
-            <th scope="col">action</th>
-        </tr>
-        </thead>
-        <tbody>
-            {% for data in data %}
-            <tr>
-                <td scope='row'>{{ data.ticketId }}</td>
-                <td>{{ data.user_id }}</td>
-                <td>{{ data.subject }}</td>
-                <td>{{ data.category }}</td>
-                <td>{{ data.priority }}</td>
-                <td>{{ data.status }}</td>
-                <td>{{data.created_at }}</td>
-                <td>{{ data.updated_at }}</td>
-                <td>
-                    {% set x=data['ticketId'] %}
-                    <!--<FORM METHOD="POST" name="view" action="{{ url_for('viewticket') }}">
-                        <input type="hidden" name="viewx" value="{{x}}">
-                        <button type="submit">view</button>
-                    </FORM>-->
-                    <a href="{{ url_for('viewticket', ticket_id=x) }}"><button class="btn btn-small">view</button></a>
-                </form>
-                </td>
-            </tr>
-            {% endfor %}
-            
-            </tbody>
-        </table>
 
-        <p>{{ data }}</p>
-    </div>
+{% block content %}
+
+
+<div class="card card-cascade narrower z-depth-0">
+
+              <div
+                class="view view-cascade gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
+
+                <div>
+                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i
+                      class="fas fa-th-large mt-0"></i></button>
+                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i
+                      class="fas fa-columns mt-0"></i></button>
+                </div>
+
+                <a href="" class="white-text mx-3">{{ title }} Tickets</a>
+
+                <div>
+                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i
+                      class="fas fa-pencil-alt mt-0"></i></button>
+                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i
+                      class="fas fa-eraser mt-0"></i></button>
+                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i
+                      class="fas fa-info-circle mt-0"></i></button>
+                </div>
+
+              </div>
+
+              <div class="">
+
+                <div class="card-body table-responsive">
+
+                  <!--Table-->
+                  <table id="dt-vertical-scroll" class="table" cellspacing="0" width="100%"">
+
+                    <!-- Table head -->
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="th-sm">Ticket id</th>
+                        <th scope="col">User</th>
+                        <th scope="col">subject</th>
+                        <th scope="col">category</th>
+                        <th scope="col">priority</th>
+                        <th scope="col">status</th>
+                        <th scope="col">created on</th>
+                        <th scope="col">updated on</th>
+                        <th scope="col">action</th>
+                      </tr>
+                    </thead>
+                    <!-- Table head -->
+                    {% set counter=0 %}
+                    {% for data in data %}
+                    <tr>
+                        <td scope="row">{{ counter+1 }}</td>
+                        <td>{{ data.ticketId }}</td>
+                        <td>{{ data.user.username }}</td>
+                        <td>{{ data.subject }}</td>
+                        <td>{{ data.category }}</td>
+                        <td><span class="badge badge-pill badge-secondary">{{ data.priority }}</span></td>
+                        <td><span class="badge badge-pill badge-secondary">{{ data.status }}</span></td>
+                        <td>{{data.created_at }}</td>
+                        <td>{{ data.updated_at }}</td>
+                        <td>
+                            {% set x=data['ticketId'] %}
+                            <a href="{{ url_for('viewticket', ticket_id=x) }}"><button type="button" class="btn btn-outline-info btn-rounded btn-sm px-2"><i
+                                class="fas fa-pencil-alt mt-0"></i></button>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    <!-- Table body -->
+                    <tbody>
+
+                    </tbody>
+                    <!-- Table body -->
+
+                  </table>
+                  <!-- Table -->
+
+                </div>
+
+                <hr class="my-0">
+
+                <!-- Bottom Table UI -->
+
+
+              </div>
+
+            </div>
 {% endblock %}
+
+{%  block script %}
+   $('#dt-vertical-scroll').DataTable();
+  $('#dt-vertical-scroll').dataTable({
+    "paging": false,
+    "fnInitComplete": function () {
+      var myCustomScrollbar = document.querySelector('#dt-vertical-scroll_wrapper .dataTables_scrollBody');
+      var ps = new PerfectScrollbar(myCustomScrollbar);
+    },
+    "scrollY": 450,
+  });
+
+{%  endblock %}

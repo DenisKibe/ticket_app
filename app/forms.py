@@ -11,7 +11,7 @@ class LoginForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
     email   = StringField("Email", validators=[DataRequired()])
-    role = StringField("Role", validators=[DataRequired()])
+    role = SelectField("Role",choices=['User','Technician','Admin'], validators=[DataRequired()])
     username = StringField("userName", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Register Now")
@@ -28,6 +28,6 @@ class NewTicketForm(FlaskForm):
     
 class CommentForm(FlaskForm):
     comment = TextAreaField("comment", validators=[DataRequired()])
-    status = RadioField('Solved', choices=[('Yes'),('No')])
+    status = SelectField('Solved', choices=[('Yes'),('No')])
     
     submit = SubmitField("Post") 

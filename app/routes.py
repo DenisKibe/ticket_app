@@ -104,7 +104,7 @@ def dash(urlto):
         
         if session.get('user_role') == 'Admin':
             data=TicketModel.query.filter(TicketModel.status == urlto).all()
-            return render_template("dash.html", data=data)
+            return render_template("dash.html", data=data, title=urlto)
         else:
             data=TicketModel.query.filter(TicketModel.user_id== session.get('user_id') , TicketModel.status==urlto).all()
             return render_template("dash.html", data=data)
@@ -113,6 +113,13 @@ def dash(urlto):
         
 @app.route("/register", methods=['POST','GET'])
 def register():
+    
+    if not session.get('Lsession'):
+        return redirect(url_for('login'))
+    
+    if not session.get('user_role') == 'Admin':
+        return redirect(url_for('login'))
+    
     form = RegisterForm()
     if form.validate_on_submit():
         passwd=form.password.data

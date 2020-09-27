@@ -1,48 +1,77 @@
 
     {% extends "layout.html" %}
-   
+
     {% block content %}
-    
-    <div class="container">
-         <form name="login" action="" method="post" novalidate>
-        <fieldset class="form-group">
-            <legend>{{title}}</legend>     
-            {{ form.hidden_tag() }}       
-                <p> {{ form.email.label }}</br>
-                    {{ form.email }}
-                    {% for error in form.email.errors %}
-                     <span class="error-message">{{ error }}</span>
-                    {% endfor %}
-                </p>
-                <p> {{ form.password.label }}</br>
-                    {{ form.password }}
-                    {% for error in form.password.errors %}
-                     <span class="error-message">{{ error }}</span>
-                    {% endfor %}
-                </p>
-            
-            
-                <p> {{ form.role.label }}</br>
-                    {{ form.role }}
-                    {% for error in form.role.errors %}
-                     <span class="error-message">{{ error }}</span>
-                    {% endfor %}
-                </p>
-            
-                <p> {{ form.username.label }}</br>
-                    {{ form.username }}
-                    {% for error in form.username.errors %}
-                     <span class="error-message">{{ error }}</span>
-                    {% endfor %}
-                </p>
-            
-            
-            
-                <p> 
-                    {{ form.submit() }}
-                </p>
-            
-        </fieldset>
+
+    <div class="container ">
+      <div class="row">
+        <div class="col">
+
+          <!-- Material form register -->
+<div class="card text-dark">
+
+    <h5 class="card-header info-color white-text text-center py-4">
+        <strong>{{title}}</strong>
+    </h5>
+
+    <!--Card content-->
+    <div class="card-body px-lg-5 pt-0">
+
+        <!-- Form -->
+        <form class="text-center text-body" name="login" action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="md-form text-body">
+                  {{ form.email.label }}<br>
+                  {{ form.email(class_="form-control") }}
+                  {% for error in form.email.errors %}
+                   <span class="error-message">{{ error }}</span>
+                  {% endfor %}
+            </div>
+
+
+            <!-- E-mail -->
+            <div class="md-form text-body">
+                  {{ form.password.label }}<br>
+                  {{ form.password(class_="form-control") }}
+                  {% for error in form.password.errors %}
+                    <span class="error-message">{{ error }}</span>
+                  {% endfor %}
+            </div>
+
+            <!-- Password -->
+            <div class="md-form text-body">
+                  {{ form.role.label }}<br><br>
+                  {{ form.role(class_="form-control") }}
+                  {% for error in form.role.errors %}
+                    <span class="error-message">{{ error }}</span>
+                  {% endfor %}
+            </div>
+
+            <!-- Phone number -->
+            <div class="md-form text-body">
+                {{ form.username.label }}<br>
+                {{ form.username(class_="form-control") }}
+                {% for error in form.username.errors %}
+                  <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+
+            <!-- Sign up button -->
+            <button class="btn btn-outline-info btn-rounded my-4 waves-effect z-depth-0" name="submit" type="submit" Value="Register Now">
+                Register
+            </button>
+
+
         </form>
+        <!-- Form -->
+
+</div>
+<!-- Material form register -->
+
+        </div>
+        </div>
+    </div>
     </div>
     {% endblock %}
