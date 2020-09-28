@@ -3,26 +3,20 @@
 {% block content %}
 
 <div class="container">
-  <div class="row mr-0">
-    <div class="col">
+  <div class="row">
+    <div class="col col-sm-3">
 
         <!-- Author box -->
         <div class="card card-body">
 
-          <div class="row">
-
-            <!-- Avatar -->
-            <div class="col-12">
+          
               <h3 class="text-center"><strong>Owner Details</strong></h3>
 
               <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(26).jpg"
                 class="img-fluid rounded-circle text-center" alt="" style="width:50px; height:50px">
 
-            </div>
-            </div>
-            <div class="row">
-            <!-- Author Data -->
-            <div class="col">
+            
+            
               <p><strong>username</strong></p>
               <p>
                 <i>{{ ticket.user.username }}</i>
@@ -32,23 +26,22 @@
               <p><strong>updated on </strong></p>
               <p><i>{{ ticket.updated_at }}</i></p>
               <p><strong>Status</strong></p>
-              <p><i>{{ ticket.status }}</i?</p>
+              <p><i>{{ ticket.status }}</i></p>
 
-            </div>
-
-          </div>
+            
 
         </div>
         <!-- Author box -->
     </div>
-    <div class="col ">
+    <div class="col col-sm-6">
     <!-- Card -->
 
               <!-- Author box -->
-              <div class="card card-body">
-                <h4 class="text-center"><strong>Ticket Details</strong></h4>
+    <div class="card card-body">
 
-                <img class="img-fluid " src="{{ url_for('static', filename=ticket.image) }}" alt="Card imagecap">
+        <h4 class="text-center"><strong>Ticket Details</strong></h4>
+
+        <img class="img-fluid text-center img-thumbnail" src="{{ url_for('static', filename=ticket.image) }}" alt="Card imagecap"/>
    <div class="card-body">
      <h5 class="card-title">{{ ticket.subject }}</h5>
      <p class="card-text">{{ ticket.comment}}</p>
@@ -59,36 +52,36 @@
 
      {% endif %}
      
-<div class="card-footer ">
-<form name="commentForm" action="{{ url_for('comment') }}" method="post">
-{{ form.hidden_tag() }}
-<input type="hidden" name="ticket_id" value="{{ ticket.ticketId }}">
+      <div class="card-footer ">
+        <form name="commentForm" action="{{ url_for('comment') }}" method="post">
+          {{ form.hidden_tag() }}
+          <input type="hidden" name="ticket_id" value="{{ ticket.ticketId }}">
 
-<div class="md-form text-body">
- {{ form.comment.label }} <br>
- {{ form.comment(class_="form-control md-textarea") }}
- {% for error in form.comment.errors %}
-   <span class="error-message">{{ error }}</span>
- {% endfor %}
-</div>
+          <div class="md-form text-body">
+            {{ form.comment.label }} <br>
+            {{ form.comment(class_="form-control md-textarea") }}
+            {% for error in form.comment.errors %}
+              <span class="error-message">{{ error }}</span>
+            {% endfor %}
+            </div>
 
-<p>{{ form.status.label }} <br>
-{{ form.status}}
-{% for error in form.status.errors %}
- <span class="error-message">{{ error }}</span>
-{% endfor %}
-</p>
-<p>
-{{ form.submit() }}
-</p>
+          <p>{{ form.status.label }} <br>
+            {{ form.status}}
+            {% for error in form.status.errors %}
+              <span class="error-message">{{ error }}</span>
+            {% endfor %}
+          </p>
+          <p>
+            {{ form.submit() }}
+          </p>
 
-</form>
-</div>
-              </div>
+        </form>
+      </div>
+    </div>
               <!-- Author box -->
     </div>
     </div>
-    <div class="col">
+    <div class="col col-sm-3 float-right">
 
       <div class="card"><h4 class="text-center"><strong>Comments</strong></h4></div>
 
@@ -100,16 +93,7 @@
 
         <!-- Author box -->
         <div class="card card-body">
-
-          <div class="row">
-
-            <!-- Avatar -->
-            <div class="col-12">
-
-              <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(26).jpg"
-                class="img-fluid rounded-circle" alt="">
-
-            </div>
+           
 
             <!-- Author Data -->
             <div class="col-12 col-sm-10">
@@ -127,7 +111,7 @@
 
             </div>
 
-          </div>
+        
 
         </div>
         <!-- Author box -->
@@ -137,6 +121,7 @@
       {% endfor %}
       </div>
       </div>
+    </div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
