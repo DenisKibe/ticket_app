@@ -105,7 +105,7 @@ def dash(urlto):
         if session.get('user_role') == 'Admin':
             data=TicketModel.query.filter(TicketModel.status == urlto).all()
             return render_template("dash.html", data=data, title=urlto)
-        else:
+        elif session.get('user_role') == 'Technician':
             data=TicketModel.query.filter(TicketModel.user_id== session.get('user_id') , TicketModel.status==urlto).all()
             return render_template("dash.html", data=data)
         
@@ -208,9 +208,7 @@ def viewticket(ticket_id):
 
 @app.route("/assign", methods=["GET","POST"])
 @app.route("/assign/<ticketid>", methods=["GET","POST"])
-def assign(ticketid):
-    if not session.get('Lsession'):
-        return redirect(url_for('login'))
+def assign():
     
     if request.method == "POST":
         
