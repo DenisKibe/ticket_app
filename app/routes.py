@@ -185,9 +185,7 @@ def viewticket(ticket_id):
     
     if not session.get('Lsession'):
         return redirect(url_for('login'))
-    
-    
-    
+     
     form = CommentForm()
     
     comments = CommentModel.query.filter(CommentModel.ticket_id == ticket_id).all()

@@ -28,6 +28,6 @@ class NewTicketForm(FlaskForm):
     
 class CommentForm(FlaskForm):
     comment = TextAreaField("comment", validators=[DataRequired()])
-    status = SelectField('Solved', choices=[('Yes'),('No')])
+    status = SelectField('Solved', choices=[(''),('Yes'),('No')])
     
     submit = SubmitField("Post") 

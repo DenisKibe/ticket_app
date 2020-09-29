@@ -22,9 +22,11 @@
                 <i>{{ ticket.user.username }}</i>
               </p>
               <p><strong>created on</strong></p>
-              <p><i> {{ ticket.created_at }}</i></p>
+                {% set DTime=ticket.created_at %}
+              <p><i> {{ DTime.strftime("%a, %d %B, %y") }}</i></p>
               <p><strong>updated on </strong></p>
-              <p><i>{{ ticket.updated_at }}</i></p>
+                {% set DTime=ticket.created_at %}
+              <p><i>{{ DTime.strftime("%a, %d %B, %y") }}</i></p>
               <p><strong>Status</strong></p>
               <p><i>{{ ticket.status }}</i></p>
 
@@ -33,7 +35,7 @@
         </div>
         <!-- Author box -->
     </div>
-    <div class="col col-sm-6">
+    <div class="col col-sm-5">
     <!-- Card -->
 
               <!-- Author box -->
@@ -81,22 +83,15 @@
               <!-- Author box -->
     </div>
     </div>
-    <div class="col col-sm-3 float-right">
-
-      <div class="card"><h4 class="text-center"><strong>Comments</strong></h4></div>
-
-      {% for data in comments %}
-
-
+    <div class="col col-sm-4">
       <!-- Card -->
       <section >
 
         <!-- Author box -->
         <div class="card card-body">
-           
-
-            <!-- Author Data -->
-            <div class="col-12 col-sm-10">
+        <h3 class="text-center"><strong>Comments</strong></h3>
+          <hr>
+      {% for data in comments %}
 
               <p>
 
@@ -104,21 +99,25 @@
 
               </p>
 
+              <p>
+                {% set DTime=data.comment_on %}
+                <i class="comment-date font-small">{{ DTime.strftime("%a, %d %B, %y") }}</i>
+              </p>
               
               <p class="dark-grey-text article">
                 {{ data.comment }}
               </p>
 
-            </div>
+            <hr>
+      {% endfor %}
+    </div>
 
         
 
-        </div>
-        <!-- Author box -->
+  </div>
+  <!-- Author box -->
 
-      </section>
-
-      {% endfor %}
+</section>
       </div>
       </div>
     </div>
