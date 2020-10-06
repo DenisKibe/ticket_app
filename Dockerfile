@@ -8,6 +8,4 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 COPY . .
 CMD ["flask", "run"]
-FROM gcr.io/cloud-builders/gcloud
-COPY notice.sh /usr/bin
-ENTRYPOINT ["/usr/bin/notice.sh"]
+
