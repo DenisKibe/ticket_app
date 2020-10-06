@@ -1,4 +1,4 @@
-FROM python:3.7-alpine
+FROM python:3.8
 WORKDIR /ticket_app
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
