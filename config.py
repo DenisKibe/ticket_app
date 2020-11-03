@@ -8,6 +8,7 @@ class Config(object):
     TESTING = False
     UPLOAD_FOLDER = 'app/static/uploads/'
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    #SESSION_COOKIE_SECURE = True
     
     
 class ProductionConfig(Config):

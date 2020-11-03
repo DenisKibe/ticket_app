@@ -51,18 +51,20 @@
                       </tr>
                     </thead>
                     <!-- Table head -->
-                    {% set counter=0 %}
+                    
                     {% for data in data %}
                     <tr>
-                        <td scope="row">{{ counter+1 }}</td>
+                        <td scope="row">{{ loop.index }}</td>
                         <td>{{ data.ticketId }}</td>
                         <td>{{ data.user.username }}</td>
                         <td>{{ data.subject }}</td>
                         <td>{{ data.category }}</td>
                         <td><span class="badge badge-pill badge-secondary">{{ data.priority }}</span></td>
                         <td><span class="badge badge-pill badge-secondary">{{ data.status }}</span></td>
-                        <td>{{data.created_at }}</td>
-                        <td>{{ data.updated_at }}</td>
+                          {% set DTime=data.created_at %}
+                        <td>{{ DTime.strftime("%a, %d %B, %y") }}</td>
+                          {% set DTime=data.updated_at %}
+                        <td>{{ DTime.strftime("%a, %d %B, %y") }}</td>
                         <td>
                             {% set x=data['ticketId'] %}
                             <a href="{{ url_for('viewticket', ticket_id=x) }}"><button type="button" class="btn btn-outline-info btn-rounded btn-sm px-2"><i
@@ -70,6 +72,7 @@
 
                         </td>
                     </tr>
+                   
                     {% endfor %}
 
                     <!-- Table body -->

@@ -4,90 +4,94 @@
 
 <div class="container">
   <div class="row">
+<<<<<<< HEAD
     <div class="col col-sm-4">
+=======
+    <div class="col col-sm-3">
+>>>>>>> 2d77859383813cb93a5bb910abc533916a03a226
 
         <!-- Author box -->
         <div class="card card-body">
 
-          <div class="row">
-
-            <!-- Avatar -->
-            <div class="col-12">
+          
               <h3 class="text-center"><strong>Owner Details</strong></h3>
 
               <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(26).jpg"
                 class="img-fluid rounded-circle text-center" alt="" style="width:50px; height:50px">
 
-            </div>
-            </div>
-            <div class="row">
-            <!-- Author Data -->
-            <div class="col">
+            
+            
               <p><strong>username</strong></p>
               <p>
                 <i>{{ ticket.user.username }}</i>
               </p>
               <p><strong>created on</strong></p>
-              <p><i> {{ ticket.created_at }}</i></p>
+                {% set DTime=ticket.created_at %}
+              <p><i> {{ DTime.strftime("%a, %d %B, %y") }}</i></p>
               <p><strong>updated on </strong></p>
-              <p><i>{{ ticket.updated_at }}</i></p>
+                {% set DTime=ticket.created_at %}
+              <p><i>{{ DTime.strftime("%a, %d %B, %y") }}</i></p>
               <p><strong>Status</strong></p>
-              <p><i>{{ ticket.status }}</i?</p>
+              <p><i>{{ ticket.status }}</i></p>
 
-            </div>
-
-          </div>
+            
 
         </div>
         <!-- Author box -->
     </div>
-    <div class="col ">
+    <div class="col col-sm-5">
     <!-- Card -->
 
               <!-- Author box -->
-              <div class="card card-body">
-                <h4 class="text-center"><strong>Ticket Details</strong></h4>
+    <div class="card card-body">
 
+        <h4 class="text-center"><strong>Ticket Details</strong></h4>
+
+<<<<<<< HEAD
               <img class="img-fluid " src="{{ url_for('static', filename=ticket.image) }}" alt="Card imagecap"/>
+=======
+        <img class="img-fluid text-center img-thumbnail" src="{{ url_for('static', filename=ticket.image) }}" alt="Card imagecap"/>
+>>>>>>> 2d77859383813cb93a5bb910abc533916a03a226
    <div class="card-body">
      <h5 class="card-title">{{ ticket.subject }}</h5>
      <p class="card-text">{{ ticket.comment}}</p>
 
      {% if session.get('user_role') == "Admin" %}
-
+    
      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">assign</button>
 
      {% endif %}
      
-<div class="card-footer ">
-<form name="commentForm" action="{{ url_for('comment') }}" method="post">
-{{ form.hidden_tag() }}
-<input type="hidden" name="ticket_id" value="{{ ticket.ticketId }}">
+      <div class="card-footer ">
+        <form name="commentForm" action="{{ url_for('comment') }}" method="post">
+          {{ form.hidden_tag() }}
+          <input type="hidden" name="ticket_id" value="{{ ticket.ticketId }}">
 
-<div class="md-form text-body">
- {{ form.comment.label }} <br>
- {{ form.comment(class_="form-control md-textarea") }}
- {% for error in form.comment.errors %}
-   <span class="error-message">{{ error }}</span>
- {% endfor %}
-</div>
+          <div class="md-form text-body">
+            {{ form.comment.label }} <br>
+            {{ form.comment(class_="form-control md-textarea") }}
+            {% for error in form.comment.errors %}
+              <span class="error-message">{{ error }}</span>
+            {% endfor %}
+            </div>
 
-<p>{{ form.status.label }} <br>
-{{ form.status}}
-{% for error in form.status.errors %}
- <span class="error-message">{{ error }}</span>
-{% endfor %}
-</p>
-<p>
-{{ form.submit() }}
-</p>
+          <p>{{ form.status.label }} <br>
+            {{ form.status}}
+            {% for error in form.status.errors %}
+              <span class="error-message">{{ error }}</span>
+            {% endfor %}
+          </p>
+          <p>
+            {{ form.submit() }}
+          </p>
 
-</form>
-</div>
-              </div>
+        </form>
+      </div>
+    </div>
               <!-- Author box -->
     </div>
     </div>
+<<<<<<< HEAD
   
     <div class="col ">
 
@@ -96,16 +100,25 @@
       {% for data in comments %}
 
 
+=======
+    <div class="col col-sm-4">
+>>>>>>> 2d77859383813cb93a5bb910abc533916a03a226
       <!-- Card -->
 
         <!-- Author box -->
         <div class="card card-body">
+<<<<<<< HEAD
 
           <div class="row">
 
 
             <!-- Author Data -->
             <div class="col-12 col-sm-10">
+=======
+        <h3 class="text-center"><strong>Comments</strong></h3>
+          <hr>
+      {% for data in comments %}
+>>>>>>> 2d77859383813cb93a5bb910abc533916a03a226
 
               <p>
 
@@ -113,23 +126,32 @@
 
               </p>
 
+              <p>
+                {% set DTime=data.comment_on %}
+                <i class="comment-date font-small">{{ DTime.strftime("%a, %d %B, %y") }}</i>
+              </p>
               
               <p class="dark-grey-text article">
                 {{ data.comment }}
               </p>
 
-            </div>
-
-          </div>
-
-        </div>
-        <!-- Author box -->
-
-    
-
+            <hr>
       {% endfor %}
+    </div>
+
+        
+
+<<<<<<< HEAD
+    
+=======
+  </div>
+  <!-- Author box -->
+>>>>>>> 2d77859383813cb93a5bb910abc533916a03a226
+
+</section>
       </div>
       </div>
+    </div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -151,7 +173,7 @@
             <form method="post" action="{{ url_for('assign') }}">
               <input type="hidden" name="user_id" value="{{ users.userId }}">
               <input type="hidden" name="ticket_id" value="{{ ticket.ticketId }}">
-              <input type="submit" value="assign" >
+              <button type="submit" class="btn btn-sm btn-secondary">assign</button>
             </form>
           </div>
 
