@@ -3,8 +3,8 @@
 {% block content %}
 
 <div class="container">
-  <div class="row mr-0">
-    <div class="col">
+  <div class="row">
+    <div class="col col-sm-4">
 
         <!-- Author box -->
         <div class="card card-body">
@@ -48,7 +48,7 @@
               <div class="card card-body">
                 <h4 class="text-center"><strong>Ticket Details</strong></h4>
 
-                <img class="img-fluid " src="{{ url_for('static', filename=ticket.image) }}" alt="Card imagecap">
+              <img class="img-fluid " src="{{ url_for('static', filename=ticket.image) }}" alt="Card imagecap"/>
    <div class="card-body">
      <h5 class="card-title">{{ ticket.subject }}</h5>
      <p class="card-text">{{ ticket.comment}}</p>
@@ -88,7 +88,8 @@
               <!-- Author box -->
     </div>
     </div>
-    <div class="col">
+  
+    <div class="col ">
 
       <div class="card"><h4 class="text-center"><strong>Comments</strong></h4></div>
 
@@ -96,20 +97,12 @@
 
 
       <!-- Card -->
-      <section >
 
         <!-- Author box -->
         <div class="card card-body">
 
           <div class="row">
 
-            <!-- Avatar -->
-            <div class="col-12">
-
-              <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20(26).jpg"
-                class="img-fluid rounded-circle" alt="">
-
-            </div>
 
             <!-- Author Data -->
             <div class="col-12 col-sm-10">
@@ -132,7 +125,7 @@
         </div>
         <!-- Author box -->
 
-      </section>
+    
 
       {% endfor %}
       </div>
