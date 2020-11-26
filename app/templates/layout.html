@@ -13,49 +13,49 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
   <!-- Material Design Bootstrap -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mdb.min.css') }}">
-  {% if not session.get('user_id') %}
+  {% if request.endpoint == 'login' %}
   <!-- Your custom styles (optional) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
   {% endif %}
 </head>
-{% if session.get('user_id') %}
+{% if not request.endpoint == 'login' %}
 <body class="fixed-sn white-skin">
 {% else %}
 <body >
 {% endif %}
-  {% if not session.get('user_id') %}
+  {% if request.endpoint == 'login' %}
     <header>
   {% endif %}
 
     <!--include navbar-->
-    {% if session.get('user_id') %}
+    {% if not request.endpoint == 'login' %}
       <header>
     {% endif %}
     {% include "includes/nav.html" %}
 
-    {% if session.get('user_id') %}
+    {% if not request.endpoint == 'login' %}
 
       </header>
     {% endif %}
 
     <!--block content-->
-    {% if session.get('user_id') %}
+    {% if not request.endpoint == 'login' %}
       <div class="container-fluid">
         <main >
     {% endif %}
     {% block content %}
     {% endblock %}
-    {% if session.get('user_id') %}
+    {% if not request.endpoint == 'login' %}
         </main>
       </div>
     {% endif %}
 
     <!--include footer-->
-    {% if session.get('user_id') %}
+    {% if not request.endpoint == 'login' %}
         {% include "includes/footer.html" %}
     {% endif %}
 
-    {% if not session.get('user_id') %}
+    {% if request.endpoint == 'login' %}
       </header>
     {% endif %}
 

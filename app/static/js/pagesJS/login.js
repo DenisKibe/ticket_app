@@ -41,8 +41,6 @@ $(document).ready(function(){
                   if (userResponse.access_token != "") {
                       if (typeof (Storage) !== "undefined") {
                           sessionStorage.session = userResponse.access_token;
-                          sessionStorage.type = userResponse.token_type;
-
                           /* if(saveD){
                               localStorage.Uname=username;
                               localStorage.Pword=password;
@@ -57,7 +55,8 @@ $(document).ready(function(){
                           } */
 
                           if (sessionStorage.session!=null && sessionStorage.session!='undefined') {
-                              window.location = "http://127.0.0.1:5000/dashboard";
+                              let newurl="http://127.0.0.1:5000/dashboard/"+userResponse.user_id;
+                              window.location = newurl;
                           } else {
                               $('#login').removeClass('disabled');
                               $('#login').html('Log in');

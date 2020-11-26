@@ -1,5 +1,5 @@
 import flask , jwt, datetime
-from flask import json, Response, jsonify
+from flask import json, Response, jsonify,make_response
 from app import db, app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float, Text, TIMESTAMP, text, ForeignKey
@@ -30,13 +30,13 @@ class UserModel(db.Model):
   def __repr__(self):
     #jdata={'userId':self.userId,'username':self.username,'email':self.email,'role':self.role}
     
-    return self.name
+    return self.username
   
   def encode_auth_token(self, user_id):
     """ genrate the auth token"""
     try:
       payload={
-        'exp':datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=5),
+        'exp':datetime.datetime.utcnow() + datetime.timedelta(days=5, minutes=5),
         'iat':datetime.datetime.utcnow(),
         'sub':user_id
       }
@@ -51,9 +51,9 @@ class UserModel(db.Model):
         payload=jwt.decode(auth_token, app.config.get('SECRET_KEY'))
         return payload['sub']
       except jwt.ExpiredSignatureError:
-        return 'Token expired. Please log in again.'
+        return make_response(jsonify({'error':'Token expired. Please log in again.'})), 401
       except jwt.InvalidTokenError:
-        return "Invalid token . please log in again."
+        return make_response(jsonify({'error':'Invalid token . please log in again.'})),401
   
 class TicketModel(db.Model):
   __tablename__ ='ticket'

@@ -22,8 +22,6 @@ def index():
 @app.route("/dashboard")
 @app.route("/dashboard/<user_Id>")
 def dashboard(user_Id):
-        if not session.get('Lsession'):
-            return redirect(url_for('login'))
         
         user = UserModel.query.filter(UserModel.userId==user_Id).first()
         
@@ -68,8 +66,8 @@ def dashboard(user_Id):
         
         
         
-@app.route("/login", methods=["GET","POST"])
-@app.route("/login.html", methods=["GET","POST"])
+@app.route("/login")
+@app.route("/login.html")
 def login():
     return render_template("login.html", title="login")
 
@@ -114,7 +112,8 @@ def dash(urlto):
         
         
         
-@app.route("/register", methods=['POST','GET'])
+@app.route("/register")
+@app.route("/register.html")
 def register():
     
     """ if not session.get('Lsession'):

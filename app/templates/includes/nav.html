@@ -1,7 +1,7 @@
 
 
 
-{% if session.get('user_id') %}
+{% if not request.endpoint == 'login' %}
 <!-- Sidebar navigation -->
     <div id="slide-out" class="side-nav sn-bg-4 fixed">
       <ul class="custom-scrollbar">

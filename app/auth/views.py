@@ -41,6 +41,13 @@ class RegisterAPI(MethodView):
                     'message': 'Some error occurred. Please try again.'
                 }
                 return make_response(jsonify(responseObject)), 202
+        else:
+            responseObject={
+                'status':'fail',
+                'message':'username is already taken'
+            }
+            return make_response(jsonify(responseObject)), 400
+                
  
 class LoginAPI(MethodView):
     """User LoginResource"""
@@ -55,7 +62,7 @@ class LoginAPI(MethodView):
                     auth_token = UserModel.encode_auth_token(self,user.userId)
                     if auth_token:
                         responseObject = {
-                            'status' : 'success',
+                            'user_id' : user.userId,
                             'message' : 'Successfully logged in.',
                             'access_token' : auth_token.decode()
                         }
@@ -104,7 +111,8 @@ class UserAPI(MethodView):
             auth_token = ''
         if auth_token:
             resp=UserModel.decode_auth_token(auth_token)
-            
+            print(resp)
+            print(type(resp))
             if isinstance(resp, str):
                 user = UserModel.query.filter_by(userId=resp).first()
                 responseObject = {
@@ -117,11 +125,8 @@ class UserAPI(MethodView):
                     }
                 }
                 return make_response(jsonify(responseObject)), 200 
-            responseObject = {
-                'status' : 'fail',
-                'message' : resp
-            }
-            return make_response(jsonify(responseObject)), 401
+            
+            return make_response(resp),401
         else:
             responseObject = {
                 'status': 'fail',
