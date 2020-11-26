@@ -2,81 +2,7 @@
 
 {% block content %}
 
-<!-- Section: data tables -->
-      <section class="pb-3">
 
-        <div class="row">
-
-          <div class="col-xl-4 col-md-6">
-
-            <div class="card mb-4">
-              <div class="card-body">
-                <h4 class="h4-responsive text-center mb-3 font-weight-bold ">
-                  Visits by Browser
-                </h4>
-                <canvas id="doughnutChart"></canvas>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="col-xl-8 col-md-6">
-
-            <div class="card mb-4">
-              <div class="card-body">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th class="font-weight-bold "><strong>Country</strong></th>
-                      <th class="font-weight-bold "><strong>Visits</strong></th>
-                      <th class="font-weight-bold "><strong>Pages</strong></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><img src="../../img/flags/us.png" class="flag"> United States</td>
-                      <td>15</td>
-                      <td>307</td>
-                    </tr>
-                    <tr>
-                      <td><img src="../../img/flags/in.png" class="flag"> India</td>
-                      <td>32</td>
-                      <td>504</td>
-                    </tr>
-                    <tr>
-                      <td><img src="../../img/flags/cn.png" class="flag"> China</td>
-                      <td>41</td>
-                      <td>613</td>
-                    </tr>
-                    <tr>
-                      <td><img src="../../img/flags/pl.png" class="flag"> Poland</td>
-                      <td>14</td>
-                      <td>208</td>
-                    </tr>
-                    <tr>
-                      <td><img src="../../img/flags/it.png" class="flag"> Italy</td>
-                      <td>24</td>
-                      <td>314</td>
-                    </tr>
-                  </tbody>
-                </table>
-                <button
-                  class="btn btn btn-flat grey lighten-3 btn-rounded waves-effect float-right font-weight-bold  btn-dash">View
-                  full report</button>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-      <!-- Section: data tables -->
-
-
-
-
-<div class="card">
 <!-- Section: Classic admin cards -->
 <section class="mt-md-0 pt-md-0 mb-2 pb-2">
 
@@ -93,7 +19,7 @@
             <i class="far fa-money-bill-alt"></i>
           </div>
           <p ><a href="" class="black-text">Total Tickets</a></p>
-          <h4 class="check">{{dashboardData.totalT}}</h4>
+          <h4 class="check" id="totalT"></h4>
         </div>
 
       </div>
@@ -112,7 +38,7 @@
             <i class="fas fa-chart-line"></i>
           </div>
           <p><a href="{{ url_for('dash',urlto='NEW') }}" class="black-text">New Tickets</a></p>
-          <h4 class="check">{{dashboardData.newT}}</h4>
+          <h4 class="check" id="newT"></h4>
         </div>
 
       </div>
@@ -131,7 +57,7 @@
             <i class="fas fa-chart-pie"></i>
           </div>
           <p><a href="{{ url_for('dash',urlto='OPEN') }}" class="black-text">Open Tickets</a></p>
-          <h4 class="check">{{dashboardData.openT}}</h4>
+          <h4 class="check" id="openT"></h4>
         </div>
 
       </div>
@@ -150,7 +76,7 @@
             <i class="fas fa-chart-bar"></i>
           </div>
           <p><a href="{{ url_for('dash',urlto='CLOSED') }}" class="black-text">Closed Tickets</a></p>
-          <h4 class="check">{{dashboardData.closedT}}</h4>
+          <h4 class="check" id="closedT"></h4>
         </div>
 
       </div>
@@ -181,7 +107,7 @@
             <i class="far fa-money-bill-alt"></i>
           </div>
           <p class="white-text"><a href="{{ url_for('dash',urlto='SOLVED') }}" class="black-text">Solved Tickets</a></p>
-          <h4 class="check">{{dashboardData.solvedT}}</h4>
+          <h4 class="check" id="solvedT"></h4>
         </div>
 
       </div>
@@ -200,7 +126,7 @@
             <i class="fas fa-chart-line"></i>
           </div>
           <p><a href="{{ url_for('dash',urlto='UNSOLVED') }}" class="black-text">Unsolved Tickets</a></p>
-          <h4 class="check">{{dashboardData.unsolvedT}}</h4>
+          <h4 class="check" id="unsolvedT"></h4>
         </div>
 
       </div>
@@ -219,7 +145,7 @@
             <i class="fas fa-chart-pie"></i>
           </div>
           <p><a href="{{ url_for('dash',urlto='ASSIGNED') }}" class="black-text">Assigned Tickets</a></p>
-          <h4 class="check">{{dashboardData.assignedT}}</h4>
+          <h4 class="check" id="assignedT"></h4>
         </div>
 
       </div>
@@ -238,7 +164,7 @@
             <i class="fas fa-chart-bar"></i>
           </div>
           <p><a href="{{ url_for('dash',urlto='UNASSIGNED') }}" class="black-text">Unassigned Tickets</a></p>
-          <h4 class="check">{{dashboardData.unassignedT}}</h4>
+          <h4 class="check" id="unassignedT"></h4>
         </div>
 
       </div>
@@ -435,4 +361,7 @@
 </section>
 
 </div>
+{% endblock %}
+{% block script %}
+ <script type="text/javascript" src="{{  url_for('static',filename='js/pagesJS/dashboard.js') }}"></script>
 {% endblock %}

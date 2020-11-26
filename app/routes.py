@@ -19,50 +19,41 @@ def index():
     
     return redirect(url_for('login'))
 
-@app.route("/dashboard")
-@app.route("/dashboard/<user_Id>")
-def dashboard(user_Id):
+@flask_sijax.route(app,'/dashboard')
+def dashboard():
+    def getCounts(obj_response,user_Id,role):
+        if(role == 'Admin'):
+            obj_response.html('#totalT', TicketModel.query.order_by().count())
+            obj_response.html('#newT', TicketModel.query.filter_by(status = 'NEW').count())
+            obj_response.html('#openT',TicketModel.query.filter_by(status='OPEN').count())
+            obj_response.html('#closedT',TicketModel.query.filter_by(status = 'CLOSED').count())
+            obj_response.html('#solvedT',TicketModel.query.filter_by(status = 'SOLVED').count())
+            obj_response.html('#unsolvedT',TicketModel.query.filter_by(status = 'UNSOLVED').count())
+            obj_response.html('#assignedT',TicketModel.query.filter_by(status = 'ASSIGNED').count())
+        elif(role == 'Technician'):
+            obj_response.html('#totalT', TicketModel.query.filter(Assign_ticketModel.user_id == user_Id).count())
+            obj_response.html('#newT', TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'NEW').count())
+            obj_response.html('#openT',TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'OPEN').count())
+            obj_response.html('#closedT',TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'CLOSED').count())
+            obj_response.html('#solvedT',TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'SOLVED').count())
+            obj_response.html('#unsolvedT',TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'UNSOLVED').count())
+            obj_response.html('#assignedT',TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'UNSOLVED').count())
+        elif(role == 'User'):
+            obj_response.html('#totalT', TicketModel.query.filter_by(user_id = user_Id).count())
+            obj_response.html('#newT', TicketModel.query.filter_by(user_id = user_Id , status ='NEW').count())
+            obj_response.html('#openT',TicketModel.query.filter_by(user_id = user_Id , status ='OPEN').count())
+            obj_response.html('#closedT',TicketModel.query.filter_by(user_id = user_Id , status = 'CLOSED').count())
+            obj_response.html('#solvedT',TicketModel.query.filter_by(user_id = user_Id , status = 'SOLVED').count())
+            obj_response.html('#unsolvedT',TicketModel.query.filter_by(user_id = user_Id , status = 'UNSOLVED').count())
+            obj_response.html('#assignedT',TicketModel.query.filter_by(user_id = user_Id , status = 'ASSIGNED').count())
+            
         
-        user = UserModel.query.filter(UserModel.userId==user_Id).first()
-        
-        if(user.role == 'Admin'):
-            dashboardData = {
-                            "totalT" : TicketModel.query.order_by().count(),
-                            "newT" : TicketModel.query.filter(TicketModel.status == 'NEW').count(),
-                            "openT" : TicketModel.query.filter(TicketModel.status=='OPEN').count(),
-                            "closedT" : TicketModel.query.filter(TicketModel.status == 'CLOSED').count(),
-                            "solvedT" : TicketModel.query.filter(TicketModel.status == 'SOLVED').count(),
-                            "unsolvedT" : TicketModel.query.filter(TicketModel.status == 'UNSOLVED').count(),
-                            "assignedT" : TicketModel.query.filter(TicketModel.status == 'ASSIGNED').count(),
-                            "unassignedT" : TicketModel.query.filter(TicketModel.status == 'UNASSIGNED').count()
-                            }
-            return render_template("dashboard.html", dashboardData=dashboardData)
+    if g.sijax.is_sijax_request:
+        #sijax request detected
+        g.sijax.register_callback('getCounts', getCounts)
+        return g.sijax.process_request()
     
-        elif(user.role == 'Technician'):
-            dashboardData = {
-                            "totalT" : Assign_ticketModel.query.filter(Assign_ticketModel.user_id == user_Id).count(),
-                            "newT" : Assign_ticketModel.query.filter(Assign_ticketModel.user_id == user_Id , Assign_ticketModel.status == 'NEW').count(),
-                            "openT" : Assign_ticketModel.query.filter(Assign_ticketModel.user_id == user_Id , Assign_ticketModel.status == 'OPEN').count(),
-                            "closedT" : Assign_ticketModel.query.filter(Assign_ticketModel.user_id == user_Id , Assign_ticketModel.status == 'CLOSED').count(),
-                            "solvedT" : Assign_ticketModel.query.filter(Assign_ticketModel.user_id == user_Id , Assign_ticketModel.status == 'SOLVED').count(),
-                            "unsolvedT" : Assign_ticketModel.query.filter(Assign_ticketModel.user_id == user_Id , Assign_ticketModel.status == 'UNSOLVED').count(),
-                            "assignedT" : Assign_ticketModel.query.filter(Assign_ticketModel.user_id == user_Id , Assign_ticketModel.status == 'ASSIGNED').count(),
-                            "unassignedT" : TicketModel.query.filter(TicketModel.user_id == user_Id, TicketModel.status == 'UNASSIGNED').count()
-                            }
-            return render_template("dashboard.html", dashboardData=dashboardData)
-    
-        elif(user.role == 'User'):
-            dashboardData = {
-                            "totalT" : TicketModel.query.filter(TicketModel.user_id == user_Id).count(),
-                            "newT" : TicketModel.query.filter(TicketModel.user_id == user_Id , TicketModel.status=='NEW').count(),
-                            "openT" : TicketModel.query.filter(TicketModel.user_id == user_Id , TicketModel.status=='OPEN').count(),
-                            "closedT" : TicketModel.query.filter(TicketModel.user_id == user_Id , TicketModel.status == 'CLOSED').count(),
-                            "solvedT" : TicketModel.query.filter(TicketModel.user_id == user_Id , TicketModel.status == 'SOLVED').count(),
-                            "unsolvedT" : TicketModel.query.filter(TicketModel.user_id == user_Id , TicketModel.status == 'UNSOLVED').count(),
-                            "assignedT" : TicketModel.query.filter(TicketModel.user_id == user_Id , TicketModel.status == 'ASSIGNED').count(),
-                            "unassignedT" : TicketModel.query.filter(TicketModel.user_id == user_Id , TicketModel.status == 'UNASSIGNED').count()
-                            }
-            return render_template("dashboard.html", dashboardData=dashboardData, user=user)
+    return render_template("dashboard.html")
         
         
         
@@ -99,9 +90,6 @@ def login():
             
 @app.route("/dash/<urlto>")
 def dash(urlto):
-        
-        if not session.get('Lsession'):
-            return redirect(url_for('login'))
         
         if session.get('user_role') == 'Admin':
             data=TicketModel.query.filter(TicketModel.status == urlto).all()

@@ -31,12 +31,12 @@
                   class="w-fa fas fa-chart-pie"></i>Create new ticket</a>
             </li>
 
-            {% if session.get('user_role')=='Admin' %}
+
             <li>
-              <a href="{{ url_for('register')}}" class="collapsible-header waves-effect"><i
+              <a id="regli" href="{{ url_for('register')}}" class="collapsible-header waves-effect invisible"><i
                   class="w-fa fas fa-chart-pie"></i>Register User</a>
             </li>
-            {% endif %}
+
             <!-- Simple link -->
 
           </ul>

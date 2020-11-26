@@ -1,4 +1,7 @@
 $(document).ready(function(){
+  if (sessionStorage.getItem('session') != null && sessionStorage.getItem('session') !="undefined") {
+		window.location = "/dashboard";
+	}
   //function to check password length
   function lengthValidator(pass){
         if (pass.length >= 8) {
@@ -13,7 +16,7 @@ $(document).ready(function(){
 
     $('#login').click(function(e){
       e.preventDefault();
-      var username=$('#username').val();
+      var username=$('#username1').val();
       var password=$('#PwordL').val();
 
       var lengthValid = lengthValidator(password);
@@ -41,6 +44,8 @@ $(document).ready(function(){
                   if (userResponse.access_token != "") {
                       if (typeof (Storage) !== "undefined") {
                           sessionStorage.session = userResponse.access_token;
+
+
                           /* if(saveD){
                               localStorage.Uname=username;
                               localStorage.Pword=password;
@@ -55,8 +60,7 @@ $(document).ready(function(){
                           } */
 
                           if (sessionStorage.session!=null && sessionStorage.session!='undefined') {
-                              let newurl="http://127.0.0.1:5000/dashboard/"+userResponse.user_id;
-                              window.location = newurl;
+                              window.location = "/dashboard";
                           } else {
                               $('#login').removeClass('disabled');
                               $('#login').html('Log in');
@@ -91,25 +95,4 @@ $(document).ready(function(){
           return false;
       }
   });
-
-
-
-toastr.options = {
-  "closeButton": true,
-  "debug": true,
-  "newestOnTop": true,
-  "progressBar": true,
-  "positionClass": "md-toast-top-right",
-  "preventDuplicates": true,
-  "onclick": null,
-  "showDuration": 300,
-  "hideDuration": 3000,
-  "timeOut": 5000,
-  "extendedTimeOut": 1000,
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut"
-}
-
 });
