@@ -19,27 +19,22 @@
 
                   <!--Body-->
 
-                  <form name="login" action="" method="post" novalidate class="pt-5 pb-5">
-                      {{ form.hidden_tag() }}
+                  <form name="login" action="" method=""  class="pt-5 pb-5">
 
-                    <div class="md-form">
-                      <i class="fas fa-envelope prefix white-text"></i>
-                        {{ form.email.label }}<br>
-                        {{ form.email(class_="form-control") }}
-                        {% for error in form.email.errors %}
-                            <span class="error-message">{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    <div class="md-form">
-                      <i class="fas fa-lock prefix white-text"></i>
-                        {{ form.password.label }}<br>
-                        {{ form.password(class_="form-control") }}
-                        {% for error in form.password.errors %}
-                            <span class="error-message">{{ error }}</span>
-                        {% endfor %}
-                    </div>
+                      <div class="md-form form-sm mb-5">
+                        <i class="fa fa-envelope prefix"></i>
+                        <input type="name" id="username" class="form-control form-control-sm validate" required />
+                        <label id="labelforusername" for="username">username</label>
+                      </div>
 
-                    <button class="btn purple-gradient btn-lg" name="submit" type="submit" Value="Login">
+                      <div class="md-form form-sm mb-1">
+                        <i class="fa fa-lock prefix"></i>
+                        <i class="fa fa-eye-slash  float-right mt-3 text-dark" id="LPV"></i>
+                        <input type="password" id="PwordL" class="form-control form-control-sm validate" required />
+                        <label id="labelforpassword" for="PwordL">Your password</label>
+                      </div>
+
+                    <button class="btn purple-gradient btn-lg" id="login" name="submitL" Value="Login">
                         Login
                     </button>
 
@@ -57,4 +52,8 @@
       </div>
     </section>
 
+ {% endblock %}
+
+ {% block script %}
+  <script type="text/javascript" src="{{  url_for('static',filename='js/pagesJS/login.js') }}"></script>
  {% endblock %}

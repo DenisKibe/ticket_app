@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationE
 from app.models import UserModel, TicketModel
 import email_validator 
 
-class LoginForm(FlaskForm):
+""" class LoginForm(FlaskForm):
     email=StringField("Email", validators=[DataRequired(), Email()])
     password=PasswordField("Password", validators=[DataRequired(), Length(min=6,max=15)])
     submit=SubmitField("Login")
@@ -14,7 +14,7 @@ class RegisterForm(FlaskForm):
     role = SelectField("Role",choices=['User','Technician','Admin'], validators=[DataRequired()])
     username = StringField("userName", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
-    submit = SubmitField("Register Now")
+    submit = SubmitField("Register Now") """
     
 class NewTicketForm(FlaskForm):
     status = StringField("Status", validators=[DataRequired()])

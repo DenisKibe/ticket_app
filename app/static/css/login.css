@@ -22,11 +22,6 @@ html,
           height: 650px;
         }
       }
-
-      .intro-2 {
-          background: url("https://mdbootstrap.com/img/Photos/Horizontal/Nature/full page/img%20(11).jpg")no-repeat center center;
-          background-size: cover;
-      }
       .top-nav-collapse {
           background-color: #3f51b5 !important;
       }

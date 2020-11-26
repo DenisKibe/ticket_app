@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <script type="text/javascript" src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static',filename='js/sijax/sijax.js') }}"></script>
+        <script type="text/javascript">
+            {{ g.sijax.get_js()|safe }}
+        </script>
+    </head>
+    <body>
+        <a id="try">try</a>
+
+        <script type="text/javascript">
+            $('#try').click(function(){
+                Sijax.request('say_hi');
+            })
+        </script>
+    </body>
+</html>

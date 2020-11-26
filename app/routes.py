@@ -1,11 +1,13 @@
 from app import app, db
-from flask import render_template, session, request, flash, url_for, json, Response,redirect
+from flask import render_template, session, request, flash, url_for, json, Response,redirect, g
 from app.models import UserModel, TicketModel, Assign_ticketModel, CommentModel
-from app.forms import LoginForm, RegisterForm, NewTicketForm, CommentForm
+from app.forms import NewTicketForm, CommentForm
 from werkzeug.security import generate_password_hash, check_password_hash
-import random, string,logging, os
+import random, string,logging, os, flask_sijax, requests
 from datetime import datetime
 from werkzeug.utils import secure_filename
+from flask_sijax import sijax
+from urllib.parse import urlparse 
 
 #FOR FILE UPLOAD
 def allowed_file(filename):
@@ -15,7 +17,7 @@ def allowed_file(filename):
 @app.route("/index.html")
 def index():
     
-    return redirect("login")
+    return redirect(url_for('login'))
 
 @app.route("/dashboard")
 @app.route("/dashboard/<user_Id>")
@@ -69,8 +71,9 @@ def dashboard(user_Id):
 @app.route("/login", methods=["GET","POST"])
 @app.route("/login.html", methods=["GET","POST"])
 def login():
-    
-    if session.get('Lsession'):
+    return render_template("login.html", title="login")
+
+"""if session.get('Lsession'):
         return redirect(f"dashboard/{session.get('user_id')}")
     
     form = LoginForm()
@@ -92,8 +95,8 @@ def login():
                  return render_template("login.html", title="login", form=form, datax="wrong password", login=True)
         else:
             return render_template("login.html", title="login", form=form, datax='None', login=True)
-        
-    return render_template("login.html", title="login", form=form, login=True)
+         
+    return render_template("login.html", title="login", form=form, login=True) """
             
             
 @app.route("/dash/<urlto>")
@@ -114,7 +117,7 @@ def dash(urlto):
 @app.route("/register", methods=['POST','GET'])
 def register():
     
-    if not session.get('Lsession'):
+    """ if not session.get('Lsession'):
         return redirect(url_for('login'))
     
     if not session.get('user_role') == 'Admin':
@@ -133,8 +136,8 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         flash("You are successfully registered!","success")
-        return redirect(url_for('index'))
-    return render_template("register.html", title="Register", form=form, register=True)
+        return redirect(url_for('index')) """
+    return render_template("register.html", title="Register")
            
 global image  
 @app.route("/createticket", methods=['POST','GET'])
@@ -258,3 +261,37 @@ def comment():
         db.session.commit()
         
     return redirect(f"viewticket/{ticket_id}")
+
+
+#sijax function
+@flask_sijax.route(app,'/hello')
+def hello():
+    def say_hi(obj_response):
+        obj_response.alert("Hi there!")
+        
+    if g.sijax.is_sijax_request:
+        #sijax request detected
+        g.sijax.register_callback('say_hi', say_hi)
+        return g.sijax.process_request()
+    
+    #regular (non sijax request)
+    return render_template('test.html')
+
+""" @flask_sijax.route(app,'/login')
+def login():
+    def logger_in(obj_response, username,password):
+        data=json.dumps({'username':username,'password':password})
+        resp=requests.post('/auth/login',data=data,headers={'Contnet-Type':'application/json','Allow-Method':'POST'})
+        
+        if resp.status_code != 200:
+            obj_response.alert(resp.json())
+        else:
+            obj_response.alert(resp.json())
+        
+        if g.sijax.is_sijax_request:
+            #sijax request detected
+            g.sijax.register_callback('logger_in', logger_in)
+            return g.sijax.process_request()
+    
+        #regular (non sijax request)
+        return render_template('login.html') """

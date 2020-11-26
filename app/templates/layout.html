@@ -58,6 +58,7 @@
     {% if not session.get('user_id') %}
       </header>
     {% endif %}
+
     <!-- jQuery -->
   <script type="text/javascript" src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
   <!-- Bootstrap tooltips -->
@@ -66,11 +67,18 @@
   <script type="text/javascript" src="{{  url_for('static',filename='js/bootstrap.min.js') }}"></script>
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="{{  url_for('static',filename='js/mdb.min.js') }}"></script>
+  {% if not request.endpoint == 'login' %}
   <!-- Your custom scripts (optional) -->
   <script type="text/javascript" src="{{  url_for('static',filename='js/custom.js') }}"></script>
-  <script type="text/JavaScript">
+  {%endif%}
+  <!--sijax-->
+  <script type="text/javascript" src="{{ url_for('static',filename='js/sijax/sijax.js') }}"></script>
+  <script type="text/javascript">
+      {{ g.sijax.get_js()|safe }}
+  </script>
+  <!--inline javascript-->
+
   {% block script %}
   {% endblock %}
-  </script>
 </body>
 </html>
