@@ -12,7 +12,7 @@ $(document).ready(function(){
     sessionStorage.status=$("#titleT").val();
 
     $.ajax({
-      url:"http://127.0.0.1:5000/api/getdata",
+      url:"http://35.189.71.15:8000/api/getdata",
       method:'POST',
       dataType:'json',
       headers:{
@@ -47,7 +47,7 @@ $(document).ready(function(){
 
   //on enter start to get content
   $.ajax({
-    url:"http://127.0.0.1:5000/api/getdata",
+    url:"http://35.189.71.15:8000/api/getdata",
     method:'POST',
     dataType:'json',
     headers:{
