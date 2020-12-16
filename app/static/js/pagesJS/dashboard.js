@@ -6,7 +6,7 @@ $(document).ready(function(){
   document.cookie= "session="+sessionStorage.getItem('session');
   
   $.ajax({
-			url:"http://127.0.0.1:5000/auth/status",
+			url:"http://35.189.71.15:8000/auth/status",
 
 			method:'Get',
 			dataType:'json',
