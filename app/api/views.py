@@ -28,7 +28,6 @@ class GetDataApi(MethodView):
                         'status' : data.status,
                         'imageURL' : data.image,
                         'category' : data.category,
-                        'comment' : data.comment,
                         'priority' : data.priority,
                         'subject' : data.subject,
                         'created' : data.created_at.strftime("%d/%m/%y"),
@@ -95,33 +94,88 @@ class SearchAPI(MethodView):
      def post(self):
         post_data = request.get_json()
         responseBody=[]
-        y=post_data.get('field')
-        x=TicketModel+'.'+y
-        try:
-            datas= TicketModel.query.filter(x.like('%{1}%').format(post_data.get('vall')))
-            for data in datas:
-                respObject={
-                    'username':data.user.username,
-                    'ticketId' : data.ticketId,
-                    'status' : data.status,
-                    'imageURL' : data.image,
-                    'category' : data.category,
-                    'comment' : data.comment,
-                    'priority' : data.priority,
-                    'subject' : data.subject,
-                    'created' : data.created_at.strftime("%d/%m/%y"),
-                    'updated' : data.updated_at.strftime("%d/%m/%y")
-                }
-                responseBody.append(respObject)
+        
+        if post_data.get('field') == 'subject':
             
-            return make_response(jsonify(responseBody)),200
-        except Exception as e:
-            print(e)
-            responseObject = {
-                'status': 'fail',
-                'message' : 'Try again'
-            }
-            return make_response(jsonify(responseObject)), 500
+            try:
+                datas= TicketModel.query.filter(TicketModel.subject.like('%'+post_data.get('vall')+'%'))
+                for data in datas:
+                    respObject={
+                        'username':data.user.username,
+                        'ticketId' : data.ticketId,
+                        'status' : data.status,
+                        'imageURL' : data.image,
+                        'category' : data.category,
+                        'priority' : data.priority,
+                        'subject' : data.subject,
+                        'created' : data.created_at.strftime("%d/%m/%y"),
+                        'updated' : data.updated_at.strftime("%d/%m/%y")
+                    }
+                    responseBody.append(respObject)
+                
+                return make_response(jsonify(responseBody)),200
+            except Exception as e:
+                print(e)
+                responseObject = {
+                    'status': 'fail',
+                    'message' : 'Try again'
+                }
+                return make_response(jsonify(responseObject)), 500
+            
+        elif post_data.get('field') == 'comment':
+            
+            try:
+                datas= TicketModel.query.filter(TicketModel.comment.like('%'+post_data.get('vall')+'%'))
+                for data in datas:
+                    respObject={
+                        'username':data.user.username,
+                        'ticketId' : data.ticketId,
+                        'status' : data.status,
+                        'imageURL' : data.image,
+                        'category' : data.category,
+                        'priority' : data.priority,
+                        'subject' : data.subject,
+                        'created' : data.created_at.strftime("%d/%m/%y"),
+                        'updated' : data.updated_at.strftime("%d/%m/%y")
+                    }
+                    responseBody.append(respObject)
+                
+                return make_response(jsonify(responseBody)),200
+            except Exception as e:
+                print(e)
+                responseObject = {
+                    'status': 'fail',
+                    'message' : 'Try again'
+                }
+                return make_response(jsonify(responseObject)), 500
+            
+        elif post_data.get('field') == 'category':
+            
+            try:
+                datas= TicketModel.query.filter(TicketModel.category.like('%'+post_data.get('vall')+'%'))
+                for data in datas:
+                    respObject={
+                        'username':data.user.username,
+                        'ticketId' : data.ticketId,
+                        'status' : data.status,
+                        'imageURL' : data.image,
+                        'category' : data.category,
+                        'priority' : data.priority,
+                        'subject' : data.subject,
+                        'created' : data.created_at.strftime("%d/%m/%y"),
+                        'updated' : data.updated_at.strftime("%d/%m/%y")
+                    }
+                    responseBody.append(respObject)
+                
+                return make_response(jsonify(responseBody)),200
+            except Exception as e:
+                print(e)
+                responseObject = {
+                    'status': 'fail',
+                    'message' : 'Try again'
+                }
+                return make_response(jsonify(responseObject)), 500
+            
             
 #define the API Endpoints
 getdata_view = GetDataApi.as_view('getdata_api')

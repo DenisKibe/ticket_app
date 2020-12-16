@@ -11,6 +11,17 @@ from urllib.parse import urlparse
 
 
 
+@app.before_request
+def before_request_func():
+    
+    if not request.method == 'GET':
+        if not request.path == '/auth/login':
+            session= request.cookies.get('session')
+            resp=UserModel.decode_auth_token(session)
+            if not isinstance(resp, str):
+                return redirect("login")
+            
+            
 @app.route("/login")
 @app.route("/login.html")
 def login():
@@ -40,18 +51,7 @@ def login():
             return render_template("login.html", title="login", form=form, datax='None', login=True)
          
     return render_template("login.html", title="login", form=form, login=True) """
-            
-
-@app.before_request
-def before_request_func():
-    
-    if not request.method == 'GET':
-        if not request.path == '/auth/login':
-            session= request.cookies.get('session')
-            resp=UserModel.decode_auth_token(session)
-            if not isinstance(resp, str):
-                return redirect("login")
-                
+                            
 
 #FOR FILE UPLOAD
 def allowed_file(filename):
@@ -187,14 +187,56 @@ def createticket():
     
     return render_template("createTicket.html", title="Create Ticket", title2="Image Upload", form=form )
 
-@app.route("/viewticket", methods=['POST','GET'])
-@app.route("/viewticket/<ticket_id>", methods=['POST','GET'])
-def viewticket(ticket_id):
+
+class Handler(object):
+    def __init__(self,ticket_id):
+        self.ticket_id=ticket_id
     
-    if not session.get('Lsession'):
-        return redirect(url_for('login'))
-     
-    form = CommentForm()
+    def getTick(self,obj_response):
+        datas=TicketModel.query.filter_by(ticketId = self.ticket_id).first()
+        assigned =Assign_ticketModel.query.filter_by(ticket_id = self.ticket_id).first()
+        if(assigned==None):
+            assignedStatus = None
+        else:
+            assignedStatus = assigned.user.username
+                
+        obj_response.html("#usrNameD",datas.user.username)
+        obj_response.html("#assignedD",assignedStatus)
+        obj_response.html("#statusD",datas.status)
+        obj_response.html("#priorityD",datas.priority)
+        obj_response.html("#updatedD",datas.updated_at.strftime("%d/%m/%y"))
+        obj_response.html("#categoryD",datas.category)
+        obj_response.html("#subjectD",datas.subject)
+        obj_response.html("#createdD",datas.created_at.strftime("%d/%m/%y"))
+        obj_response.html("#noteD",datas.comment)
+        
+    
+    def getCom(self,obj_response):
+        coms=CommentModel.query.filter_by(ticket_id = self.ticket_id)
+        
+        for data in coms:
+            comment ="""
+                <b>%s</b>--><i>%s</i>--><b>%s</b>
+                <p>%s</p>
+                <hr>
+            """%(data.user.username,data.user.role,data.comment_on.strftime("%d/%m/%y"),data.comment)
+            print(data.user.username)
+            obj_response.html_append('#commentD',comment)
+        
+    
+@flask_sijax.route(app,"/viewticket/<ticket_id>")
+def viewticket(ticket_id): 
+    
+        
+    
+    if g.sijax.is_sijax_request:
+        #sijax request detected
+        g.sijax.register_object(Handler(ticket_id))
+        return g.sijax.process_request()
+    
+    #regular (non sijax request)
+    return render_template("viewTicket.html" )
+    """ form = CommentForm()
     
     comments = CommentModel.query.filter(CommentModel.ticket_id == ticket_id).all()
     
@@ -207,9 +249,9 @@ def viewticket(ticket_id):
         ticket.status = 'OPEN'
         ticket.updated_at = datetime.now()
         
-        db.session.commit()
+        db.session.commit() """
         
-    return render_template("viewTicket.html",ticket = ticket, user=user, form = form, comments=comments )
+    return render_template("viewTicket.html" )
 
 
 @app.route("/assign", methods=["GET","POST"])
