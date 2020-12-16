@@ -1,5 +1,5 @@
 from app import app, db
-from flask import render_template, session, request, flash, url_for, json, Response,redirect, g
+from flask import render_template, session, request, flash, url_for, json, Response,redirect, g, make_response
 from app.models import UserModel, TicketModel, Assign_ticketModel, CommentModel
 from app.forms import NewTicketForm, CommentForm
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,6 +8,50 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 from flask_sijax import sijax
 from urllib.parse import urlparse 
+
+
+
+@app.route("/login")
+@app.route("/login.html")
+def login():
+    return render_template("login.html", title="login")
+
+"""if session.get('Lsession'):
+        return redirect(f"dashboard/{session.get('user_id')}")
+    
+    form = LoginForm()
+    
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        
+        user=UserModel.query.filter(UserModel.email==email).first()
+        
+        if user is not None:
+            if check_password_hash(user.password,password):
+                session['Lsession'] = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(64))
+                session['user_id']=user.userId
+                session['user_role'] = user.role
+                session['user_name'] = user.username
+                return redirect(f"dashboard/{user.userId}")
+            else:
+                 return render_template("login.html", title="login", form=form, datax="wrong password", login=True)
+        else:
+            return render_template("login.html", title="login", form=form, datax='None', login=True)
+         
+    return render_template("login.html", title="login", form=form, login=True) """
+            
+
+@app.before_request
+def before_request_func():
+    
+    if not request.method == 'GET':
+        if not request.path == '/auth/login':
+            session= request.cookies.get('session')
+            resp=UserModel.decode_auth_token(session)
+            if not isinstance(resp, str):
+                return redirect("login")
+                
 
 #FOR FILE UPLOAD
 def allowed_file(filename):
@@ -57,47 +101,21 @@ def dashboard():
         
         
         
-@app.route("/login")
-@app.route("/login.html")
-def login():
-    return render_template("login.html", title="login")
 
-"""if session.get('Lsession'):
-        return redirect(f"dashboard/{session.get('user_id')}")
-    
-    form = LoginForm()
-    
-    if form.validate_on_submit():
-        email = form.email.data
-        password = form.password.data
-        
-        user=UserModel.query.filter(UserModel.email==email).first()
-        
-        if user is not None:
-            if check_password_hash(user.password,password):
-                session['Lsession'] = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(64))
-                session['user_id']=user.userId
-                session['user_role'] = user.role
-                session['user_name'] = user.username
-                return redirect(f"dashboard/{user.userId}")
-            else:
-                 return render_template("login.html", title="login", form=form, datax="wrong password", login=True)
-        else:
-            return render_template("login.html", title="login", form=form, datax='None', login=True)
-         
-    return render_template("login.html", title="login", form=form, login=True) """
             
-            
-@app.route("/dash/<urlto>")
-def dash(urlto):
+# @app.route("/dash/<urlto>/<role>/<userId>")
+# def dash(urlto,role,userId):
         
-        if session.get('user_role') == 'Admin':
-            data=TicketModel.query.filter(TicketModel.status == urlto).all()
-            return render_template("dash.html", data=data, title=urlto)
-        elif session.get('user_role') == 'Technician':
-            data=TicketModel.query.filter(TicketModel.user_id== session.get('user_id') , TicketModel.status==urlto).all()
-            return render_template("dash.html", data=data)
-        
+#     if role == 'Admin':
+#         data=TicketModel.query.filter_by(status = urlto).all()
+#         print(data)
+#         return render_template("dash.html", data=data, title=urlto)
+#     elif role == 'Technician':
+#         data=TicketModel.query.filter(Assign_ticketModel.user_id == userId , TicketModel.status==urlto).all()
+#         return render_template("dash.html", data=data, title=urlto)
+#     elif session.get('user_role') == 'User':
+#         data=TicketModel.query.filter_by(user_id=userId,status=urlto).all()
+#         return render_template("dash.html", data=data, title=urlto)
         
         
 @app.route("/register")
@@ -282,3 +300,8 @@ def login():
     
         #regular (non sijax request)
         return render_template('login.html') """
+        
+@app.route('/dash')
+@app.route('/dash.html')
+def dash():
+    return render_template("dash.html")

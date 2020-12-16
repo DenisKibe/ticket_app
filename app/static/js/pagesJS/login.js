@@ -1,7 +1,27 @@
 $(document).ready(function(){
   if (sessionStorage.getItem('session') != null && sessionStorage.getItem('session') !="undefined") {
-		window.location = "/dashboard";
+
+    $.ajax({
+  			url:"http://127.0.0.1:5000/auth/status",
+
+  			method:'Get',
+  			dataType:'json',
+  			headers:{
+  				'Content-Type':'application/json',
+          'Authorization':'Bearer '+sessionStorage.getItem('session')
+  			},
+        data:false,
+  			success:function(ResponseBody){
+
+          window.location = "/dashboard";
+  			},
+  			error:function(error){
+  				console.log(JSON.stringify(error));
+          sessionStorage.removeItem('session');
+        }
+      });
 	}
+  
   //function to check password length
   function lengthValidator(pass){
         if (pass.length >= 8) {
@@ -44,8 +64,7 @@ $(document).ready(function(){
                   if (userResponse.access_token != "") {
                       if (typeof (Storage) !== "undefined") {
                           sessionStorage.session = userResponse.access_token;
-
-
+                          document.cookie= "session="+userResponse.access_token;
                           /* if(saveD){
                               localStorage.Uname=username;
                               localStorage.Pword=password;

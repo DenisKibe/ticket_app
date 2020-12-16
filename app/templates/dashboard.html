@@ -18,7 +18,7 @@
           <div class="pull-right">
             <i class="far fa-money-bill-alt"></i>
           </div>
-          <p ><a href="" class="black-text">Total Tickets</a></p>
+          <p ><a href="dash.html" id="totalTL" class="black-text">Total Tickets</a></p>
           <h4 class="check" id="totalT"></h4>
         </div>
 
@@ -37,7 +37,7 @@
           <div class="pull-right">
             <i class="fas fa-chart-line"></i>
           </div>
-          <p><a href="{{ url_for('dash',urlto='NEW') }}" class="black-text">New Tickets</a></p>
+          <p><a href="dash.html" id="newTL" class="black-text">New Tickets</a></p>
           <h4 class="check" id="newT"></h4>
         </div>
 
@@ -56,7 +56,7 @@
           <div class="pull-right">
             <i class="fas fa-chart-pie"></i>
           </div>
-          <p><a href="{{ url_for('dash',urlto='OPEN') }}" class="black-text">Open Tickets</a></p>
+          <p><a href="dash.html" id="openTL" class="black-text">Open Tickets</a></p>
           <h4 class="check" id="openT"></h4>
         </div>
 
@@ -75,7 +75,7 @@
           <div class="pull-right">
             <i class="fas fa-chart-bar"></i>
           </div>
-          <p><a href="{{ url_for('dash',urlto='CLOSED') }}" class="black-text">Closed Tickets</a></p>
+          <p><a href="dash.html" id="closedTL" class="black-text">Closed Tickets</a></p>
           <h4 class="check" id="closedT"></h4>
         </div>
 
@@ -106,7 +106,7 @@
           <div class="pull-right">
             <i class="far fa-money-bill-alt"></i>
           </div>
-          <p class="white-text"><a href="{{ url_for('dash',urlto='SOLVED') }}" class="black-text">Solved Tickets</a></p>
+          <p class="white-text"><a href="dash.html" id="solvedTL" class="black-text">Solved Tickets</a></p>
           <h4 class="check" id="solvedT"></h4>
         </div>
 
@@ -125,7 +125,7 @@
           <div class="pull-right">
             <i class="fas fa-chart-line"></i>
           </div>
-          <p><a href="{{ url_for('dash',urlto='UNSOLVED') }}" class="black-text">Unsolved Tickets</a></p>
+          <p><a href="dash.html" id="unsolvedTL" class="black-text">Unsolved Tickets</a></p>
           <h4 class="check" id="unsolvedT"></h4>
         </div>
 
@@ -144,7 +144,7 @@
           <div class="pull-right">
             <i class="fas fa-chart-pie"></i>
           </div>
-          <p><a href="{{ url_for('dash',urlto='ASSIGNED') }}" class="black-text">Assigned Tickets</a></p>
+          <p><a href="dash.html" id="assignedTL" class="black-text">Assigned Tickets</a></p>
           <h4 class="check" id="assignedT"></h4>
         </div>
 
@@ -153,26 +153,6 @@
 
     </div>
     <!-- Grid column -->
-
-    <!-- Grid column -->
-    <div class="col-xl-3 col-md-6 mb-0">
-
-      <!-- Card Red -->
-      <div class="card classic-admin-card red accent-2">
-        <div class="card-body">
-          <div class="pull-right">
-            <i class="fas fa-chart-bar"></i>
-          </div>
-          <p><a href="{{ url_for('dash',urlto='UNASSIGNED') }}" class="black-text">Unassigned Tickets</a></p>
-          <h4 class="check" id="unassignedT"></h4>
-        </div>
-
-      </div>
-      <!-- Card Red -->
-
-    </div>
-    <!-- Grid column -->
-
   </div>
   <!-- Grid row -->
 

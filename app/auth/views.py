@@ -111,8 +111,6 @@ class UserAPI(MethodView):
             auth_token = ''
         if auth_token:
             resp=UserModel.decode_auth_token(auth_token)
-            print(resp)
-            print(type(resp))
             if isinstance(resp, str):
                 user = UserModel.query.filter_by(userId=resp).first()
                 responseObject = {

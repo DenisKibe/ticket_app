@@ -2,6 +2,9 @@ $(document).ready(function(){
   if (sessionStorage.getItem('session') === null || sessionStorage.getItem('session')=="undefined") {
 		window.location = "/";
 	}
+
+  document.cookie= "session="+sessionStorage.getItem('session');
+  
   $.ajax({
 			url:"http://127.0.0.1:5000/auth/status",
 
@@ -16,6 +19,7 @@ $(document).ready(function(){
 
 				let r =JSON.parse(JSON.stringify(ResponseBody));
 				console.log(JSON.stringify(ResponseBody));
+        sessionStorage.U=JSON.stringify(ResponseBody);
         if(r.data.role == 'Admin'){
           $('#regli').removeClass('invisible');
         }
@@ -31,6 +35,28 @@ $(document).ready(function(){
           window.location="/";
         }, 5000);
 			}
+    });
+
+    $('#totalTL').click(function(){
+      sessionStorage.status="Total";
+    });
+    $('#newTL').click(function(){
+      sessionStorage.status="NEW";
+    });
+    $('#openTL').click(function(){
+      sessionStorage.status="OPEN";
+    });
+    $('#closedTL').click(function(){
+      sessionStorage.status="CLOSED";
+    });
+    $('#solvedTL').click(function(){
+      sessionStorage.status="SOLVED";
+    });
+    $('#unsolvedTL').click(function(){
+      sessionStorage.status="UNSOLVED";
+    });
+    $('#assignedTL').click(function(){
+      sessionStorage.status="ASSIGNED";
     });
 
 });

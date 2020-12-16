@@ -4,15 +4,118 @@
         <script type="text/javascript" src="{{ url_for('static',filename='js/sijax/sijax.js') }}"></script>
         <script type="text/javascript">
             {{ g.sijax.get_js()|safe }}
+
+
         </script>
+        <script type="text/javascript">
+        const dbName = "tickets";
+
+        let ticketsData= [{category: "Technical",
+        comment: "The network hass a down time ",
+        created: "22/08/20",
+        imageURL: "",
+        priority: "HIGH",
+        status: "OPEN",
+        subject: "network downtime",
+        ticketId: "7fgKSLPudIheGGHp",
+        updated: "23/08/20",
+        username: "postgres"}, {category: "developer",
+        comment: "the website is down for some reason.",
+        created: "23/08/20",
+        imageURL: "/uploads/TdUFgf9.png",
+        priority: "LOW",
+        status: "OPEN",
+        subject: "website down",
+        ticketId: "wpElcFTw6KupSU9G",
+        updated: "31/08/20",
+        username: "Denis Kibe"}];
+
+        let request = window.indexedDB.open(dbName, 2);
+
+        request.onerror = function(event){
+          //handle errors
+          alert("error");
+        };
+
+        request.onupgradeneeded = function(event){
+          var db = event.target.result;
+          alert("here");
+          var objectStore =db.createObjectStore(sessionStorage.getItem('status'),{keyPath : "ticketId"});
+
+          objectStore.createIndex("username","username",{unique:true});
+          objectStore.createIndex("subject","subject");
+          objectStore.createIndex("category","category");
+          objectStore.createIndex("priority","priority");
+          objectStore.createIndex("status","status");
+          objectStore.createIndex("created","created");
+          objectStore.createIndex("updated","updated");
+
+          objectStore.transaction.oncomplete = function(event){
+            //store values in the newly created objectStore.
+            var ticketObjectStore = db.transaction(sessionStorage.getItem('status'), "readwrite").objectStore(sessionStorage.getItem('status'));
+            ticketsData.forEach(function(data){
+              ticketObjectStore.add(data);
+            });
+          };
+
+        };
+
+        </script>
+
     </head>
     <body>
-        <a id="try">try</a>
+      <table id="dt-vertical-scroll" class="table" cellspacing="0" width="100%">
 
+        <!-- Table head -->
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="th-sm">Ticket id</th>
+            <th scope="col">User</th>
+            <th scope="col">subject</th>
+            <th scope="col">category</th>
+            <th scope="col">priority</th>
+            <th scope="col">status</th>
+            <th scope="col">created on</th>
+            <th scope="col">updated on</th>
+            <th scope="col">action</th>
+          </tr>
+        </thead>
+        <!-- Table head -->
+
+        {% for data in data %}
+        <tr>
+            <td scope="row">{{ loop.index }}</td>
+            <td>{{ data.ticketId }}</td>
+            <td>{{ data.user.username }}</td>
+            <td>{{ data.subject }}</td>
+            <td>{{ data.category }}</td>
+            <td><span class="badge badge-pill badge-secondary">{{ data.priority }}</span></td>
+            <td><span class="badge badge-pill badge-secondary">{{ data.status }}</span></td>
+              {% set DTime=data.created_at %}
+            <td>{{ DTime.strftime("%a, %d %B, %y") }}</td>
+              {% set DTime=data.updated_at %}
+            <td>{{ DTime.strftime("%a, %d %B, %y") }}</td>
+            <td>
+                {% set x=data['ticketId'] %}
+                <a href="{{ url_for('viewticket', ticket_id=x) }}"><button type="button" class="btn btn-outline-info btn-rounded btn-sm px-2"><i
+                    class="fas fa-pencil-alt mt-0"></i></button>
+
+            </td>
+        </tr>
+
+        {% endfor %}
+
+        <!-- Table body -->
+        <tbody>
+
+        </tbody>
+        <!-- Table body -->
+
+      </table>
+      <!-- Table -->
         <script type="text/javascript">
-            $('#try').click(function(){
-                Sijax.request('say_hi');
-            })
+
         </script>
     </body>
 </html>

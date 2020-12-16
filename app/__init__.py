@@ -20,3 +20,5 @@ from app import routes
 
 from app.auth.views import auth_blueprint
 app.register_blueprint(auth_blueprint)
+from app.api.views import api_blueprint
+app.register_blueprint(api_blueprint)

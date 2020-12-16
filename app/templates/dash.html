@@ -6,25 +6,30 @@
 <div class="card card-cascade narrower z-depth-0">
 
               <div
-                class="view view-cascade gradient-card-header blue-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
+                class="view view-cascade gradient-card-header blue-gradient narrower py-2 m-0">
 
-                <div>
-                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i
-                      class="fas fa-th-large mt-0"></i></button>
-                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i
-                      class="fas fa-columns mt-0"></i></button>
+
+                <div  class="white-text mx-3">
+                  <div class="row p-0 m-0">
+                    <div class="col-5 p-0 m-0 ">
+                  <select id="titleT" value="ALL" class="custom-select-sm border-0 browser-default w-25 float-right" style="background-color:transparent;">
+                    <option value="NEW">NEW</option>
+                    <option value="OPEN">OPEN</option>
+                    <option value="CLOSED">CLOSED</option>
+                    <option value="SOLVED">SOLVED</option>
+                    <option value="UNSOLVED">UNSOLVED</option>
+                    <option value="ASSIGNED">ASSIGNED</option>
+                  </select>
+                  </div>
+                  <div class="col-3 pl-ml-0 ">
+                  <div class="float-left">TICKETS</div>
+                  </div>
+                  <div class="col-4 ">
+                  <div ><input id="filterT" class="form-control form-control-sm" placeholder="filter" autocomplete="off"></div>
+                  </div>
+                  </div>
                 </div>
 
-                <a href="" class="white-text mx-3">{{ title }} Tickets</a>
-
-                <div>
-                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i
-                      class="fas fa-pencil-alt mt-0"></i></button>
-                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i
-                      class="fas fa-eraser mt-0"></i></button>
-                  <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i
-                      class="fas fa-info-circle mt-0"></i></button>
-                </div>
 
               </div>
 
@@ -33,52 +38,26 @@
                 <div class="card-body table-responsive">
 
                   <!--Table-->
-                  <table id="dt-vertical-scroll" class="table" cellspacing="0" width="100%"">
+                  <table id="ticketTable" class="table" cellspacing="0" width="100%">
 
                     <!-- Table head -->
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
+                        <th scope="th-sm">#</th>
                         <th scope="th-sm">Ticket id</th>
-                        <th scope="col">User</th>
-                        <th scope="col">subject</th>
-                        <th scope="col">category</th>
-                        <th scope="col">priority</th>
-                        <th scope="col">status</th>
-                        <th scope="col">created on</th>
-                        <th scope="col">updated on</th>
-                        <th scope="col">action</th>
+                        <th scope="th-sm">User</th>
+                        <th scope="th-sm">subject</th>
+                        <th scope="th-sm">category</th>
+                        <th scope="th-sm">priority</th>
+                        <th scope="th-sm">status</th>
+                        <th scope="th-sm">created on</th>
+                        <th scope="th-sm">updated on</th>
+                        <th scope="th-sm">action</th>
                       </tr>
-                    </thead>
-                    <!-- Table head -->
-                    
-                    {% for data in data %}
-                    <tr>
-                        <td scope="row">{{ loop.index }}</td>
-                        <td>{{ data.ticketId }}</td>
-                        <td>{{ data.user.username }}</td>
-                        <td>{{ data.subject }}</td>
-                        <td>{{ data.category }}</td>
-                        <td><span class="badge badge-pill badge-secondary">{{ data.priority }}</span></td>
-                        <td><span class="badge badge-pill badge-secondary">{{ data.status }}</span></td>
-                          {% set DTime=data.created_at %}
-                        <td>{{ DTime.strftime("%a, %d %B, %y") }}</td>
-                          {% set DTime=data.updated_at %}
-                        <td>{{ DTime.strftime("%a, %d %B, %y") }}</td>
-                        <td>
-                            {% set x=data['ticketId'] %}
-                            <a href="{{ url_for('viewticket', ticket_id=x) }}"><button type="button" class="btn btn-outline-info btn-rounded btn-sm px-2"><i
-                                class="fas fa-pencil-alt mt-0"></i></button>
+                      </thead>
+                    <tbody id="content">
 
-                        </td>
-                    </tr>
-                   
-                    {% endfor %}
-
-                    <!-- Table body -->
-                    <tbody>
-
-                    </tbody>
+                    </tbody >
                     <!-- Table body -->
 
                   </table>
@@ -97,14 +76,6 @@
 {% endblock %}
 
 {%  block script %}
-   $('#dt-vertical-scroll').DataTable();
-  $('#dt-vertical-scroll').dataTable({
-    "paging": false,
-    "fnInitComplete": function () {
-      var myCustomScrollbar = document.querySelector('#dt-vertical-scroll_wrapper .dataTables_scrollBody');
-      var ps = new PerfectScrollbar(myCustomScrollbar);
-    },
-    "scrollY": 450,
-  });
+   <script type="text/javascript" src="{{  url_for('static',filename='js/pagesJS/dash.js') }}"></script>
 
 {%  endblock %}
