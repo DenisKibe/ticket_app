@@ -2,7 +2,7 @@ $(document).ready(function(){
   if (sessionStorage.getItem('session') != null && sessionStorage.getItem('session') !="undefined") {
 
     $.ajax({
-  			url:"http://35.189.71.15:8000/auth/status",
+  			url:window.location.origin+"/auth/status",
 
   			method:'Get',
   			dataType:'json',
@@ -48,7 +48,7 @@ $(document).ready(function(){
           $('#login').html('<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>');
 
           $.ajax({
-              url: "http://35.189.71.15:8000/auth/login",
+              url: window.location.origin+"/auth/login",
 
               method: 'POST',
               dataType: 'json',
