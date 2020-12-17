@@ -6,7 +6,7 @@ $(document).ready(function(){
   document.cookie= "session="+sessionStorage.getItem('session');
 
   Sijax.request('getTick');
-  alert('done');
+  
   Sijax.request('getCom');
 
   // $.ajax({
