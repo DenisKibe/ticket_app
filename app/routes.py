@@ -122,7 +122,7 @@ def dashboard():
 @app.route("/register.html")
 def register():
     
-    """ if not session.get('Lsession'):
+    """ if not session.get('session'):
         return redirect(url_for('login'))
     
     if not session.get('user_role') == 'Admin':
@@ -148,7 +148,7 @@ global image
 @app.route("/createticket", methods=['POST','GET'])
 def createticket():
 
-    if not session.get('Lsession'):
+    if not session.get('session'):
         return redirect(url_for('login'))
     
     form = NewTicketForm()
