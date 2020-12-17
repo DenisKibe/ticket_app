@@ -148,7 +148,7 @@ global image
 @app.route("/createticket", methods=['POST','GET'])
 def createticket():
 
-    if not session.get('session'):
+    if not request.cookies.get('session'):
         return redirect(url_for('login'))
     
     form = NewTicketForm()
