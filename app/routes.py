@@ -116,7 +116,7 @@ def dashboard():
 @app.route("/register.html")
 def register():
     
-    """ if not session.get('Lsession'):
+    """ if not session.get('session'):
         return redirect(url_for('login'))
     
     if not session.get('user_role') == 'Admin':
