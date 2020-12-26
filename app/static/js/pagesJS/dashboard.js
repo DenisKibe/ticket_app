@@ -4,9 +4,9 @@ $(document).ready(function(){
 	}
 
   document.cookie= "session="+sessionStorage.getItem('session');
-  
+
   $.ajax({
-			url:"http://35.189.71.15:8000/auth/status",
+			url:window.location.origin+"/auth/status",
 
 			method:'Get',
 			dataType:'json',

@@ -16,61 +16,48 @@
           <div class="card-body px-lg-5 pt-0">
 
               <!-- Form -->
-              <form class="text-center text-body" name="login" action="" method="post" novalidate enctype="multipart/form-data">
-                  {{ form.hidden_tag() }}
+              <form name="create" id="create" class="pt-5 pb-5 text-center text-body" method="post" enctype="multipart/form-data">
 
-                  <div class="md-form text-body">
-                    {{ form.subject.label }}<br>
-                        {{ form.subject(class_="form-control") }}
-                        {% for error in form.subject.errors %}
-                         <span class="error-message">{{ error }}</span>
-                        {% endfor %}
+                  <div class="md-form form-sm mb-5">
+                    <input type="text" id="subject" name="subject" class="form-control form-control-sm validate" required />
+                    <label id="labelforsubject" for="subject">Description</label>
+                  </div>
+
+                  <div class="md-form form-sm mb-1">
+                    <input type="text" id="category" name="category" class="form-control form-control-sm validate" required />
+                    <label id="labelforcategory" for="category">category</label>
                   </div>
 
 
-                  <!-- E-mail -->
-                  <div class="md-form text-body">
-                    {{ form.category.label }}<br>
-                        {{ form.category(class_="form-control") }}
-                        {% for error in form.category.errors %}
-                         <span class="error-message">{{ error }}</span>
-                        {% endfor %}
+                    <select class="mdb-select md-form" name="priority">
+                      <option value="" disabled selected>priority</option>
+                      <option value="LOW">Low</option>
+                      <option value="MEDIUM">Medium</option>
+                      <option value="HIGH">High</option>
+                    </select>
+
+
+                  <div class="md-form form-sm mb-5">
+                    <textarea id="description" name="description" class="md-textarea form-control" rows="3"></textarea>
+                    <label id="labelfordescription" for="description">Notes</label>
+
                   </div>
 
-                  <!-- Password -->
-                  <div class="md-form text-body ">
-                    {{ form.priority.label }}<br><br>
-                        {{ form.priority(class_="form-control") }}
-                        {% for error in form.priority.errors %}
-                         <span class="error-message">{{ error }}</span>
-                        {% endfor %}
+                  <label id="labelforpicture" >{{title2}}</label>
+                  <div class="md-form form-sm mb-5">
+                    <input type="file" name="image" id="image" class="form-control form-control-sm validate" required />
+
                   </div>
 
-                  <!-- Phone number -->
-                  <div class="md-form text-body">
-                    {{ form.comment.label }}<br><br>
-                        {{ form.comment(class_="form-control md-textarea") }}
-                        {% for error in form.comment.errors %}
-                         <span class="error-message">{{ error }}</span>
-                        {% endfor %}
-                  </div>
+                  <!--pass the user id-->
+                  <input type="hidden" name="userId" id="userId"/>
 
-                  <!-- Newsletter -->
-                  <div class="md-form text-body">
-                    {{ form.image.label }}<br><br>
-                        {{ form.image(class_="form-control") }}
-                        {% for error in form.image.errors %}
-                         <span class="error-message">{{ error }}</span>
-                        {% endfor %}
-                  </div>
-
-                  <!-- Sign up button -->
-                  <button class="btn btn-outline-info btn-rounded my-4 waves-effect z-depth-0" name="submit" type="submit" Value="Register Now">
+                  <button class="btn btn-outline-info btn-rounded my-4 waves-effect z-depth-0" id="createbtn" name="submit" type="submit" value="Register Form">
                       Create
                   </button>
 
-
               </form>
+
               <!-- Form -->
 
           </div>
@@ -80,4 +67,7 @@
     </div>
     </div>
     </div>
+    {% endblock %}
+    {% block script %}
+     <script type="text/javascript" src="{{  url_for('static',filename='js/pagesJS/createticket.js') }}"></script>
     {% endblock %}

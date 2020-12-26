@@ -2,7 +2,7 @@ $(document).ready(function(){
   if (sessionStorage.getItem('session') != null && sessionStorage.getItem('session') !="undefined") {
 
     $.ajax({
-  			url:"http://35.189.71.15:8000/auth/status",
+  			url:window.location.origin+"/auth/status",
 
   			method:'Get',
   			dataType:'json',
@@ -12,16 +12,21 @@ $(document).ready(function(){
   			},
         data:false,
   			success:function(ResponseBody){
-
+          document.cookie="session=; expires="+new Date(0);
+          document.cookie= "session="+sessionStorage.getItem('session');
           window.location = "/dashboard";
   			},
   			error:function(error){
   				console.log(JSON.stringify(error));
           sessionStorage.removeItem('session');
+          document.cookie="session; expires="+new Date(0);
+
         }
       });
 	}
-  
+
+  document.cookie="session=; expires="+new Date(0);
+
   //function to check password length
   function lengthValidator(pass){
         if (pass.length >= 8) {
@@ -48,7 +53,7 @@ $(document).ready(function(){
           $('#login').html('<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>');
 
           $.ajax({
-              url: "http://35.189.71.15:8000/auth/login",
+              url: window.location.origin+"/auth/login",
 
               method: 'POST',
               dataType: 'json',

@@ -176,6 +176,33 @@ class SearchAPI(MethodView):
                 }
                 return make_response(jsonify(responseObject)), 500
             
+        elif post_data.get('field') == 'ID':
+            
+            try:
+                datas= TicketModel.query.filter(TicketModel.ticketId.like('%'+post_data.get('vall')+'%'))
+                for data in datas:
+                    respObject={
+                        'username':data.user.username,
+                        'ticketId' : data.ticketId,
+                        'status' : data.status,
+                        'imageURL' : data.image,
+                        'category' : data.category,
+                        'priority' : data.priority,
+                        'subject' : data.subject,
+                        'created' : data.created_at.strftime("%d/%m/%y"),
+                        'updated' : data.updated_at.strftime("%d/%m/%y")
+                    }
+                    responseBody.append(respObject)
+                
+                return make_response(jsonify(responseBody)),200
+            except Exception as e:
+                print(e)
+                responseObject = {
+                    'status': 'fail',
+                    'message' : 'Try again'
+                }
+                return make_response(jsonify(responseObject)), 500
+            
             
 #define the API Endpoints
 getdata_view = GetDataApi.as_view('getdata_api')

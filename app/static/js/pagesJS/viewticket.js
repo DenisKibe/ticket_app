@@ -5,9 +5,14 @@ $(document).ready(function(){
 	}
   document.cookie= "session="+sessionStorage.getItem('session');
 
-  Sijax.request('getTick');
-  alert('done');
-  Sijax.request('getCom');
+
+
+
+  Sijax.request('getTick',[sessionStorage.getItem('BtnId')]);
+
+  Sijax.request('getCom',[sessionStorage.getItem('BtnId')]);
+
+
 
   // $.ajax({
   //     url:window.location.origin+"/api/getticket",

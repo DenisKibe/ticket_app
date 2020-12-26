@@ -1,5 +1,5 @@
 from app import app, db
-from flask import render_template, session, request, flash, url_for, json, Response,redirect, g, make_response
+from flask import render_template, session, request, flash, url_for, json, Response,redirect, g, make_response, abort
 from app.models import UserModel, TicketModel, Assign_ticketModel, CommentModel
 from app.forms import NewTicketForm, CommentForm
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -9,18 +9,9 @@ from werkzeug.utils import secure_filename
 from flask_sijax import sijax
 from urllib.parse import urlparse 
 
-
-
-@app.before_request
-def before_request_func():
-    
-    if not request.method == 'GET':
-        if not request.path == '/auth/login':
-            session= request.cookies.get('session')
-            resp=UserModel.decode_auth_token(session)
-            if not isinstance(resp, str):
-                return redirect("login")
-            
+#FOR FILE UPLOAD
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.',1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
             
 @app.route("/login")
 @app.route("/login.html")
@@ -53,9 +44,7 @@ def login():
     return render_template("login.html", title="login", form=form, login=True) """
                             
 
-#FOR FILE UPLOAD
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.',1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
 
 @app.route("/")
 @app.route("/index.html")
@@ -65,6 +54,11 @@ def index():
 
 @flask_sijax.route(app,'/dashboard')
 def dashboard():
+    session= request.cookies.get('session')
+    resp=UserModel.decode_auth_token(session)
+    if not isinstance(resp, str):
+        return redirect(url_for('login'))
+    
     def getCounts(obj_response,user_Id,role):
         if(role == 'Admin'):
             obj_response.html('#totalT', TicketModel.query.order_by().count())
@@ -144,57 +138,119 @@ def register():
         return redirect(url_for('index')) """
     return render_template("register.html", title="Register")
            
-global image  
-@app.route("/createticket", methods=['POST','GET'])
-def createticket():
 
-    if not session.get('Lsession'):
-        return redirect(url_for('login'))
+
+class SijaxHandler(object):
     
-    form = NewTicketForm()
-    if request.method == "POST":
+    @staticmethod
+    def _dump_data(obj_response, files, form_values):
         
-        if 'file' not in request.files:
-            flash('No file part')
-        file = request.files['image']
+        def dump_files():
+            global imageUrl
+            if 'image' not in files:
+                return 'Bad upload'
+
+            file_data = files['image']
+            file_name = file_data.filename
+            print (file_name)
+            print(file_data.content_type)
+            if file_name is None:
+                return 'Nothing uploaded'
+
+            if file_data and allowed_file(file_name):
+                new_filename = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(7))
+                fileName=file_data.filename
+                ext=fileName.rsplit('.',1)[1]
+                filename= secure_filename('.'.join([new_filename,ext]))
+                file_data.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                imageUrl='/'.join(['/uploads', filename])
+                return "uploaded"
+            else:
+                return "invalide type of file"
         
-        if file.filename=='':
-            flash('No selected file')
-        if file and allowed_file(file.filename):
-            new_filename = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(7))
-            x=file.filename
-            y=x.rsplit('.',1)[1]
-            
-            filename= secure_filename('.'.join([new_filename,y]))
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            image='/'.join(['/uploads', filename])
-            flash('file uploaded')
-        
+        resp=dump_files() 
+        print (imageUrl)   
         status = 'NEW'
-        comment   = form.comment.data
-        category  = form.category.data
-        priority  = form.priority.data
-        subject  = form.subject.data
+        user_id = form_values.get('userId')
+        comment   = form_values.get('description')
+        category  = form_values.get('category')
+        priority  = form_values.get('priority')
+        subject  = form_values.get('subject')
         updated_at = datetime.now()
-        ticketId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+        ticketId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16)) 
+       
         
-        new_ticket = TicketModel(user_id=session.get('user_id'),status=status,image=image, comment=comment,category=category, priority=priority, subject=subject,updated_at=updated_at, ticketId=ticketId)
+        
+        new_ticket = TicketModel(user_id=user_id,status=status,image=imageUrl, comment=comment,category=category, priority=priority, subject=subject,updated_at=updated_at, ticketId=ticketId)
         db.session.add(new_ticket)
         db.session.commit()
-        flash("Ticket has been created successfuly","success")
-        
-        return render_template("createTicket.html", title=category, title2="Image Upload", form=form )
+        print('here')
+
+        obj_response.alert("sucess "+resp)
+
+    @staticmethod
+    def start_upload(obj_response, files, form_values):
+        SijaxHandler._dump_data(obj_response, files, form_values)
+
     
-    return render_template("createTicket.html", title="Create Ticket", title2="Image Upload", form=form )
+@flask_sijax.route(app,"/createticket")
+def createticket():
+    session= request.cookies.get('session')
+    resp=UserModel.decode_auth_token(session)
+    if not isinstance(resp, str):
+        return redirect(url_for('login'))
+    
+    form_init_js =''
+    form_init_js += g.sijax.register_upload_callback('create', SijaxHandler.start_upload)
+    
+    if g.sijax.is_sijax_request:
+        # The request looks like a valid Sijax request
+        # The handlers are already registered above.. we can process the request
+        return g.sijax.process_request()
+
+    # form = NewTicketForm()
+    # if request.method == "POST":
+        
+    #     if 'file' not in request.files:
+    #         flash('No file part')
+    #     file = request.files['image']
+        
+    #     if file.filename=='':
+    #         flash('No selected file')
+    #     if file and allowed_file(file.filename):
+    #         new_filename = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(7))
+    #         x=file.filename
+    #         y=x.rsplit('.',1)[1]
+            
+    #         filename= secure_filename('.'.join([new_filename,y]))
+    #         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    #         image='/'.join(['/uploads', filename])
+    #         flash('file uploaded')
+        
+    #     status = 'NEW'
+    #     comment   = form.comment.data
+    #     category  = form.category.data
+    #     priority  = form.priority.data
+    #     subject  = form.subject.data
+    #     updated_at = datetime.now()
+    #     ticketId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+        
+    #     new_ticket = TicketModel(user_id=session.get('user_id'),status=status,image=image, comment=comment,category=category, priority=priority, subject=subject,updated_at=updated_at, ticketId=ticketId)
+    #     db.session.add(new_ticket)
+    #     db.session.commit()
+    #     flash("Ticket has been created successfuly","success")
+        
+    #     return render_template("createTicket.html", title=category, title2="Image Upload", form=form )
+    
+    return render_template("createTicket.html", title="Create Ticket", title2="Image Upload", form_init_js=form_init_js)
 
 
 class Handler(object):
-    def __init__(self,ticket_id):
-        self.ticket_id=ticket_id
-    
-    def getTick(self,obj_response):
-        datas=TicketModel.query.filter_by(ticketId = self.ticket_id).first()
-        assigned =Assign_ticketModel.query.filter_by(ticket_id = self.ticket_id).first()
+     
+    @staticmethod
+    def getTick(obj_response,ticket_id):
+        datas=TicketModel.query.filter_by(ticketId =ticket_id).first()
+        assigned =Assign_ticketModel.query.filter_by(ticket_id =ticket_id).first()
         if(assigned==None):
             assignedStatus = None
         else:
@@ -210,28 +266,27 @@ class Handler(object):
         obj_response.html("#createdD",datas.created_at.strftime("%d/%m/%y"))
         obj_response.html("#noteD",datas.comment)
         
-    
-    def getCom(self,obj_response):
-        coms=CommentModel.query.filter_by(ticket_id = self.ticket_id)
+    @staticmethod
+    def getCom(obj_response,ticket_id):
+        coms=CommentModel.query.filter_by(ticket_id = ticket_id)
         
         for data in coms:
-            comment ="""
-                <b>%s</b>--><i>%s</i>--><b>%s</b>
-                <p>%s</p>
-                <hr>
+            comment ="""\n%s(%s)-->%s\n\n%s\n______________________
             """%(data.user.username,data.user.role,data.comment_on.strftime("%d/%m/%y"),data.comment)
             print(data.user.username)
             obj_response.html_append('#commentD',comment)
         
     
-@flask_sijax.route(app,"/viewticket/<ticket_id>")
-def viewticket(ticket_id): 
-    
-        
+@flask_sijax.route(app,"/viewticket.html")
+def viewticket(): 
+    session= request.cookies.get('session')
+    resp=UserModel.decode_auth_token(session)
+    if not isinstance(resp, str):
+        return redirect(url_for('login'))
     
     if g.sijax.is_sijax_request:
         #sijax request detected
-        g.sijax.register_object(Handler(ticket_id))
+        g.sijax.register_object(Handler)
         return g.sijax.process_request()
     
     #regular (non sijax request)
@@ -346,4 +401,9 @@ def login():
 @app.route('/dash')
 @app.route('/dash.html')
 def dash():
+    session= request.cookies.get('session')
+    resp=UserModel.decode_auth_token(session)
+    if not isinstance(resp, str):
+        return redirect(url_for('login'))
+    
     return render_template("dash.html")

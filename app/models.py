@@ -36,7 +36,7 @@ class UserModel(db.Model):
     """ genrate the auth token"""
     try:
       payload={
-        'exp':datetime.datetime.utcnow() + datetime.timedelta(days=5, minutes=5),
+        'exp':datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=3),
         'iat':datetime.datetime.utcnow(),
         'sub':user_id
       }

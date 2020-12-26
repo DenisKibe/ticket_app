@@ -73,9 +73,15 @@
   {%endif%}
   <!--sijax-->
   <script type="text/javascript" src="{{ url_for('static',filename='js/sijax/sijax.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static',filename='js/sijax/sijax_upload.js') }}"></script>
   <script type="text/javascript">
       {{ g.sijax.get_js()|safe }};
   </script>
+  {% if request.endpoint == 'createticket' %}
+  <script type="text/javascript">
+    {{ form_init_js|safe }};
+  </script>
+  {% endif %}
   <!--inline javascript-->
 
   {% block script %}
