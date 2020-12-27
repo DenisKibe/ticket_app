@@ -5,14 +5,27 @@ $(document).ready(function(){
 	}
   document.cookie= "session="+sessionStorage.getItem('session');
 
-
-
-
   Sijax.request('getTick',[sessionStorage.getItem('BtnId')]);
 
   Sijax.request('getCom',[sessionStorage.getItem('BtnId')]);
 
+  $('#sendcom').click(function(){
+    comment=$('#comVal').val();
 
+    if(comment.length < 1){
+      toastr.warning('please write a comment');
+      $('#comVal').focus();
+    }else{
+      Sijax.request('commenting',[sessionStorage.getItem('BtnId'),JSON.parse(sessionStorage.getItem('U')).data.user_id,comment]);
+      Sijax.request('changeStatus',[sessionStorage.getItem('BtnId'),"OPEN"]);
+      
+  }
+  });
+
+  //make the register link visible is user is admin
+  if(JSON.parse(sessionStorage.getItem('U')).data.role == 'Admin'){
+    $('#regli').removeClass('invisible');
+  }
 
   // $.ajax({
   //     url:window.location.origin+"/api/getticket",

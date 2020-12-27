@@ -116,12 +116,12 @@ class CommentModel(db.Model):
     comment =  db.Column(db.Text)
     comment_on = db.Column(db.DateTime, server_default=text("CURRENT_TIMESTAMP"))
     
-    def __init__(self, commentId, user_id, ticket_id, comment, comment_on):
+    def __init__(self, commentId, user_id, ticket_id, comment):
       self.commentId = commentId
       self.user_id = user_id
       self.ticket_id = ticket_id
       self.comment = comment
-      self.comment_on = comment_on
+      
       
     def __repr__(self):
       return self.commentId 

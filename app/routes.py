@@ -152,8 +152,7 @@ class SijaxHandler(object):
 
             file_data = files['image']
             file_name = file_data.filename
-            print (file_name)
-            print(file_data.content_type)
+            
             if file_name is None:
                 return 'Nothing uploaded'
 
@@ -169,7 +168,6 @@ class SijaxHandler(object):
                 return "invalide type of file"
         
         resp=dump_files() 
-        print (imageUrl)   
         status = 'NEW'
         user_id = form_values.get('userId')
         comment   = form_values.get('description')
@@ -184,7 +182,7 @@ class SijaxHandler(object):
         new_ticket = TicketModel(user_id=user_id,status=status,image=imageUrl, comment=comment,category=category, priority=priority, subject=subject,updated_at=updated_at, ticketId=ticketId)
         db.session.add(new_ticket)
         db.session.commit()
-        print('here')
+       
 
         obj_response.alert("sucess "+resp)
 
@@ -265,15 +263,16 @@ class Handler(object):
         obj_response.html("#subjectD",datas.subject)
         obj_response.html("#createdD",datas.created_at.strftime("%d/%m/%y"))
         obj_response.html("#noteD",datas.comment)
+        obj_response.html("#imgUrl",datas.image)
         
     @staticmethod
     def getCom(obj_response,ticket_id):
         coms=CommentModel.query.filter_by(ticket_id = ticket_id)
         
+        obj_response.html("#commentD",'')
         for data in coms:
             comment ="""\n%s(%s)-->%s\n\n%s\n______________________
             """%(data.user.username,data.user.role,data.comment_on.strftime("%d/%m/%y"),data.comment)
-            print(data.user.username)
             obj_response.html_append('#commentD',comment)
         
     
@@ -309,7 +308,7 @@ def viewticket():
     return render_template("viewTicket.html" )
 
 
-@app.route("/assign", methods=["GET","POST"])
+""" @app.route("/assign", methods=["GET","POST"])
 @app.route("/assign/<ticketid>", methods=["GET","POST"])
 def assign():
     
@@ -329,40 +328,82 @@ def assign():
         
         db.session.commit()
         
-        return render_template(f"assign.html",data="done" )
+        return render_template(f"assign.html",data="done" ) """
     
-@app.route("/comment", methods=["GET","POST"])
-def comment():
-    global ticket_id,ticketE
-    if not session.get('Lsession'):
-        return redirect(url_for('login'))
+class PerformHandler(object):
     
-    
-    if request.method == 'POST':
-        comment = request.form.get('comment')
-        status = request.form.get('status')
-        
-        ticket_id = request.form.get('ticket_id')
-        user_id = session.get('user_id')
+    @staticmethod
+    def commenting(obj_response,ticket_id,user_id,comment):
         commentId = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
-        
-        ticketE = TicketModel.query.filter(TicketModel.ticketId  == ticket_id).first()
-        
-        if status == 'No':
-            ticketE.status = 'UNSOLVED'
-        elif status== 'Yes' and session.get('user_role')=='Admin':
-            ticketE.status = 'CLOSED'
-        elif status == 'Yes' and session.get('user_role') == 'Technician':
-            ticketE.status = 'SOLVED'
-        elif status == 'Yes' and session.get('user_role') == 'User':
-            ticketE.status = 'SOLVED' 
-               
+        print('here')
+        print(comment)
         new_comment=CommentModel(comment = comment, ticket_id = ticket_id, user_id = user_id, commentId = commentId)
         
         db.session.add(new_comment)
         db.session.commit()
         
-    return redirect(f"viewticket/{ticket_id}")
+        coms=CommentModel.query.filter_by(ticket_id = ticket_id)
+        
+        obj_response.html("#commentD",'')
+        for data in coms:
+            comment ="""\n%s(%s)-->%s\n\n%s\n______________________
+            """%(data.user.username,data.user.role,data.comment_on.strftime("%d/%m/%y"),data.comment)
+            obj_response.html_append('#commentD',comment)
+        
+    @staticmethod
+    def changeStatus(ticket_id,newstatus):
+        ticketE = TicketModel.query.filterby(ticketId = ticket_id).first()
+        ticketE.status = newstatus
+        ticketE.updated_at = datetime.now()
+        
+        db.session.commit()
+        
+    @staticmethod
+    def assigning(user_id,ticket_id):
+        assignId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+        
+        new_assign=Assign_ticketModel(user_id=user_id, ticket_id=ticket_id, assignId=assignId, status='ASSIGNED')
+        db.session.add(new_assign)
+        db.session.commit()
+        
+        #PerformHandler.changeStatus(ticket_id,"ASSIGNED")
+        
+@flask_sijax.route(app,"/performtask")
+def performtask():
+    session= request.cookies.get('session')
+    resp=UserModel.decode_auth_token(session)
+    if not isinstance(resp, str):
+        return redirect(url_for('login'))
+    
+    if g.sijax.is_sijax_request:
+        #sijax request detected
+        g.sijax.register_object(PerformHandler)
+        return g.sijax.process_request()
+    # if request.method == 'POST':
+    #     comment = request.form.get('comment')
+    #     status = request.form.get('status')
+        
+    #     ticket_id = request.form.get('ticket_id')
+    #     user_id = session.get('user_id')
+    #     commentId = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+        
+    #     ticketE = TicketModel.query.filter(TicketModel.ticketId  == ticket_id).first()
+        
+    #     if status == 'No':
+    #         ticketE.status = 'UNSOLVED'
+    #     elif status== 'Yes' and session.get('user_role')=='Admin':
+    #         ticketE.status = 'CLOSED'
+    #     elif status == 'Yes' and session.get('user_role') == 'Technician':
+    #         ticketE.status = 'SOLVED'
+    #     elif status == 'Yes' and session.get('user_role') == 'User':
+    #         ticketE.status = 'SOLVED' 
+               
+    #     new_comment=CommentModel(comment = comment, ticket_id = ticket_id, user_id = user_id, commentId = commentId)
+        
+    #     db.session.add(new_comment)
+    #     db.session.commit()
+        
+    return redirect(url_for('/'))
 
 
 #sijax function

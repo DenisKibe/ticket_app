@@ -7,13 +7,52 @@ $(document).ready(function(){
   //set the drop down to the clicked button
   $('#titleT').val(sessionStorage.getItem('status'));
 
+  $('#searchbtn').on('click',function(){
+
+    let field=$('#fieldS').val();
+    let vall=$('#vall').val();
+
+    if(vall.length <=2){
+      toastr.info('search characters must be more than 2 for optimum result.');
+      return false;
+    }
+    else{
+      $.ajax({
+        url:window.location.origin+"/api/search",
+        method:'POST',
+        dataType:'json',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        data:JSON.stringify({'field':field,'vall':vall}),
+        success:function(Resp){
+          console.log(JSON.parse(JSON.stringify(Resp)));
+          $('#content').empty();
+          let r= JSON.parse(JSON.stringify(Resp));
+          let z=0;
+          for ( var key in r){
+            if(r.hasOwnProperty(key)){
+              z++;
+
+              $('#content').append('<tr><td scope="row">'+z+'</td><td>'+r[key].ticketId+'</td><td>'+r[key].username+'</td><td style="white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:4px;">'+r[key].subject+'</td><td>'+r[key].category+'</td><td><span class="badge badge-pill badge-secondary">'+r[key].priority+'</span></td><td><span class="badge badge-pill badge-secondary">'+r[key].status+'</span></td><td>'+r[key].created+'</td><td>'+r[key].updated+'</td><td><a href="viewticket.html" id="'+r[key].ticketId+'"class="btn btn-outline-info btn-rounded btn-sm px-2">&#9998</a></td></tr>');
+            }
+          }
+
+        },
+        error:function(Err){
+          console.log(JSON.stringify(Err));
+          toastr.error('An Error occured. Please try again later');
+        }
+      });
+    }
+  })
+
   //listen to any changes of the dropdrop and get contents
   $('#titleT').change(function(){
 
     if($("#titleT").val() == "Search"){
-      $('#searchFrom').html('');
-      $('#searchForm').html('<form class=""><div class="input-group"><select class="form-control" id="fieldS" name="fieldS"><option value="ID">ID</option><option value="subject">subject</option><option value="comment">comment</option><option value="category">category</option></select><input type="text" aria-label="vall" id="vall" class="form-control"><div class="input-group-append"><button class="btn btn-md btn-outline-default m-0 px-3 py-2 z-depth-0 waves-effect" type="button" id="searchbtn">search</button></div></div></form>');
-      $('#content').html('');
+      $('#searchForm').removeClass('invisible');
+      $('#content').empty();
     }else{
       sessionStorage.status=$("#titleT").val();
 
@@ -99,43 +138,6 @@ $(document).ready(function(){
 
     });
 
-$('#searchbtn').click(function(){
-  alert('clicked')
-  let field=$('#fieldS').val();
-  let vall=$('#vall').val();
 
-  if(vall.length <=2){
-    toastr.info('search characters must be more than 2 for optimum result.');
-    return false;
-  }
-  else{
-    $.ajax({
-      url:window.location.origin+"/api/search",
-      method:'POST',
-      dataType:'json',
-      headers:{
-        'Content-Type':'application/json'
-      },
-      data:JSON.stringify({'field':field,'vall':vall}),
-      success:function(Resp){
-        console.log(JSON.parse(JSON.stringify(Resp)));
-        let r= JSON.parse(JSON.stringify(Resp));
-        let z=0;
-        for ( var key in r){
-          if(r.hasOwnProperty(key)){
-            z++;
-
-            $('#content').append('<tr><td scope="row">'+z+'</td><td>'+r[key].ticketId+'</td><td>'+r[key].username+'</td><td style="white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:4px;">'+r[key].subject+'</td><td>'+r[key].category+'</td><td><span class="badge badge-pill badge-secondary">'+r[key].priority+'</span></td><td><span class="badge badge-pill badge-secondary">'+r[key].status+'</span></td><td>'+r[key].created+'</td><td>'+r[key].updated+'</td><td><a href="viewticket.html" id="'+r[key].ticketId+'"class="btn btn-outline-info btn-rounded btn-sm px-2">&#9998</a></td></tr>');
-          }
-        }
-
-      },
-      error:function(Err){
-        console.log(JSON.stringify(Err));
-        toastr.error('An Error occured. Please try again later');
-      }
-    });
-  }
-})
 
 })

@@ -2,8 +2,21 @@
 
 {% block content %}
 
-<div class="" id="searchForm">
-
+<div class="invisible" id="searchForm">
+  <form class="">
+    <div class="input-group">
+      <select class="form-control" id="fieldS" name="fieldS">
+        <option value="ID">ID</option>
+        <option value="subject">subject</option>
+        <option value="comment">comment</option>
+        <option value="category">category</option>
+    </select>
+    <input type="text" aria-label="vall" id="vall" class="form-control">
+  <div class="input-group-append">
+    <button class="btn btn-md btn-outline-default m-0 px-3 py-2 z-depth-0 waves-effect" type="button" id="searchbtn">search</button>
+  </div>
+  </div>
+  </form>
 </div>
 
 <div class="card card-cascade narrower z-depth-0">
