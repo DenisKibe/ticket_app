@@ -274,6 +274,39 @@ class Handler(object):
             comment ="""\n%s(%s)-->%s\n\n%s\n______________________
             """%(data.user.username,data.user.role,data.comment_on.strftime("%d/%m/%y"),data.comment)
             obj_response.html_append('#commentD',comment)
+            
+    @staticmethod
+    def commenting(obj_response,ticket_id,user_id,comment):
+        commentId = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+        print('here')
+        print(comment)
+        new_comment=CommentModel(comment = comment, ticket_id = ticket_id, user_id = user_id, commentId = commentId)
+        
+        db.session.add(new_comment)
+        db.session.commit()
+        
+        coms=CommentModel.query.filter_by(ticket_id = ticket_id)
+        
+        obj_response.html("#commentD",'')
+        Handler.getCom(obj_response,ticket_id)
+        
+    @staticmethod
+    def changeStatus(ticket_id,newstatus):
+        ticketE = TicketModel.query.filterby(ticketId = ticket_id).first()
+        ticketE.status = newstatus
+        ticketE.updated_at = datetime.now()
+        
+        db.session.commit()
+        
+    @staticmethod
+    def assigning(user_id,ticket_id):
+        assignId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+        
+        new_assign=Assign_ticketModel(user_id=user_id, ticket_id=ticket_id, assignId=assignId, status='ASSIGNED')
+        db.session.add(new_assign)
+        db.session.commit()
+        
+        Handler.changeStatus(ticket_id,"ASSIGNED")
         
     
 @flask_sijax.route(app,"/viewticket.html")
@@ -330,55 +363,19 @@ def assign():
         
         return render_template(f"assign.html",data="done" ) """
     
-class PerformHandler(object):
     
-    @staticmethod
-    def commenting(obj_response,ticket_id,user_id,comment):
-        commentId = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
-        print('here')
-        print(comment)
-        new_comment=CommentModel(comment = comment, ticket_id = ticket_id, user_id = user_id, commentId = commentId)
         
-        db.session.add(new_comment)
-        db.session.commit()
-        
-        coms=CommentModel.query.filter_by(ticket_id = ticket_id)
-        
-        obj_response.html("#commentD",'')
-        for data in coms:
-            comment ="""\n%s(%s)-->%s\n\n%s\n______________________
-            """%(data.user.username,data.user.role,data.comment_on.strftime("%d/%m/%y"),data.comment)
-            obj_response.html_append('#commentD',comment)
-        
-    @staticmethod
-    def changeStatus(ticket_id,newstatus):
-        ticketE = TicketModel.query.filterby(ticketId = ticket_id).first()
-        ticketE.status = newstatus
-        ticketE.updated_at = datetime.now()
-        
-        db.session.commit()
-        
-    @staticmethod
-    def assigning(user_id,ticket_id):
-        assignId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
-        
-        new_assign=Assign_ticketModel(user_id=user_id, ticket_id=ticket_id, assignId=assignId, status='ASSIGNED')
-        db.session.add(new_assign)
-        db.session.commit()
-        
-        #PerformHandler.changeStatus(ticket_id,"ASSIGNED")
-        
-@flask_sijax.route(app,"/performtask")
-def performtask():
-    session= request.cookies.get('session')
-    resp=UserModel.decode_auth_token(session)
-    if not isinstance(resp, str):
-        return redirect(url_for('login'))
+# @flask_sijax.route(app,"/performtask")
+# def performtask():
+#     session= request.cookies.get('session')
+#     resp=UserModel.decode_auth_token(session)
+#     if not isinstance(resp, str):
+#         return redirect(url_for('login'))
     
-    if g.sijax.is_sijax_request:
-        #sijax request detected
-        g.sijax.register_object(PerformHandler)
-        return g.sijax.process_request()
+#     if g.sijax.is_sijax_request:
+#         #sijax request detected
+#         g.sijax.register_object(PerformHandler)
+#         return g.sijax.process_request()
     # if request.method == 'POST':
     #     comment = request.form.get('comment')
     #     status = request.form.get('status')
@@ -403,7 +400,7 @@ def performtask():
     #     db.session.add(new_comment)
     #     db.session.commit()
         
-    return redirect(url_for('/'))
+    #return redirect(url_for('/'))
 
 
 #sijax function

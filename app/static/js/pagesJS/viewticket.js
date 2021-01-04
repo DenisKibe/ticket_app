@@ -9,18 +9,30 @@ $(document).ready(function(){
 
   Sijax.request('getCom',[sessionStorage.getItem('BtnId')]);
 
+  //for the comment
   $('#sendcom').click(function(){
-    comment=$('#comVal').val();
+    let comment=$('#comVal').val();
 
     if(comment.length < 1){
       toastr.warning('please write a comment');
       $('#comVal').focus();
     }else{
+      $('#comVal').val('');
       Sijax.request('commenting',[sessionStorage.getItem('BtnId'),JSON.parse(sessionStorage.getItem('U')).data.user_id,comment]);
-      Sijax.request('changeStatus',[sessionStorage.getItem('BtnId'),"OPEN"]);
-      
   }
   });
+
+  // popovers Initialization
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
+  //for the change status
+  $('#Cstatus').popover({
+    html: true,
+    placement: 'right',
+    content: function () { return (JSON.parse(sessionStorage.getItem('U')).data.role=='Admin')?'<ol><li>CLOSED</li><hr><li>UNSOLVED</li></ol>':'<ul><li>SOLVED</li><li>UNSOLVED</li></ul>'; }
+  });
+
 
   //make the register link visible is user is admin
   if(JSON.parse(sessionStorage.getItem('U')).data.role == 'Admin'){
