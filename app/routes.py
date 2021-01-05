@@ -255,8 +255,8 @@ class Handler(object):
             assignedStatus = assigned.user.username
                 
         obj_response.html("#usrNameD",datas.user.username)
-        obj_response.html("#assignedD",assignedStatus)
-        obj_response.html("#statusD",datas.status)
+        obj_response.attr("#assignedD",'value',assignedStatus)
+        obj_response.html("#opt1",datas.status)
         obj_response.html("#priorityD",datas.priority)
         obj_response.html("#updatedD",datas.updated_at.strftime("%d/%m/%y"))
         obj_response.html("#categoryD",datas.category)
@@ -285,28 +285,27 @@ class Handler(object):
         db.session.add(new_comment)
         db.session.commit()
         
-        coms=CommentModel.query.filter_by(ticket_id = ticket_id)
         
         obj_response.html("#commentD",'')
         Handler.getCom(obj_response,ticket_id)
         
     @staticmethod
-    def changeStatus(ticket_id,newstatus):
-        ticketE = TicketModel.query.filterby(ticketId = ticket_id).first()
+    def changeStatus(obj_response,ticket_id,newstatus):
+        ticketE = TicketModel.query.filter_by(ticketId = ticket_id).first()
         ticketE.status = newstatus
         ticketE.updated_at = datetime.now()
         
         db.session.commit()
         
     @staticmethod
-    def assigning(user_id,ticket_id):
+    def assigning(obj_response,user_id,ticket_id):
         assignId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
         
         new_assign=Assign_ticketModel(user_id=user_id, ticket_id=ticket_id, assignId=assignId, status='ASSIGNED')
         db.session.add(new_assign)
         db.session.commit()
         
-        Handler.changeStatus(ticket_id,"ASSIGNED")
+        Handler.changeStatus(obj_response,ticket_id,"ASSIGNED")
         
     
 @flask_sijax.route(app,"/viewticket.html")

@@ -2,7 +2,7 @@ from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 from datetime import datetime
 from app import db
-from app.models import TicketModel, Assign_ticketModel
+from app.models import TicketModel, Assign_ticketModel, UserModel
 import random, string
 
 api_blueprint = Blueprint('api', __name__)
@@ -203,11 +203,26 @@ class SearchAPI(MethodView):
                 }
                 return make_response(jsonify(responseObject)), 500
             
+class GetListTechAPI(MethodView):
+    """get list of Techs and their ID """
+    def get(self):
+        responseBody=[]
+        data= UserModel.query.filter_by(role='Technician')
+        for techs in data:
+           respObject={
+               'username':techs.username,
+               'user_id':techs.userId
+           }
+           responseBody.append(respObject)
+           
+        return make_response(jsonify(responseBody)),200
+            
             
 #define the API Endpoints
 getdata_view = GetDataApi.as_view('getdata_api')
 getticket_view = GetTicketAPI.as_view('getticket_api')
 search_view = SearchAPI.as_view('search_api')
+getlisttech_view = GetListTechAPI.as_view('getlisttech_api')
 
 #add Rules for API EndPoints
 api_blueprint.add_url_rule(
@@ -224,4 +239,9 @@ api_blueprint.add_url_rule(
     '/api/search',
     view_func= search_view,
     methods=['POST']
+)
+api_blueprint.add_url_rule(
+    '/api/getlisttech',
+    view_func= getlisttech_view,
+    methods=['GET']
 )

@@ -43,10 +43,15 @@
 
                   </div>
 
-                  <label id="labelforpicture" >{{title2}}</label>
-                  <div class="md-form form-sm mb-5">
-                    <input type="file" name="image" id="image" class="form-control form-control-sm validate" required />
-
+                  
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                    </div>
+                    <div class="custom-file">
+                      <input type="file" name="image" class="form-control form-control-sm validate" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                      <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                    </div>
                   </div>
 
                   <!--pass the user id-->

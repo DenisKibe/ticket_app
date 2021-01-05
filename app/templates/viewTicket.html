@@ -15,8 +15,33 @@
                 class="img-fluid img-thumbnail text-center" alt="" style="width:50px; height:50px"></p>
 
               <p><b>username:</b> <i id="usrNameD"></i></p>
-              <p><b>assigned:</b> <i id="assignedD"> </i><i class="btn btn-sm btn-primary p-1" id="assignC">A</i></p>
-              <p><b>status:</b> <i id="statusD"> </i><i class="btn btn-sm btn-primary p-1" id="Cstatus" data-toggle="popover">S</i></p>
+              <p>
+                <div class="md-form input-group py-0 my-0">
+                  <div class="input-group-prepend ">
+                    <span class="input-group-text p-0 md-addon">assigned:</span>
+                  </div>
+                  <input type="text" id="assignedD" class="form-control disabled input-sm">
+                  <div class="input-group-append">
+                    <span class="input-group-text px-1 py-0" id="assignTech">A</span>
+                  </div>
+                </div>
+
+               </p>
+              <p>
+                <div class="md-form input-group py-0 my-0">
+                  <div class="input-group-prepend ">
+                    <span class="input-group-text p-0 md-addon">status:</span>
+                  </div>
+                  <select class="disabled form-control border-0" id="changeSat" name="fieldS">
+                      <option value="" id="opt1"></option>
+                      <option value="" id="opt2"></option>
+                      <option value="" id="opt3"></option>
+                  </select>
+                  <div class="input-group-append">
+                    <span class="input-group-text px-1 py-0" id="Estatus">E</span>
+                  </div>
+                </div>
+              </p>
               <p><b>priority:</b> <i id="priorityD"> </i></p>
               <p><b>created:</b> <i id="createdD"></i></p>
               <p><b>updated:</b> <i id="updatedD"></i></p>
@@ -56,14 +81,14 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col">
-      <div class="accordion md-accordion accordion-blocks" id="accordionEx78" role="tablist" aria-multiselectable="true">
+      <div class="accordion md-accordion accordion-blocks" id="accordionEx77" role="tablist" aria-multiselectable="true">
         <div class="card">
 
     <!-- Card header -->
     <div class="card-header p-2" role="tab" id="headingUnfiled">
 
       <!-- Heading -->
-      <a data-toggle="collapse" data-parent="#accordionEx78" href="#collapseUnfiled" aria-expanded="true"
+      <a data-toggle="collapse" data-parent="#accordionEx77" href="#collapseUnfiled" aria-expanded="true"
         aria-controls="collapseUnfiled">
         <h6 class="mt-1 mb-0">
           <span><b>gallery</b></span>
@@ -127,36 +152,16 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="listTechM" tabindex="-1" role="dialog" aria-labelledby="listTechM" aria-hidden="true">
   <div class="modal-dialog " role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="container">
-          {% for users in user %}
-          <div class="row">
-            <div class="col-8">
-              <p>{{ users.username}}</p>
-            </div>
-            <form method="post" action="{{ url_for('assign') }}">
-              <input type="hidden" name="user_id" value="{{ users.userId }}">
-              <input type="hidden" name="ticket_id" value="{{ ticket.ticketId }}">
-              <button type="submit" class="btn btn-sm btn-secondary">assign</button>
-            </form>
-          </div>
 
-        </div>
-        {% endfor %}
+      <div class="modal-body" id="Mcontent">
+
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-</div>
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+      </div>
       </div>
     </div>
   </div>
