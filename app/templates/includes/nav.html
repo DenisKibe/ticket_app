@@ -3,25 +3,9 @@
 
 {% if not request.endpoint == 'login' %}
 <!-- Sidebar navigation -->
-    <div id="slide-out" class="side-nav sn-bg-4 fixed">
+    <div id="slide-out" class="side-nav  fixed">
       <ul class="custom-scrollbar">
-
-        <!-- Logo -->
-        <li class="logo-sn waves-effect py-3">
-          <div class="text-center">
-            <a href="" class="pl-0"><img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"></a>
-          </div>
-        </li>
-
-        <!-- Search Form -->
-        <li>
-          <form class="search-form" role="search">
-            <div class="md-form mt-0 waves-light">
-              <input type="text" class="form-control py-2" placeholder="Search">
-            </div>
-          </form>
-        </li>
-
+        <div class=" py-3 blue-gradient text-center"><h2><strong class="">CRM</strong></h2></div>
         <!-- Side navigation links -->
         <li>
           <ul class="collapsible collapsible-accordion">
@@ -37,7 +21,7 @@
                   class="w-fa fas fa-chart-pie"></i>Register User</a>
             </li>
 
-            
+
 
             <!-- Simple link -->
 
@@ -60,19 +44,16 @@
 
     <!-- Breadcrumb -->
     <div class="breadcrumb-dn mr-auto">
-      <p>Dashboard v.1</p>
+      <ol class="breadcrumb" id="breadC">
+        <li class="breadcrumb-item active "><a href="{{url_for('dashboard')}}" class="black-text">Dashboard</a></li>
+      </ol>
     </div>
 
   </nav>
 
   {% else %}
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar pb-0 mb-0">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top scrolling-navbar white pb-0 mb-0">
   <div class="container">
-    <a class="navbar-brand" href="#"><strong>MDB</strong></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-7"
-      aria-controls="navbarSupportedContent-7" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
 
   </div>
 </nav>

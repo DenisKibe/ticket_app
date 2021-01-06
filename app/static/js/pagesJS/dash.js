@@ -7,6 +7,9 @@ $(document).ready(function(){
   //set the drop down to the clicked button
   $('#titleT').val(sessionStorage.getItem('status'));
 
+  //for the breadcrumb
+  $('#breadC').append('<li class="breadcrumb-item"><a href="dash.html" class="black-text">Dash</a></li>');
+
   $('#searchbtn').on('click',function(){
 
     let field=$('#fieldS').val();

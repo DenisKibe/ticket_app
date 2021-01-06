@@ -4,13 +4,21 @@
 
 <div class="container-fluid ">
   <div class="row">
-    <div class="col col-sm-3 align-content-right">
+    <div class="col">
+    <nav class="navbar navbar-dark green mb-1">
+
+      <h5 class="mx-auto"><strong>Details</strong></h5>
+
+      <h5 class="text-center mx-auto"><strong>Ticket</strong></h5>
+
+      <h5 class="text-center float-left mx-auto "><strong>Comments</strong></h5>
+    </nav>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-sm-3 align-content-right border-right border-left">
 
         <!-- Author box -->
-
-
-              <h5 class="text-center"><strong>Details</strong></h5>
-
               <p><img src=""
                 class="img-fluid img-thumbnail text-center" alt="" style="width:50px; height:50px"></p>
 
@@ -22,7 +30,7 @@
                   </div>
                   <input type="text" id="assignedD" class="form-control disabled input-sm">
                   <div class="input-group-append">
-                    <span class="input-group-text px-1 py-0" id="assignTech">A</span>
+                    <span class="input-group-text px-1 py-0 font-sm" id="assignTech"><i class="fas fa-pencil-alt font-sm mt-0"></i></span>
                   </div>
                 </div>
 
@@ -38,7 +46,7 @@
                       <option value="" id="opt3"></option>
                   </select>
                   <div class="input-group-append">
-                    <span class="input-group-text px-1 py-0" id="Estatus">E</span>
+                    <span class="input-group-text px-1 py-0 font-sm" id="Estatus"><i class="fas fa-pencil-alt font-sm mt-0"></i></span>
                   </div>
                 </div>
               </p>
@@ -49,24 +57,20 @@
 
         </div>
         <!-- Author box -->
-    <div class="col col-sm-5">
+    <div class="col col-sm-5 border-right">
     <!-- Card -->
 
-        <h5 class="text-center"><strong>Ticket</strong></h5>
         <p><i>category:</i> <b id="categoryD"></b></p>
         <p><b><i id="subjectD"></i></b></p>
-        <textarea name="name" cols="35" class="ml-4 form-control" style="height:200px;" id="noteD" readonly="readonly">
+        <textarea name="name" cols="35" class="ml-3 form-control" style="height:200px;" id="noteD" readonly="readonly">
 
         </textarea>
 
         <!-- Author box -->
     </div>
-    <div class="col col-sm-4">
+    <div class="col col-sm-4 border-right">
       <!-- Card -->
-
-        <h5 class="text-center"><strong>Comments</strong></h5>
-          <hr>
-        <textarea cols="15" class="ml-4 form-control border-0 white p-0" style="height:250px;font-size:small;" id="commentD" readonly="readonly">
+        <textarea cols="15" class="ml-3 form-control border-0 white p-0" style="height:250px;font-size:small;" id="commentD" readonly="readonly">
 
         </textarea>
     </div>

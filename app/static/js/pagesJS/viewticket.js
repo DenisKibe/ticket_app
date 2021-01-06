@@ -9,6 +9,8 @@ $(document).ready(function(){
 
   Sijax.request('getCom',[sessionStorage.getItem('BtnId')]);
 
+  //for the breadcrumb
+  $('#breadC').append('<li class="breadcrumb-item"><a href="viewticket.html" class="black-text">ViewTicket</a></li>');
   //for the comment
   $('#sendcom').click(function(){
     let comment=$('#comVal').val();
