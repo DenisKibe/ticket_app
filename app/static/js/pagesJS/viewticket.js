@@ -66,6 +66,20 @@ $(document).ready(function(){
     $('#listTechM').modal('hide');
   });
 
+  //for view image
+  $('#viewPic').click(function(){
+      let imgurl= $('#imgUrl').html();
+      if(imgurl == ''){
+        $('#imgCont').empty();
+        $('#imgCont').append('<p>No Image to show!</p>')
+        $('#imageView').modal('show');
+      }else{
+        $('#imgCont').empty();
+        $('#imgCont').append('<img src="'+window.location.origin+'/static'+imgurl+'" class=""/>');
+        $('#imageView').modal('show');
+      }
+  });
+
   //assign button
   $('#assignTech').click(function(){
     $.ajax({
