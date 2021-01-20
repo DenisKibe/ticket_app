@@ -23,8 +23,6 @@ $(document).ready(function(){
       Sijax.request('commenting',[sessionStorage.getItem('BtnId'),JSON.parse(sessionStorage.getItem('U')).data.user_id,comment]);
   }
   });
-  //initialize mdb select
-  $('.mdb-select').materialSelect();
 
   //for the options
   if(JSON.parse(sessionStorage.getItem('U')).data.role=='Admin'){
@@ -45,11 +43,16 @@ $(document).ready(function(){
     let newS=$('#changeSat').val();
     Sijax.request('changeStatus',[sessionStorage.getItem('BtnId'),newS]);
     $('#changeSat').addClass('disabled');
+    if(JSON.parse(sessionStorage.getItem('U')).data.role=='Technician'){
+      Sijax.request('clearNew',[sessionStorage.getItem('BtnId')]);
+    }
   });
   //make the register link visible is user is admin
   if(JSON.parse(sessionStorage.getItem('U')).data.role == 'Admin'){
     $('#regli').removeClass('invisible');
   }
+  $('#usernameS').html(JSON.parse(sessionStorage.getItem('U')).data.username)
+  $('#userRole').html(JSON.parse(sessionStorage.getItem('U')).data.role)
 
   //add event to checkbox
   jQuery(document).delegate("#listTechM .chb","change",function(){
@@ -82,37 +85,50 @@ $(document).ready(function(){
 
   //assign button
   $('#assignTech').click(function(){
-    $.ajax({
-  			url:window.location.origin+"/api/getlisttech",
+    if(JSON.parse(sessionStorage.getItem('U')).data.role != 'Admin'){
+      toastr.warning('You do not have permission to assign');
+    }else{
+      $.ajax({
+    			url:window.location.origin+"/api/getlisttech",
 
-  			method:'Get',
-  			dataType:'json',
-  			headers:{
-  				'Content-Type':'application/json'
-  			},
-        data:false,
-  			success:function(ResponseBody){
-          let resp = JSON.parse(JSON.stringify(ResponseBody));
-          console.log(resp)
-          let y=0;
-          $('#Mcontent').empty();
-          for ( var key in resp){
-            if(resp.hasOwnProperty(key)){
-              y++;
-                $('#Mcontent').append('<div class="form-check"><input type="checkbox" class="form-check-input chb" id="'+y+'" value="'+resp[key].user_id+'"><label class="form-check-label" for="'+y+'">'+resp[key].username+'</label></div>');
-              }
+    			method:'Get',
+    			dataType:'json',
+    			headers:{
+    				'Content-Type':'application/json',
+            'Authorization':'Bearer '+sessionStorage.getItem('session')
+    			},
+          data:false,
+          statusCode:{
+            401:function(){
+              toastr.error("Unauthorized! Please Login again");
+              sessionStorage.clear();
+              setTimeout(function () {
+                window.location="/";
+              }, 3000);
             }
-        },
-  			error:function(error){
-  				console.log(JSON.stringify(error));
-        },
-        complete:function(){
-          $('#listTechM').modal('show');
-        }
-      });
+          },
+    			success:function(ResponseBody){
+            let resp = JSON.parse(JSON.stringify(ResponseBody));
+            console.log(resp)
+            let y=0;
+            $('#Mcontent').empty();
+            for ( var key in resp){
+              if(resp.hasOwnProperty(key)){
+                y++;
+                  $('#Mcontent').append('<div class="form-check"><input type="checkbox" class="form-check-input chb" id="'+y+'" value="'+resp[key].user_id+'"><label class="form-check-label" for="'+y+'">'+resp[key].username+'</label></div>');
+                }
+              }
 
-    $('#listTechM').modal('show');
-  });
+              $('#listTechM').modal('show');
+          },
+    			error:function(error){
+    				console.log(JSON.stringify(error));
+          }
+
+    });
+  }
+});
+
 
   // $.ajax({
   //     url:window.location.origin+"/api/getticket",

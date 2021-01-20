@@ -11,7 +11,7 @@
         <option value="comment">comment</option>
         <option value="category">category</option>
     </select>
-    <input type="text" aria-label="vall" id="vall" class="form-control">
+    <input type="text" aria-label="vall" id="vall" class="form-control" autocomplete="off">
   <div class="input-group-append">
     <button class="btn btn-md btn-outline-default m-0 px-3 py-2 z-depth-0 waves-effect" type="button" id="searchbtn">search</button>
   </div>
@@ -30,7 +30,6 @@
                   <select id="titleT" value="ALL" class="custom-select-sm border-0 browser-default w-25 float-right" style="background-color:transparent;">
                     <option value="Search">Search</option>
                     <option value="NEW">NEW</option>
-                    <option value="OPEN">OPEN</option>
                     <option value="CLOSED">CLOSED</option>
                     <option value="SOLVED">SOLVED</option>
                     <option value="UNSOLVED">UNSOLVED</option>
@@ -54,7 +53,7 @@
                 <div class="card-body table-responsive">
 
                   <!--Table-->
-                  <table id="ticketTable" class="table" cellspacing="0" width="100%">
+                  <table id="ticketTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
 
                     <!-- Table head -->
                     <thead>

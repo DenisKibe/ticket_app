@@ -29,11 +29,10 @@ $(document).ready(function(){
 
   //function to check password length
   function lengthValidator(pass){
-        if (pass.length >= 8) {
+        if (pass.length >= 4) {
           return true;
         } else {
-            $('#errorMSG').html("password must be greater than 8 characters!");
-            $('#ErrorM').modal('show');
+          toastr.error('password must be greater than 8 characters');
           return false;
         }
       };

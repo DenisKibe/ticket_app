@@ -6,72 +6,81 @@
     <div class="container ">
       <div class="row">
         <div class="col">
-
           <!-- Material form register -->
-<div class="card text-dark">
+          <div class="card">
 
-    <h5 class="card-header info-color white-text text-center py-4">
-        <strong>{{title}}</strong>
-    </h5>
+              <h5 class="card-header info-color white-text text-center py-4">
+                  <strong>{{title}}</strong>
+              </h5>
 
-    <!--Card content-->
-    <div class="card-body px-lg-5 pt-0">
+              <!--Card content-->
+              <div class="card-body px-lg-5 pt-0">
 
-        <!-- Form -->
-        <form class="text-center text-body" name="login" action="" method="post" novalidate>
-            {{ form.hidden_tag() }}
+                  <!-- Form -->
+                  <form class="text-center" style="color: #757575;">
 
-            <div class="md-form text-body">
-                  {{ form.email.label }}<br>
-                  {{ form.email(class_="form-control") }}
-                  {% for error in form.email.errors %}
-                   <span class="error-message">{{ error }}</span>
-                  {% endfor %}
-            </div>
-
-
-            <!-- E-mail -->
-            <div class="md-form text-body">
-                  {{ form.password.label }}<br>
-                  {{ form.password(class_="form-control") }}
-                  {% for error in form.password.errors %}
-                    <span class="error-message">{{ error }}</span>
-                  {% endfor %}
-            </div>
-
-            <!-- Password -->
-            <div class="md-form text-body">
-                  {{ form.role.label }}<br><br>
-                  {{ form.role(class_="form-control") }}
-                  {% for error in form.role.errors %}
-                    <span class="error-message">{{ error }}</span>
-                  {% endfor %}
-            </div>
-
-            <!-- Phone number -->
-            <div class="md-form text-body">
-                {{ form.username.label }}<br>
-                {{ form.username(class_="form-control") }}
-                {% for error in form.username.errors %}
-                  <span class="error-message">{{ error }}</span>
-                {% endfor %}
-            </div>
+                      <div class="form-row">
+                          <div class="col">
+                              <!-- username -->
+                              <div class="md-form">
+                                  <input type="text" id="Rusername" class="form-control validate" autocomplete="off" required>
+                                  <label for="Rusername" id="LRusername">Username</label>
+                              </div>
+                          </div>
+                          <div class="col">
+                              <!-- Role -->
+                              <select class="mdb-select md-form" id="Rrole">
+                                <option value="" class="disabled selected">Role</option>
+                                <option value="User">User</option>
+                                <option value="Technician">Technician</option>
+                                <option value="Admin">Admin</option>
+                              </select>
+                          </div>
+                      </div>
 
 
-            <!-- Sign up button -->
-            <button class="btn btn-outline-info btn-rounded my-4 waves-effect z-depth-0" name="submit" type="submit" Value="Register Now">
-                Register
-            </button>
+                      <!-- Password -->
+                      <div class="form-row">
+                          <div class="col">
+                              <!-- password -->
+                              <div class="md-form">
+                                  <input type="password" id="Spass" class="form-control" required>
+                                  <label for="Spass" id="LSpass">Password</label>
+                              </div>
+                          </div>
+                          <div class="col">
+                              <!-- confirm password -->
+                              <div class="md-form">
+                                  <input type="password" id="CSpass" class="form-control" required>
+                                  <label for="CSpass" id="LCSpass">confirm Password</label>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="md-form">
+                        <input type="email" id="Remail" class="form-control" autocomplete="off" required>
+                        <label for="Remail" id="LRemail">Email</label>
+                      </div>
 
 
-        </form>
-        <!-- Form -->
+                      <!-- Sign up button -->
+                      <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0 disabled" id="Rbtn" >Sign in</button>
 
-</div>
-<!-- Material form register -->
+                  </form>
+                  <!-- Form -->
+
+              </div>
+
+          </div>
+          <!-- Material form register -->
+
 
         </div>
         </div>
     </div>
     </div>
     {% endblock %}
+    {%  block script %}
+       <script type="text/javascript" src="{{  url_for('static',filename='js/pagesJS/register.js') }}"></script>
+
+    {%  endblock %}

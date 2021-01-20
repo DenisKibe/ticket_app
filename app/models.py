@@ -54,6 +54,33 @@ class UserModel(db.Model):
         return make_response(jsonify({'error':'Token expired. Please log in again.'})), 401
       except jwt.InvalidTokenError:
         return make_response(jsonify({'error':'Invalid token . please log in again.'})),401
+      
+  @staticmethod
+  def verify_auth_header(auth_header):
+    if auth_header:
+        try:
+            auth_token = auth_header.split(" ")[1]
+        except IndexError:
+            responseObject ={
+                'status':'fail',
+                'message':'Bearer token malformed.'
+            }
+            return make_response(jsonify(responseObject)),401
+    else:
+        auth_token = ''
+        
+    if auth_token:
+        resp=UserModel.decode_auth_token(auth_token)
+        if isinstance(resp, str):
+            return resp
+        
+        return make_response(resp),401
+    else:
+        responseObject = {
+            'status': 'fail',
+            'message': 'Provide a valid auth token.'
+        }
+        return make_response(jsonify(responseObject)), 401
   
 class TicketModel(db.Model):
   __tablename__ ='ticket'

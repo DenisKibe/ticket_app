@@ -1,7 +1,7 @@
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 from datetime import datetime
-from app import db
+from app import db, logger
 from app.models import TicketModel, Assign_ticketModel, UserModel
 import random, string
 
@@ -13,29 +13,191 @@ class GetDataApi(MethodView):
     get data resource
     """
     def post(self):
-        #get data from the user
-        post_data = request.get_json()
-        responseBody=[]
-        if post_data.get('role') == 'Admin':
-            try:
-                datas=TicketModel.query.filter_by(status = post_data.get('status'))
-            
-                #create a dict of results
-                for data in datas:
-                    respObject={
-                        'username':data.user.username,
-                        'ticketId' : data.ticketId,
-                        'status' : data.status,
-                        'imageURL' : data.image,
-                        'category' : data.category,
-                        'priority' : data.priority,
-                        'subject' : data.subject,
-                        'created' : data.created_at.strftime("%d/%m/%y"),
-                        'updated' : data.updated_at.strftime("%d/%m/%y")
-                    }
-                    responseBody.append(respObject)
+        user_Id=UserModel.verify_auth_header(request.headers.get('Authorization'))
+        if not isinstance(user_Id, str):
+            return make_response(jsonify({'message':'failed'})), 401
+        else:
+            logger.info('user {} accessing  /api/getdata'.format(user_Id))
+            #get data from the user
+            post_data = request.get_json()
+            responseBody=[]
+            if post_data.get('role') == 'Admin':
+                try:
+                    datas=TicketModel.query.filter_by(status = post_data.get('status')).order_by(TicketModel.updated_at.desc())
                 
-                return make_response(jsonify(responseBody)),200
+                    #create a dict of results
+                    for data in datas:
+                        respObject={
+                            'username':data.user.username,
+                            'ticketId' : data.ticketId,
+                            'status' : data.status,
+                            'imageURL' : data.image,
+                            'category' : data.category,
+                            'priority' : data.priority,
+                            'subject' : data.subject,
+                            'created' : data.created_at.strftime("%d/%m/%y"),
+                            'updated' : data.updated_at.strftime("%d/%m/%y")
+                        }
+                        responseBody.append(respObject)
+                    
+                    return make_response(jsonify(responseBody)),200
+                except Exception as e:
+                    print(e)
+                    responseObject = {
+                        'status': 'fail',
+                        'message' : 'Try again'
+                    }
+                    return make_response(jsonify(responseObject)), 500
+                
+            elif post_data.get('role') == 'Technician':
+                if post_data.get('status') == 'NEW':
+                    try:
+                        datas=Assign_ticketModel.query.filter_by(status = post_data.get('status'), user_id = user_Id).order_by(Assign_ticketModel.assigned_on.desc())
+                        
+                        #create a dict of results
+                        for data in datas:
+                            respObject={
+                                'username':data.user.username,
+                                'ticketId' : data.ticket_id,
+                                'status' : data.ticket.status,
+                                'imageURL' : data.ticket.image,
+                                'category' : data.ticket.category,
+                                'priority' : data.ticket.priority,
+                                'subject' : data.ticket.subject,
+                                'created' : data.ticket.created_at.strftime("%d/%m/%y"),
+                                'updated' : data.ticket.updated_at.strftime("%d/%m/%y")
+                            }
+                            responseBody.append(respObject)
+                        
+                        return make_response(jsonify(responseBody)),200
+                    except Exception as e:
+                        print(e)
+                        responseObject = {
+                            'status': 'fail',
+                            'message' : 'Try again'
+                        }
+                        return make_response(jsonify(responseObject)), 500
+                    
+                elif post_data.get('status') == 'ASSIGNED':
+                    try:
+                        datas=TicketModel.query.filter_by(status = post_data.get('status'), user_id = user_Id).order_by(TicketModel.updated_at.desc())
+                        
+                        #create a dict of results
+                        for data in datas:
+                            respObject={
+                                'username':data.user.username,
+                                'ticketId' : data.ticketId,
+                                'status' : data.status,
+                                'imageURL' : data.image,
+                                'category' : data.category,
+                                'priority' : data.priority,
+                                'subject' : data.subject,
+                                'created' : data.created_at.strftime("%d/%m/%y"),
+                                'updated' : data.updated_at.strftime("%d/%m/%y")
+                            }
+                            responseBody.append(respObject)
+                        
+                        return make_response(jsonify(responseBody)),200
+                    except Exception as e:
+                        print(e)
+                        responseObject = {
+                            'status': 'fail',
+                            'message' : 'Try again'
+                        }
+                        return make_response(jsonify(responseObject)), 500
+                    
+                else:
+                    try:
+                        datas=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.status==post_data.get('status')).order_by(TicketModel.updated_at.desc())
+                        
+                        #create a dict of results
+                        for data in datas:
+                            respObject={
+                                'username':data.user.username,
+                                'ticketId' : data.ticketId,
+                                'status' : data.status,
+                                'imageURL' : data.image,
+                                'category' : data.category,
+                                'priority' : data.priority,
+                                'subject' : data.subject,
+                                'created' : data.created_at.strftime("%d/%m/%y"),
+                                'updated' : data.updated_at.strftime("%d/%m/%y")
+                            }
+                            responseBody.append(respObject)
+                        
+                        return make_response(jsonify(responseBody)),200
+                    except Exception as e:
+                        print(e)
+                        responseObject = {
+                            'status': 'fail',
+                            'message' : 'Try again'
+                        }
+                        return make_response(jsonify(responseObject)), 500
+                    
+            elif post_data.get('role') == 'User':
+                try:
+                    datas=TicketModel.query.filter_by(status = post_data.get('status'), user_id = user_Id).order_by(TicketModel.updated_at.desc())
+                
+                    #create a dict of results
+                    for data in datas:
+                        respObject={
+                            'username':data.user.username,
+                            'ticketId' : data.ticketId,
+                            'status' : data.status,
+                            'imageURL' : data.image,
+                            'category' : data.category,
+                            'priority' : data.priority,
+                            'subject' : data.subject,
+                            'created' : data.created_at.strftime("%d/%m/%y"),
+                            'updated' : data.updated_at.strftime("%d/%m/%y")
+                        }
+                        responseBody.append(respObject)
+                    
+                    return make_response(jsonify(responseBody)),200
+                except Exception as e:
+                    print(e)
+                    responseObject = {
+                        'status': 'fail',
+                        'message' : 'Try again'
+                    }
+                    return make_response(jsonify(responseObject)), 500
+        
+        
+class GetTicketAPI(MethodView):
+    """get ticket based on ID """
+    def post(self):
+        user_Id=UserModel.verify_auth_header(request.headers.get('Authorization'))
+        if not isinstance(user_Id, str):
+            logger.warning('user session {} -->[{}]'.format(request.headers.get('Authorization'), user_Id[1]))
+            return make_response(jsonify({'message':'failed'})), 401
+        else:
+            logger.info('user {} accessing  /api/getticket'.format(user_Id))
+            post_data = request.get_json()
+            
+            try:
+                datas=TicketModel.query.filter_by(ticketId = post_data.get('ticketId')).first()
+                assigned =Assign_ticketModel.query.filter_by(ticket_id = post_data.get('ticketId')).first()
+                if(assigned==None):
+                    assignedStatus = None
+                else:
+                    assignedStatus = assigned.user.username
+                    
+                    #return data
+                respObject={
+                    'username':datas.user.username,
+                    'ticketId' : datas.ticketId,
+                    'status' : datas.status,
+                    'imageURL' : datas.image,
+                    'category' : datas.category,
+                    'comment' : datas.comment,
+                    'priority' : datas.priority,
+                    'subject' : datas.subject,
+                    'created' : datas.created_at.strftime("%d/%m/%y"),
+                    'updated' : datas.updated_at.strftime("%d/%m/%y"),
+                    'Assigned' : assignedStatus
+                }
+                print(respObject)
+                return make_response(jsonify(respObject)),200
             except Exception as e:
                 print(e)
                 responseObject = {
@@ -43,186 +205,219 @@ class GetDataApi(MethodView):
                     'message' : 'Try again'
                 }
                 return make_response(jsonify(responseObject)), 500
-        #elif role == 'Technician':
-        #    data=TicketModel.query.filter(Assign_ticketModel.user_id == userId , TicketModel.status==urlto).all()
-         #   return render_template("dash.html", data=data, title=urlto)
-       # elif session.get('user_role') == 'User':
-        #    data=TicketModel.query.filter_by(user_id=userId,status=urlto).all()
-         #   return render_template("dash.html", data=data, title=urlto)
-        
-class GetTicketAPI(MethodView):
-    """get ticket based on ID """
-    def post(self):
-        post_data = request.get_json()
-        
-        try:
-            datas=TicketModel.query.filter_by(ticketId = post_data.get('ticketId')).first()
-            assigned =Assign_ticketModel.query.filter_by(ticket_id = post_data.get('ticketId')).first()
-            if(assigned==None):
-                assignedStatus = None
-            else:
-                assignedStatus = assigned.user.username
-                
-                #return data
-            respObject={
-                'username':datas.user.username,
-                'ticketId' : datas.ticketId,
-                'status' : datas.status,
-                'imageURL' : datas.image,
-                'category' : datas.category,
-                'comment' : datas.comment,
-                'priority' : datas.priority,
-                'subject' : datas.subject,
-                'created' : datas.created_at.strftime("%d/%m/%y"),
-                'updated' : datas.updated_at.strftime("%d/%m/%y"),
-                'Assigned' : assignedStatus
-            }
-            print(respObject)
-            return make_response(jsonify(respObject)),200
-        except Exception as e:
-            print(e)
-            responseObject = {
-                'status': 'fail',
-                'message' : 'Try again'
-            }
-            return make_response(jsonify(responseObject)), 500
  
 class SearchAPI(MethodView):
      """
      search any field of ticket
      """
      def post(self):
-        post_data = request.get_json()
-        responseBody=[]
-        
-        if post_data.get('field') == 'subject':
+        user_Id=UserModel.verify_auth_header(request.headers.get('Authorization'))
+        if not isinstance(user_Id, str):
+            logger.warning('user session {} -->[{}]'.format(request.headers.get('Authorization'), user_Id[1]))
+            return make_response(jsonify({'message':'failed'})), 401
+        else:
+            logger.info('user {} accessing  /api/search'.format(user_Id))
+            post_data = request.get_json()
+            responseBody=[]
             
-            try:
-                datas= TicketModel.query.filter(TicketModel.subject.like('%'+post_data.get('vall')+'%'))
-                for data in datas:
-                    respObject={
-                        'username':data.user.username,
-                        'ticketId' : data.ticketId,
-                        'status' : data.status,
-                        'imageURL' : data.image,
-                        'category' : data.category,
-                        'priority' : data.priority,
-                        'subject' : data.subject,
-                        'created' : data.created_at.strftime("%d/%m/%y"),
-                        'updated' : data.updated_at.strftime("%d/%m/%y")
-                    }
-                    responseBody.append(respObject)
+            if post_data.get('field') == 'subject':
                 
-                return make_response(jsonify(responseBody)),200
-            except Exception as e:
-                print(e)
-                responseObject = {
-                    'status': 'fail',
-                    'message' : 'Try again'
-                }
-                return make_response(jsonify(responseObject)), 500
-            
-        elif post_data.get('field') == 'comment':
-            
-            try:
-                datas= TicketModel.query.filter(TicketModel.comment.like('%'+post_data.get('vall')+'%'))
-                for data in datas:
-                    respObject={
-                        'username':data.user.username,
-                        'ticketId' : data.ticketId,
-                        'status' : data.status,
-                        'imageURL' : data.image,
-                        'category' : data.category,
-                        'priority' : data.priority,
-                        'subject' : data.subject,
-                        'created' : data.created_at.strftime("%d/%m/%y"),
-                        'updated' : data.updated_at.strftime("%d/%m/%y")
+                try:
+                    if post_data.get('role') == 'Admin':
+                        datas= TicketModel.query.filter(TicketModel.subject.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+                    elif post_data.get('role') == 'User':
+                        datas= TicketModel.query.filter(TicketModel.user_id == user_Id ,TicketModel.subject.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+                    elif post_data.get('role') == 'Technician':
+                        datas=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.subject.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+                        
+                    for data in datas:
+                        respObject={
+                            'username':data.user.username,
+                            'ticketId' : data.ticketId,
+                            'status' : data.status,
+                            'imageURL' : data.image,
+                            'category' : data.category,
+                            'priority' : data.priority,
+                            'subject' : data.subject,
+                            'created' : data.created_at.strftime("%d/%m/%y"),
+                            'updated' : data.updated_at.strftime("%d/%m/%y")
+                        }
+                        responseBody.append(respObject)
+                    
+                    return make_response(jsonify(responseBody)),200
+                except Exception as e:
+                    print(e)
+                    responseObject = {
+                        'status': 'fail',
+                        'message' : 'Try again'
                     }
-                    responseBody.append(respObject)
+                    return make_response(jsonify(responseObject)), 500
                 
-                return make_response(jsonify(responseBody)),200
-            except Exception as e:
-                print(e)
-                responseObject = {
-                    'status': 'fail',
-                    'message' : 'Try again'
-                }
-                return make_response(jsonify(responseObject)), 500
-            
-        elif post_data.get('field') == 'category':
-            
-            try:
-                datas= TicketModel.query.filter(TicketModel.category.like('%'+post_data.get('vall')+'%'))
-                for data in datas:
-                    respObject={
-                        'username':data.user.username,
-                        'ticketId' : data.ticketId,
-                        'status' : data.status,
-                        'imageURL' : data.image,
-                        'category' : data.category,
-                        'priority' : data.priority,
-                        'subject' : data.subject,
-                        'created' : data.created_at.strftime("%d/%m/%y"),
-                        'updated' : data.updated_at.strftime("%d/%m/%y")
+            elif post_data.get('field') == 'comment':
+                
+                try:
+                    if post_data.get('role') == 'Admin':
+                        datas= TicketModel.query.filter(TicketModel.comment.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+                    elif post_data.get('role') == 'User':
+                        datas= TicketModel.query.filter(TicketModel.user_id == user_Id,TicketModel.comment.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+                    elif post_data.get('role') == 'Technician':
+                        datas=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.comment.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+                        
+                    for data in datas:
+                        respObject={
+                            'username':data.user.username,
+                            'ticketId' : data.ticketId,
+                            'status' : data.status,
+                            'imageURL' : data.image,
+                            'category' : data.category,
+                            'priority' : data.priority,
+                            'subject' : data.subject,
+                            'created' : data.created_at.strftime("%d/%m/%y"),
+                            'updated' : data.updated_at.strftime("%d/%m/%y")
+                        }
+                        responseBody.append(respObject)
+                    
+                    return make_response(jsonify(responseBody)),200
+                except Exception as e:
+                    print(e)
+                    responseObject = {
+                        'status': 'fail',
+                        'message' : 'Try again'
                     }
-                    responseBody.append(respObject)
+                    return make_response(jsonify(responseObject)), 500
                 
-                return make_response(jsonify(responseBody)),200
-            except Exception as e:
-                print(e)
-                responseObject = {
-                    'status': 'fail',
-                    'message' : 'Try again'
-                }
-                return make_response(jsonify(responseObject)), 500
-            
-        elif post_data.get('field') == 'ID':
-            
-            try:
-                datas= TicketModel.query.filter(TicketModel.ticketId.like('%'+post_data.get('vall')+'%'))
-                for data in datas:
-                    respObject={
-                        'username':data.user.username,
-                        'ticketId' : data.ticketId,
-                        'status' : data.status,
-                        'imageURL' : data.image,
-                        'category' : data.category,
-                        'priority' : data.priority,
-                        'subject' : data.subject,
-                        'created' : data.created_at.strftime("%d/%m/%y"),
-                        'updated' : data.updated_at.strftime("%d/%m/%y")
+            elif post_data.get('field') == 'category':
+                
+                try:
+                    if post_data.get('role') == 'Admin':
+                        datas= TicketModel.query.filter(TicketModel.category.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+                    elif post_data.get('role') == 'User':
+                        datas= TicketModel.query.filter(TicketModel.user_id == user_Id,TicketModel.category.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+                    elif post_data.get('role') == 'Technician':
+                        datas=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.category.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+                    for data in datas:
+                        respObject={
+                            'username':data.user.username,
+                            'ticketId' : data.ticketId,
+                            'status' : data.status,
+                            'imageURL' : data.image,
+                            'category' : data.category,
+                            'priority' : data.priority,
+                            'subject' : data.subject,
+                            'created' : data.created_at.strftime("%d/%m/%y"),
+                            'updated' : data.updated_at.strftime("%d/%m/%y")
+                        }
+                        responseBody.append(respObject)
+                    
+                    return make_response(jsonify(responseBody)),200
+                except Exception as e:
+                    print(e)
+                    responseObject = {
+                        'status': 'fail',
+                        'message' : 'Try again'
                     }
-                    responseBody.append(respObject)
+                    return make_response(jsonify(responseObject)), 500
                 
-                return make_response(jsonify(responseBody)),200
-            except Exception as e:
-                print(e)
-                responseObject = {
-                    'status': 'fail',
-                    'message' : 'Try again'
-                }
-                return make_response(jsonify(responseObject)), 500
-            
+            elif post_data.get('field') == 'ID':
+                
+                try:
+                    if post_data.get('role') == 'Admin':
+                        datas= TicketModel.query.filter(TicketModel.ticketId.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+                    elif post_data.get('role')=='User':
+                        datas= TicketModel.query.filter(TicketModel.user_id == user_Id,TicketModel.ticketId.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+                    elif post_data.get('role')=='Technician':
+                        datas=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.ticketId.like('%'+post_data.get('vall')+'%')).order_by(TicketModel.updated_at.desc())
+
+                    for data in datas:
+                        respObject={
+                            'username':data.user.username,
+                            'ticketId' : data.ticketId,
+                            'status' : data.status,
+                            'imageURL' : data.image,
+                            'category' : data.category,
+                            'priority' : data.priority,
+                            'subject' : data.subject,
+                            'created' : data.created_at.strftime("%d/%m/%y"),
+                            'updated' : data.updated_at.strftime("%d/%m/%y")
+                        }
+                        responseBody.append(respObject)
+                    
+                    return make_response(jsonify(responseBody)),200
+                except Exception as e:
+                    print(e)
+                    responseObject = {
+                        'status': 'fail',
+                        'message' : 'Try again'
+                    }
+                    return make_response(jsonify(responseObject)), 500
+                
 class GetListTechAPI(MethodView):
     """get list of Techs and their ID """
     def get(self):
-        responseBody=[]
-        data= UserModel.query.filter_by(role='Technician')
-        for techs in data:
-           respObject={
-               'username':techs.username,
-               'user_id':techs.userId
-           }
-           responseBody.append(respObject)
-           
-        return make_response(jsonify(responseBody)),200
+        user_Id=UserModel.verify_auth_header(request.headers.get('Authorization'))
+        if not isinstance(user_Id, str):
+            logger.warning('user session {} -->[{}]'.format(request.headers.get('Authorization'), user_Id[1]))
+            return make_response(jsonify({'message':'failed'})), 401
+        else:
+            logger.info('user {} accessing  /api/getlisttech'.format(user_Id))
+            responseBody=[]
+            data= UserModel.query.filter_by(role='Technician')
+            for techs in data:
+                respObject={
+                    'username':techs.username,
+                    'user_id':techs.userId
+                }
+                responseBody.append(respObject)
             
+            return make_response(jsonify(responseBody)),200
+        
+class GetStatsAPI(MethodView):
+    """get list of Techs and their ID """
+    def get(self):
+        user_Id=UserModel.verify_auth_header(request.headers.get('Authorization'))
+        if not isinstance(user_Id, str):
+            logger.warning('user session {} -->[{}]'.format(request.headers.get('Authorization'), user_Id[1]))
+            return make_response(jsonify({'message':'failed'})), 401
+        else:
+            logger.info('user {} accessing  /api/getlisttech'.format(user_Id))
+            role=UserModel.query.filter_by(userId=user_Id).first()
+            if(role.role == 'Admin'):
+                totalT=TicketModel.query.order_by().count()
+                newT=TicketModel.query.filter_by(status = 'NEW').count()
+                closedT=TicketModel.query.filter_by(status = 'CLOSED').count()
+                solvedT=TicketModel.query.filter_by(status = 'SOLVED').count()
+                unsolvedT=TicketModel.query.filter_by(status = 'UNSOLVED').count()
+                assignedT=TicketModel.query.filter_by(status = 'ASSIGNED').count()
+                
+                return make_response(jsonify({'totalT':totalT,'newT':newT,'closedT':closedT,'solvedT':solvedT,'unsolvedT':unsolvedT,'assignedT':assignedT}))
+                
+            elif(role.role == 'Technician'):
+                totalT=Assign_ticketModel.query.filter_by(user_id = user_Id).count()
+                newT=Assign_ticketModel.query.filter_by(user_id = user_Id, status = 'NEW').count()
+                assignedT=TicketModel.query.filter_by(user_id = user_Id , status = 'ASSIGNED').count()
+                closedT=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.status=='CLOSED').count()
+                solvedT=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.status=='SOLVED').count()
+                unsolvedT=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.status=='UNSOLVED').count()
+                
+                return make_response(jsonify({'totalT':totalT,'newT':newT,'closedT':closedT,'solvedT':solvedT,'unsolvedT':unsolvedT,'assignedT':assignedT}))
+                
+            elif(role.role == 'User'):
+                totalT=TicketModel.query.filter_by(user_id = user_Id).count()
+                newT=TicketModel.query.filter_by(user_id = user_Id , status ='NEW').count()
+                closedT=TicketModel.query.filter_by(user_id = user_Id , status = 'CLOSED').count()
+                solvedT=TicketModel.query.filter_by(user_id = user_Id , status = 'SOLVED').count()
+                unsolvedT=TicketModel.query.filter_by(user_id = user_Id , status = 'UNSOLVED').count()
+                assignedT=TicketModel.query.filter_by(user_id = user_Id , status = 'ASSIGNED').count()
+                
+                return make_response(jsonify({'totalT':totalT,'newT':newT,'closedT':closedT,'solvedT':solvedT,'unsolvedT':unsolvedT,'assignedT':assignedT}))
+                
             
 #define the API Endpoints
 getdata_view = GetDataApi.as_view('getdata_api')
 getticket_view = GetTicketAPI.as_view('getticket_api')
 search_view = SearchAPI.as_view('search_api')
 getlisttech_view = GetListTechAPI.as_view('getlisttech_api')
+stats_view = GetStatsAPI.as_view('stats_api')
 
 #add Rules for API EndPoints
 api_blueprint.add_url_rule(
@@ -243,5 +438,10 @@ api_blueprint.add_url_rule(
 api_blueprint.add_url_rule(
     '/api/getlisttech',
     view_func= getlisttech_view,
+    methods=['GET']
+)
+api_blueprint.add_url_rule(
+    '/api/stats',
+    view_func= stats_view,
     methods=['GET']
 )

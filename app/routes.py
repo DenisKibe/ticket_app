@@ -1,4 +1,4 @@
-from app import app, db
+from app import app, db, logger
 from flask import render_template, session, request, flash, url_for, json, Response,redirect, g, make_response, abort
 from app.models import UserModel, TicketModel, Assign_ticketModel, CommentModel
 from app.forms import NewTicketForm, CommentForm
@@ -8,6 +8,7 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 from flask_sijax import sijax
 from urllib.parse import urlparse 
+
 
 #FOR FILE UPLOAD
 def allowed_file(filename):
@@ -57,33 +58,37 @@ def dashboard():
     session= request.cookies.get('session')
     resp=UserModel.decode_auth_token(session)
     if not isinstance(resp, str):
+        logger.warning('user session: {} --> [{}]'.format(session, resp[1]))
         return redirect(url_for('login'))
-    
+    else:
+        logger.info('user {} accessing dashboard'.format(resp))
+        
     def getCounts(obj_response,user_Id,role):
         if(role == 'Admin'):
             obj_response.html('#totalT', TicketModel.query.order_by().count())
             obj_response.html('#newT', TicketModel.query.filter_by(status = 'NEW').count())
-            obj_response.html('#openT',TicketModel.query.filter_by(status='OPEN').count())
             obj_response.html('#closedT',TicketModel.query.filter_by(status = 'CLOSED').count())
             obj_response.html('#solvedT',TicketModel.query.filter_by(status = 'SOLVED').count())
             obj_response.html('#unsolvedT',TicketModel.query.filter_by(status = 'UNSOLVED').count())
             obj_response.html('#assignedT',TicketModel.query.filter_by(status = 'ASSIGNED').count())
+            
         elif(role == 'Technician'):
-            obj_response.html('#totalT', TicketModel.query.filter(Assign_ticketModel.user_id == user_Id).count())
-            obj_response.html('#newT', TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'NEW').count())
-            obj_response.html('#openT',TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'OPEN').count())
-            obj_response.html('#closedT',TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'CLOSED').count())
-            obj_response.html('#solvedT',TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'SOLVED').count())
-            obj_response.html('#unsolvedT',TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'UNSOLVED').count())
-            obj_response.html('#assignedT',TicketModel.query.filter(Assign_ticketModel.user_id == user_Id , TicketModel.status == 'UNSOLVED').count())
+            obj_response.html('#totalT', Assign_ticketModel.query.filter_by(user_id = user_Id).count())
+            obj_response.html('#newT', Assign_ticketModel.query.filter_by(user_id = user_Id, status = 'NEW').count())
+            obj_response.html('#assignedT',TicketModel.query.filter_by(user_id = user_Id , status = 'ASSIGNED').count())
+            obj_response.html('#closedT',TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.status=='CLOSED').count())
+            obj_response.html('#solvedT',TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.status=='SOLVED').count())
+            obj_response.html('#unsolvedT',TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.status=='UNSOLVED').count())
+            
         elif(role == 'User'):
             obj_response.html('#totalT', TicketModel.query.filter_by(user_id = user_Id).count())
             obj_response.html('#newT', TicketModel.query.filter_by(user_id = user_Id , status ='NEW').count())
-            obj_response.html('#openT',TicketModel.query.filter_by(user_id = user_Id , status ='OPEN').count())
             obj_response.html('#closedT',TicketModel.query.filter_by(user_id = user_Id , status = 'CLOSED').count())
             obj_response.html('#solvedT',TicketModel.query.filter_by(user_id = user_Id , status = 'SOLVED').count())
             obj_response.html('#unsolvedT',TicketModel.query.filter_by(user_id = user_Id , status = 'UNSOLVED').count())
             obj_response.html('#assignedT',TicketModel.query.filter_by(user_id = user_Id , status = 'ASSIGNED').count())
+            
+        
             
         
     if g.sijax.is_sijax_request:
@@ -112,9 +117,34 @@ def dashboard():
 #         return render_template("dash.html", data=data, title=urlto)
         
         
-@app.route("/register")
-@app.route("/register.html")
+@flask_sijax.route(app,'/register')
 def register():
+    session= request.cookies.get('session')
+    resp=UserModel.decode_auth_token(session)
+    if not isinstance(resp, str):
+        logger.warning('user session: {} --> [{}]'.format(session, resp[1]))
+        return redirect(url_for('login'))
+    else:
+        logger.info('user {} accessing register page'.format(resp))
+    
+    def validates(obj_response, username):
+        datas=UserModel.query.filter_by(username =username).first()
+        
+        if not datas:
+            obj_response.script("$('#LRusername').attr('data-success','available')")
+            obj_response.script("$('#Rusername').removeClass('validate').addClass('valid').removeClass('invalid');")
+            
+        else:
+            obj_response.script("$('#LRusername').attr('data-error','Taken!')")
+            obj_response.script("$('#Rusername').removeClass('validate').addClass('invalid').removeClass('valid');")
+        
+    if g.sijax.is_sijax_request:
+        #sijax request detected
+        g.sijax.register_callback('validates', validates)
+        return g.sijax.process_request()
+    
+    return render_template("register.html", title="Register")
+    
     
     """ if not session.get('session'):
         return redirect(url_for('login'))
@@ -136,7 +166,7 @@ def register():
         db.session.commit()
         flash("You are successfully registered!","success")
         return redirect(url_for('index')) """
-    return render_template("register.html", title="Register")
+        
            
 
 
@@ -147,6 +177,7 @@ class SijaxHandler(object):
         
         def dump_files():
             global imageUrl
+            imageUrl=''
             if 'image' not in files:
                 return 'Bad upload'
 
@@ -167,7 +198,6 @@ class SijaxHandler(object):
             else:
                 return "invalide type of file"
         
-        resp=dump_files() 
         status = 'NEW'
         user_id = form_values.get('userId')
         comment   = form_values.get('description')
@@ -183,8 +213,8 @@ class SijaxHandler(object):
         db.session.add(new_ticket)
         db.session.commit()
        
-
-        obj_response.alert("sucess "+resp)
+        obj_response.script("sessionStorage.BtnId='{}';".format(ticketId))
+        obj_response.script("window.location='/viewticket.html';")
 
     @staticmethod
     def start_upload(obj_response, files, form_values):
@@ -196,7 +226,10 @@ def createticket():
     session= request.cookies.get('session')
     resp=UserModel.decode_auth_token(session)
     if not isinstance(resp, str):
+        logger.warning('user session: {} --> [{}]'.format(session, resp[1]))
         return redirect(url_for('login'))
+    else:
+        logger.info('user {} accessing createticket page'.format(resp))
     
     form_init_js =''
     form_init_js += g.sijax.register_upload_callback('create', SijaxHandler.start_upload)
@@ -246,14 +279,20 @@ def createticket():
 class Handler(object):
      
     @staticmethod
+    def clearNew(obj_response,ticket_id):
+        ticketA = Assign_ticketModel.query.filter_by(ticket_id = ticket_id, status='NEW').first()
+        ticketA.status = "ASSIGNED"
+        db.session.commit()
+     
+    @staticmethod
     def getTick(obj_response,ticket_id):
         datas=TicketModel.query.filter_by(ticketId =ticket_id).first()
-        assigned =Assign_ticketModel.query.filter_by(ticket_id =ticket_id).first()
+        assigned =Assign_ticketModel.query.filter_by(ticket_id =ticket_id).order_by(Assign_ticketModel.assigned_on.desc()).first()
         if(assigned==None):
             assignedStatus = None
         else:
             assignedStatus = assigned.user.username
-                
+                    
         obj_response.html("#usrNameD",datas.user.username)
         obj_response.attr("#assignedD",'value',assignedStatus)
         obj_response.html("#opt1",datas.status)
@@ -265,9 +304,11 @@ class Handler(object):
         obj_response.html("#noteD",datas.comment)
         obj_response.html("#imgUrl",datas.image)
         
+        
+        
     @staticmethod
     def getCom(obj_response,ticket_id):
-        coms=CommentModel.query.filter_by(ticket_id = ticket_id)
+        coms=CommentModel.query.filter_by(ticket_id = ticket_id).order_by(CommentModel.comment_on.desc())
         
         obj_response.html("#commentD",'')
         for data in coms:
@@ -278,8 +319,6 @@ class Handler(object):
     @staticmethod
     def commenting(obj_response,ticket_id,user_id,comment):
         commentId = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
-        print('here')
-        print(comment)
         new_comment=CommentModel(comment = comment, ticket_id = ticket_id, user_id = user_id, commentId = commentId)
         
         db.session.add(new_comment)
@@ -301,19 +340,27 @@ class Handler(object):
     def assigning(obj_response,user_id,ticket_id):
         assignId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
         
-        new_assign=Assign_ticketModel(user_id=user_id, ticket_id=ticket_id, assignId=assignId, status='ASSIGNED')
+        ticketcheck=Assign_ticketModel.query.filter_by(ticket_id=ticket_id,status='NEW').first()
+        if ticketcheck:
+            Handler.clearNew(obj_response,ticket_id)
+        
+        new_assign=Assign_ticketModel(user_id=user_id, ticket_id=ticket_id, assignId=assignId, status='NEW')
         db.session.add(new_assign)
         db.session.commit()
         
         Handler.changeStatus(obj_response,ticket_id,"ASSIGNED")
         
     
+ 
 @flask_sijax.route(app,"/viewticket.html")
 def viewticket(): 
     session= request.cookies.get('session')
     resp=UserModel.decode_auth_token(session)
     if not isinstance(resp, str):
+        logger.warning('user session: {} --> [{}]'.format(session, resp[1]))
         return redirect(url_for('login'))
+    else:
+        logger.info('user {} accessing viewticket'.format(resp))
     
     if g.sijax.is_sijax_request:
         #sijax request detected
@@ -406,7 +453,9 @@ def assign():
 @flask_sijax.route(app,'/hello')
 def hello():
     def say_hi(obj_response):
+        testId="TJW6xvPLciGEEexZ"
         obj_response.alert("Hi there!")
+        obj_response.script("john();")
         
     if g.sijax.is_sijax_request:
         #sijax request detected
@@ -441,6 +490,9 @@ def dash():
     session= request.cookies.get('session')
     resp=UserModel.decode_auth_token(session)
     if not isinstance(resp, str):
+        logger.warning('user session: {} --> [{}]'.format(session, resp[1]))
         return redirect(url_for('login'))
+    else:
+        logger.info('user {} accessing dash'.format(resp))
     
     return render_template("dash.html")
