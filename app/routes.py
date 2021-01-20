@@ -198,6 +198,7 @@ class SijaxHandler(object):
             else:
                 return "invalide type of file"
         
+        dump_files()
         status = 'NEW'
         user_id = form_values.get('userId')
         comment   = form_values.get('description')
