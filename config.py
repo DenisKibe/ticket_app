@@ -2,7 +2,7 @@ import os
 
 class Config(object):
     SECRET_KEY = "LP\xb6SOI7\x16\xb0\xd9r\xb0\x1a\x9bFl>\x84\xcd\xd8\xd9\x15\x8f\x8e"
-    SQLALCHEMY_DATABASE_URI= 'postgresql://kibe:denis@localhost/ticket_app'
+    SQLALCHEMY_DATABASE_URI= 'postgresql://kibe:denis@127.0.0.1/ticket_app'
     #SIJAX_STATIC_PATH ='app/static/js/sijax/sijax.js'
     #SIJAX_JSON_URI = 'app/static/js/sijax/json2.js'
     CSRF_ENABLED=True
