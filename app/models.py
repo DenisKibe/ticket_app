@@ -11,9 +11,9 @@ class UserModel(db.Model):
   __tablename__='user'
   
   userId = db.Column(db.String(20), primary_key=True, nullable=False, unique=True)
-  username = db.Column(db.String(80), nullable=False)
+  username = db.Column(db.String(80), nullable=False,unique=True)
   password = db.Column(db.String(200), nullable=False)
-  email = db.Column(db.String(120), unique=True, nullable=False)
+  email = db.Column(db.String(120), nullable=True)
   role = db.Column(db.String(30), nullable=False)
   ticketer=relationship("TicketModel", backref='user')
   assigner=relationship("Assign_ticketModel", backref='user')
