@@ -1,13 +1,11 @@
 from app import app, db, logger
-from flask import render_template, session, request, flash, url_for, json, Response,redirect, g, make_response, abort
+from flask import render_template, session, request, flash, url_for, json, Response,redirect, g, make_response
 from app.models import UserModel, TicketModel, Assign_ticketModel, CommentModel
-from app.forms import NewTicketForm, CommentForm
 from werkzeug.security import generate_password_hash, check_password_hash
-import random, string,logging, os, flask_sijax, requests
+import random, string, os, flask_sijax, requests
 from datetime import datetime
 from werkzeug.utils import secure_filename
 from flask_sijax import sijax
-from urllib.parse import urlparse 
 
 
 #FOR FILE UPLOAD
@@ -18,33 +16,6 @@ def allowed_file(filename):
 @app.route("/login.html")
 def login():
     return render_template("login.html", title="login")
-
-"""if session.get('Lsession'):
-        return redirect(f"dashboard/{session.get('user_id')}")
-    
-    form = LoginForm()
-    
-    if form.validate_on_submit():
-        email = form.email.data
-        password = form.password.data
-        
-        user=UserModel.query.filter(UserModel.email==email).first()
-        
-        if user is not None:
-            if check_password_hash(user.password,password):
-                session['Lsession'] = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(64))
-                session['user_id']=user.userId
-                session['user_role'] = user.role
-                session['user_name'] = user.username
-                return redirect(f"dashboard/{user.userId}")
-            else:
-                 return render_template("login.html", title="login", form=form, datax="wrong password", login=True)
-        else:
-            return render_template("login.html", title="login", form=form, datax='None', login=True)
-         
-    return render_template("login.html", title="login", form=form, login=True) """
-                            
-
 
 
 @app.route("/")
@@ -98,25 +69,6 @@ def dashboard():
     
     return render_template("dashboard.html")
         
-        
-        
-
-            
-# @app.route("/dash/<urlto>/<role>/<userId>")
-# def dash(urlto,role,userId):
-        
-#     if role == 'Admin':
-#         data=TicketModel.query.filter_by(status = urlto).all()
-#         print(data)
-#         return render_template("dash.html", data=data, title=urlto)
-#     elif role == 'Technician':
-#         data=TicketModel.query.filter(Assign_ticketModel.user_id == userId , TicketModel.status==urlto).all()
-#         return render_template("dash.html", data=data, title=urlto)
-#     elif session.get('user_role') == 'User':
-#         data=TicketModel.query.filter_by(user_id=userId,status=urlto).all()
-#         return render_template("dash.html", data=data, title=urlto)
-        
-        
 @flask_sijax.route(app,'/register')
 def register():
     session= request.cookies.get('session')
@@ -145,47 +97,23 @@ def register():
     
     return render_template("register.html", title="Register")
     
-    
-    """ if not session.get('session'):
-        return redirect(url_for('login'))
-    
-    if not session.get('user_role') == 'Admin':
-        return redirect(url_for('login'))
-    
-    form = RegisterForm()
-    if form.validate_on_submit():
-        passwd=form.password.data
-        password = generate_password_hash(passwd)
-        email       = form.email.data
-        role    = form.role.data
-        username  = form.username.data
-        userId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
-
-        new_user = UserModel(role=role, email=email, username=username, userId=userId, password=password)
-        db.session.add(new_user)
-        db.session.commit()
-        flash("You are successfully registered!","success")
-        return redirect(url_for('index')) """
-        
-           
-
-
 class SijaxHandler(object):
     
     @staticmethod
     def _dump_data(obj_response, files, form_values):
         
         def dump_files():
-            global imageUrl
-            imageUrl=''
+            
             if 'image' not in files:
-                return 'Bad upload'
+                logger.warning('No file part')
+                return ''
 
             file_data = files['image']
             file_name = file_data.filename
             
             if file_name is None:
-                return 'Nothing uploaded'
+                logger.warning('No selected file')
+                return ''
 
             if file_data and allowed_file(file_name):
                 new_filename = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(7))
@@ -194,11 +122,13 @@ class SijaxHandler(object):
                 filename= secure_filename('.'.join([new_filename,ext]))
                 file_data.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 imageUrl='/'.join(['/uploads', filename])
-                return "uploaded"
+                logger.info('uploaded sucessiful')
+                return imageUrl
             else:
-                return "invalide type of file"
+                logger.warning("no image to upload")
+                return ''
         
-        dump_files()
+        imageUrl=dump_files()
         status = 'NEW'
         user_id = form_values.get('userId')
         comment   = form_values.get('description')
@@ -239,40 +169,6 @@ def createticket():
         # The request looks like a valid Sijax request
         # The handlers are already registered above.. we can process the request
         return g.sijax.process_request()
-
-    # form = NewTicketForm()
-    # if request.method == "POST":
-        
-    #     if 'file' not in request.files:
-    #         flash('No file part')
-    #     file = request.files['image']
-        
-    #     if file.filename=='':
-    #         flash('No selected file')
-    #     if file and allowed_file(file.filename):
-    #         new_filename = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(7))
-    #         x=file.filename
-    #         y=x.rsplit('.',1)[1]
-            
-    #         filename= secure_filename('.'.join([new_filename,y]))
-    #         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    #         image='/'.join(['/uploads', filename])
-    #         flash('file uploaded')
-        
-    #     status = 'NEW'
-    #     comment   = form.comment.data
-    #     category  = form.category.data
-    #     priority  = form.priority.data
-    #     subject  = form.subject.data
-    #     updated_at = datetime.now()
-    #     ticketId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
-        
-    #     new_ticket = TicketModel(user_id=session.get('user_id'),status=status,image=image, comment=comment,category=category, priority=priority, subject=subject,updated_at=updated_at, ticketId=ticketId)
-    #     db.session.add(new_ticket)
-    #     db.session.commit()
-    #     flash("Ticket has been created successfuly","success")
-        
-    #     return render_template("createTicket.html", title=category, title2="Image Upload", form=form )
     
     return render_template("createTicket.html", title="Create Ticket", title2="Image Upload", form_init_js=form_init_js)
 
@@ -370,121 +266,7 @@ def viewticket():
     
     #regular (non sijax request)
     return render_template("viewTicket.html" )
-    """ form = CommentForm()
-    
-    comments = CommentModel.query.filter(CommentModel.ticket_id == ticket_id).all()
-    
-    ticket= TicketModel.query.filter(TicketModel.ticketId  == ticket_id).first()
-    
-    user= UserModel.query.filter(UserModel.role == 'Technician').all()
-    
-    #change the status to open
-    if session.get('user_role') == 'Admin' and ticket.status == 'NEW':
-        ticket.status = 'OPEN'
-        ticket.updated_at = datetime.now()
-        
-        db.session.commit() """
-        
-    return render_template("viewTicket.html" )
 
-
-""" @app.route("/assign", methods=["GET","POST"])
-@app.route("/assign/<ticketid>", methods=["GET","POST"])
-def assign():
-    
-    if request.method == "POST":
-        
-        user_id = request.form.get('user_id')
-        ticket_id = request.form.get('ticket_id')
-        assignId   = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
-        
-        new_assign=Assign_ticketModel(user_id=user_id, ticket_id=ticket_id, assignId=assignId, status='ASSIGNED')
-        
-        db.session.add(new_assign)
-        
-        ticketE= TicketModel.query.filter(TicketModel.ticketId  == ticket_id).first()
-        ticketE.status = 'ASSIGNED'
-        ticketE.updated_at = datetime.now()
-        
-        db.session.commit()
-        
-        return render_template(f"assign.html",data="done" ) """
-    
-    
-        
-# @flask_sijax.route(app,"/performtask")
-# def performtask():
-#     session= request.cookies.get('session')
-#     resp=UserModel.decode_auth_token(session)
-#     if not isinstance(resp, str):
-#         return redirect(url_for('login'))
-    
-#     if g.sijax.is_sijax_request:
-#         #sijax request detected
-#         g.sijax.register_object(PerformHandler)
-#         return g.sijax.process_request()
-    # if request.method == 'POST':
-    #     comment = request.form.get('comment')
-    #     status = request.form.get('status')
-        
-    #     ticket_id = request.form.get('ticket_id')
-    #     user_id = session.get('user_id')
-    #     commentId = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
-        
-    #     ticketE = TicketModel.query.filter(TicketModel.ticketId  == ticket_id).first()
-        
-    #     if status == 'No':
-    #         ticketE.status = 'UNSOLVED'
-    #     elif status== 'Yes' and session.get('user_role')=='Admin':
-    #         ticketE.status = 'CLOSED'
-    #     elif status == 'Yes' and session.get('user_role') == 'Technician':
-    #         ticketE.status = 'SOLVED'
-    #     elif status == 'Yes' and session.get('user_role') == 'User':
-    #         ticketE.status = 'SOLVED' 
-               
-    #     new_comment=CommentModel(comment = comment, ticket_id = ticket_id, user_id = user_id, commentId = commentId)
-        
-    #     db.session.add(new_comment)
-    #     db.session.commit()
-        
-    #return redirect(url_for('/'))
-
-
-#sijax function
-@flask_sijax.route(app,'/hello')
-def hello():
-    def say_hi(obj_response):
-        testId="TJW6xvPLciGEEexZ"
-        obj_response.alert("Hi there!")
-        obj_response.script("john();")
-        
-    if g.sijax.is_sijax_request:
-        #sijax request detected
-        g.sijax.register_callback('say_hi', say_hi)
-        return g.sijax.process_request()
-    
-    #regular (non sijax request)
-    return render_template('test.html')
-
-""" @flask_sijax.route(app,'/login')
-def login():
-    def logger_in(obj_response, username,password):
-        data=json.dumps({'username':username,'password':password})
-        resp=requests.post('/auth/login',data=data,headers={'Contnet-Type':'application/json','Allow-Method':'POST'})
-        
-        if resp.status_code != 200:
-            obj_response.alert(resp.json())
-        else:
-            obj_response.alert(resp.json())
-        
-        if g.sijax.is_sijax_request:
-            #sijax request detected
-            g.sijax.register_callback('logger_in', logger_in)
-            return g.sijax.process_request()
-    
-        #regular (non sijax request)
-        return render_template('login.html') """
-        
 @app.route('/dash')
 @app.route('/dash.html')
 def dash():

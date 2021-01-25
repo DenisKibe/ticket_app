@@ -1,0 +1,58 @@
+2021-01-21 00:40:32,546-[INFO]- app : user admin1 -->[Successfully logged in.]
+2021-01-21 00:40:32,575-[INFO]- app : user Kh4alXkTtpjDY70g accessing dashboard
+2021-01-21 00:40:32,880-[INFO]- app : user Kh4alXkTtpjDY70g --> [success] 
+2021-01-21 00:40:32,918-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/getlisttech
+2021-01-21 00:40:32,934-[INFO]- app : user Kh4alXkTtpjDY70g accessing dashboard
+2021-01-21 00:40:37,074-[INFO]- app : user Kh4alXkTtpjDY70g accessing register page
+2021-01-21 00:40:40,737-[INFO]- app : user Kh4alXkTtpjDY70g accessing createticket page
+2021-01-21 00:40:46,784-[INFO]- app : user Kh4alXkTtpjDY70g accessing dashboard
+2021-01-21 00:40:47,114-[INFO]- app : user Kh4alXkTtpjDY70g --> [success] 
+2021-01-21 00:40:47,118-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/getlisttech
+2021-01-21 00:40:47,146-[INFO]- app : user Kh4alXkTtpjDY70g accessing dashboard
+2021-01-21 00:40:48,361-[INFO]- app : user Kh4alXkTtpjDY70g accessing dash
+2021-01-21 00:40:48,598-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/getdata
+2021-01-21 00:40:54,554-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/getdata
+2021-01-21 00:40:56,713-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/getdata
+2021-01-21 00:40:58,624-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/getdata
+2021-01-21 00:41:00,623-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/getdata
+2021-01-21 00:41:18,417-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/search
+2021-01-21 00:41:24,478-[INFO]- app : user Kh4alXkTtpjDY70g accessing dash
+2021-01-21 00:41:24,751-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/getdata
+2021-01-21 00:41:49,226-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/search
+2021-01-21 00:41:51,083-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/search
+2021-01-21 00:42:14,482-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/getdata
+2021-01-21 00:42:15,974-[INFO]- app : user Kh4alXkTtpjDY70g accessing viewticket
+2021-01-21 00:42:16,283-[INFO]- app : user Kh4alXkTtpjDY70g accessing viewticket
+2021-01-21 00:42:16,295-[INFO]- app : user Kh4alXkTtpjDY70g accessing viewticket
+2021-01-21 00:42:26,409-[INFO]- app : user Kh4alXkTtpjDY70g accessing viewticket
+2021-01-22 00:50:44,113-[WARNING]- app : user Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTExNzkwMTIsImlhdCI6MTYxMTE3ODgzMiwic3ViIjoiS2g0YWxYa1R0cGpEWTcwZyJ9.rMEf8Iw6VhxmPMg7KEFVOHVqX6Rup3D17s9jQogVbxo --> [401] 
+2021-01-22 00:52:52,918-[WARNING]- app : user admin1 --> [fail] 
+2021-01-22 01:04:24,738-[WARNING]- app : user admin1 --> [fail] 
+2021-01-22 01:13:42,585-[WARNING]- app : user admin1 --> [fail] 
+2021-01-22 01:25:25,550-[WARNING]- app : user admin1 --> [fail] 
+2021-01-22 01:26:04,425-[ERROR]- root : Error: Directory migrations already exists and is not empty
+2021-01-22 03:00:17,384-[WARNING]- app : user admin1 --> [fail] 
+2021-01-22 03:11:21,326-[WARNING]- app : user admin1 --> [Invalid username] 
+2021-01-25 22:30:04,277-[INFO]- app : user admin1 -->[Successfully logged in.]
+2021-01-25 22:30:04,303-[INFO]- app : user Kh4alXkTtpjDY70g accessing dashboard
+2021-01-25 22:30:04,854-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/getlisttech
+2021-01-25 22:30:04,906-[INFO]- app : user Kh4alXkTtpjDY70g --> [success] 
+2021-01-25 22:30:04,922-[INFO]- app : user Kh4alXkTtpjDY70g accessing dashboard
+2021-01-25 22:30:22,395-[INFO]- app : user Kh4alXkTtpjDY70g accessing createticket page
+2021-01-25 22:31:26,985-[INFO]- app : user Kh4alXkTtpjDY70g accessing createticket page
+2021-01-25 22:31:26,988-[INFO]- app : uploaded sucessiful
+2021-01-25 22:31:32,413-[INFO]- app : user Kh4alXkTtpjDY70g accessing createticket page
+2021-01-25 22:31:32,421-[INFO]- app : uploaded sucessiful
+2021-01-25 22:36:42,102-[WARNING]- app : user session: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTE2MDMxODQsImlhdCI6MTYxMTYwMzAwNCwic3ViIjoiS2g0YWxYa1R0cGpEWTcwZyJ9.yTHDdSudqMOEy7RZYPns923e8_WVe_Gyzj1d-Lp85TM --> [401]
+2021-01-25 22:36:44,613-[WARNING]- app : user Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTE2MDMxODQsImlhdCI6MTYxMTYwMzAwNCwic3ViIjoiS2g0YWxYa1R0cGpEWTcwZyJ9.yTHDdSudqMOEy7RZYPns923e8_WVe_Gyzj1d-Lp85TM --> [401] 
+2021-01-25 22:37:02,784-[INFO]- app : user admin1 -->[Successfully logged in.]
+2021-01-25 22:37:02,815-[INFO]- app : user Kh4alXkTtpjDY70g accessing dashboard
+2021-01-25 22:37:03,535-[INFO]- app : user Kh4alXkTtpjDY70g accessing  /api/getlisttech
+2021-01-25 22:37:03,591-[INFO]- app : user Kh4alXkTtpjDY70g --> [success] 
+2021-01-25 22:37:03,622-[INFO]- app : user Kh4alXkTtpjDY70g accessing dashboard
+2021-01-25 22:37:10,299-[INFO]- app : user Kh4alXkTtpjDY70g accessing createticket page
+2021-01-25 22:37:39,914-[INFO]- app : user Kh4alXkTtpjDY70g accessing createticket page
+2021-01-25 22:37:39,916-[INFO]- app : uploaded sucessiful
+2021-01-25 22:37:40,083-[INFO]- app : user Kh4alXkTtpjDY70g accessing viewticket
+2021-01-25 22:37:40,850-[INFO]- app : user Kh4alXkTtpjDY70g accessing viewticket
+2021-01-25 22:37:40,860-[INFO]- app : user Kh4alXkTtpjDY70g accessing viewticket
