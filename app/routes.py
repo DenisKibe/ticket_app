@@ -1,11 +1,9 @@
 from app import app, db, logger
-from flask import render_template, session, request, flash, url_for, json, Response,redirect, g, make_response
+from flask import render_template,  request, flash, url_for,redirect, g
 from app.models import UserModel, TicketModel, Assign_ticketModel, CommentModel
-from werkzeug.security import generate_password_hash, check_password_hash
-import random, string, os, flask_sijax, requests
+import random, string, os, flask_sijax
 from datetime import datetime
 from werkzeug.utils import secure_filename
-from flask_sijax import sijax
 
 
 #FOR FILE UPLOAD

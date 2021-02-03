@@ -1,8 +1,7 @@
-import flask , jwt, datetime
-from flask import json, Response, jsonify,make_response
+import jwt, datetime
+from flask import jsonify,make_response
 from app import db, app
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, Float, Text, TIMESTAMP, text, ForeignKey
+from sqlalchemy import text, ForeignKey
 from sqlalchemy.orm import relationship
 
 

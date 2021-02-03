@@ -1,9 +1,7 @@
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
-from datetime import datetime
-from app import db, logger
+from app import logger
 from app.models import TicketModel, Assign_ticketModel, UserModel
-import random, string
 
 api_blueprint = Blueprint('api', __name__)
 
