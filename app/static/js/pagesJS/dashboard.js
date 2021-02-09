@@ -113,7 +113,7 @@ $(document).ready(function(){
 
   			method:'Get',
   			dataType:'json',
-  			headers:{
+        headers:{
   				'Content-Type':'application/json',
           'Authorization':'Bearer '+sessionStorage.getItem('session')
   			},
@@ -129,5 +129,68 @@ $(document).ready(function(){
           toastr.error('error');
   			}
       });
+
+      $('#getStatDate').on('change', function(){
+        let dateVal=$('#getStatDate').val();
+        var start="", end="";
+        if (dateVal == "Today"){
+          let today= new Date();
+          start = today.toISOString().slice(0,10);
+          end = today.toISOString().slice(0,10);
+        }
+        else if ( dateVal == "Yesterday"){
+          let today = new Date();
+          today.setDate(today.getDate() - 1);
+          start = today.toISOString().slice(0,10);
+          end = today.toISOString().slice(0,10);
+        }
+        else if (dateVal == "7days"){
+          let today = new Date();
+          today.setDate(today.getDate() - 7);
+          start = today.toISOString().slice(0,10);
+          end = new Date().toISOString().slice(0,10);
+        }
+        else if (dateVal == "30days"){
+          let today = new Date();
+          end = today.toISOString().slice(0,10);
+          today.setDate(today.getDate()- 30);
+          start = today.toISOString().slice(0,10);
+        }
+        else if (dateVal == "week"){
+          let today = new Date();
+          today.setDate(today.getDate() - today.getDay());
+          end = today.toISOString().slice(0,10);
+          today.setDate(today.getDate() - 6);
+          start = today.toISOString().slice(0,10);
+        }
+        else if (dateVal == "month"){
+          let today = new Date();
+          today.setDate(today.getDate() - today.getDate());
+          end  = today.toISOString().slice(0,10);
+          today.setDate((today.getDate() - today.getDate())+1 );
+          start = today.toISOString().slice(0,10);
+        }
+
+        $.ajax({
+          url:window.location.origin+"/api/getdates",
+          method:'post',
+          dataType:'json',
+          headers:{
+    				'Content-Type':'application/json',
+            'Authorization':'Bearer '+sessionStorage.getItem('session')
+    			},
+          data:JSON.stringify({'start':start,'end':end}),
+          success:function(ResponseBody){
+            let r =JSON.parse(JSON.stringify(ResponseBody));
+            console.log(JSON.stringify(ResponseBody));
+            test([r.newT,r.assignedT,r.solvedT,r.unsolvedT, r.closedT]);
+
+          },
+          error:function(err){
+            console.log(JSON.stringify(err));
+            toastr.error('error');
+          }
+        });
+      })
 
 });

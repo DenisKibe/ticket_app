@@ -1,7 +1,8 @@
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 from app import logger
-from app.models import TicketModel, Assign_ticketModel, UserModel
+from app.models import CommentModel, TicketModel, Assign_ticketModel, UserModel
+import datetime
 
 api_blueprint = Blueprint('api', __name__)
 
@@ -370,7 +371,7 @@ class GetListTechAPI(MethodView):
             return make_response(jsonify(responseBody)),200
         
 class GetStatsAPI(MethodView):
-    """get list of Techs and their ID """
+    """get stats  """
     def get(self):
         user_Id=UserModel.verify_auth_header(request.headers.get('Authorization'))
         if not isinstance(user_Id, str):
@@ -408,7 +409,49 @@ class GetStatsAPI(MethodView):
                 assignedT=TicketModel.query.filter_by(user_id = user_Id , status = 'ASSIGNED').count()
                 
                 return make_response(jsonify({'totalT':totalT,'newT':newT,'closedT':closedT,'solvedT':solvedT,'unsolvedT':unsolvedT,'assignedT':assignedT}))
+
+class GetDatesAPI(MethodView):
+    """get data as per the date"""
+    def post(self):
+        user_Id=UserModel.verify_auth_header(request.headers.get('Authorization'))
+        if not isinstance(user_Id, str):
+            logger.warning('user session {} -->[{}]'.format(request.headers.get('Authorization'), user_Id[1]))
+            return make_response(jsonify({'message':'failed'})), 401
+        else:
+            logger.info('user {} accessing  /api/getstatsdate'.format(user_Id))
+            role=UserModel.query.filter_by(userId=user_Id).first()
+            post_data = request.get_json()
+            
+            if(role.role == 'Admin'):
+                totalT=TicketModel.query.filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                newT=TicketModel.query.filter_by(status = 'NEW').filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                closedT=TicketModel.query.filter_by(status = 'CLOSED').filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                solvedT=TicketModel.query.filter_by(status = 'SOLVED').filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                unsolvedT=TicketModel.query.filter_by(status = 'UNSOLVED').filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                assignedT=TicketModel.query.filter_by(status = 'ASSIGNED').filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
                 
+                return make_response(jsonify({'totalT':totalT,'newT':newT,'closedT':closedT,'solvedT':solvedT,'unsolvedT':unsolvedT,'assignedT':assignedT}))
+                
+            elif(role.role == 'Technician'):
+                totalT=Assign_ticketModel.query.filter_by(user_id = user_Id).filter(Assign_ticketModel.assigned_on.between(post_data.get('start'),post_data.get('end'))).count()
+                newT=Assign_ticketModel.query.filter_by(user_id = user_Id, status = 'NEW').filter(Assign_ticketModel.assigned_on.between(post_data.get('start'),post_data.get('end'))).count()
+                assignedT=TicketModel.query.filter_by(user_id = user_Id , status = 'ASSIGNED').filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                closedT=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.status=='CLOSED' , TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                solvedT=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.status=='SOLVED', TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                unsolvedT=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.status=='UNSOLVED', TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                
+                return make_response(jsonify({'totalT':totalT,'newT':newT,'closedT':closedT,'solvedT':solvedT,'unsolvedT':unsolvedT,'assignedT':assignedT}))
+                
+            elif(role.role == 'User'):
+                totalT=TicketModel.query.filter_by(user_id = user_Id).filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                newT=TicketModel.query.filter_by(user_id = user_Id , status ='NEW').filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                closedT=TicketModel.query.filter_by(user_id = user_Id , status = 'CLOSED').filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                solvedT=TicketModel.query.filter_by(user_id = user_Id , status = 'SOLVED').filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                unsolvedT=TicketModel.query.filter_by(user_id = user_Id , status = 'UNSOLVED').filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                assignedT=TicketModel.query.filter_by(user_id = user_Id , status = 'ASSIGNED').filter(TicketModel.updated_at.between(post_data.get('start'),post_data.get('end'))).count()
+                
+                return make_response(jsonify({'totalT':totalT,'newT':newT,'closedT':closedT,'solvedT':solvedT,'unsolvedT':unsolvedT,'assignedT':assignedT}))
+
             
 #define the API Endpoints
 getdata_view = GetDataApi.as_view('getdata_api')
@@ -416,6 +459,7 @@ getticket_view = GetTicketAPI.as_view('getticket_api')
 search_view = SearchAPI.as_view('search_api')
 getlisttech_view = GetListTechAPI.as_view('getlisttech_api')
 stats_view = GetStatsAPI.as_view('stats_api')
+getdates_view = GetDatesAPI.as_view('getdates_api')
 
 #add Rules for API EndPoints
 api_blueprint.add_url_rule(
@@ -442,4 +486,9 @@ api_blueprint.add_url_rule(
     '/api/stats',
     view_func= stats_view,
     methods=['GET']
+)
+api_blueprint.add_url_rule(
+    '/api/getdates',
+    view_func=getdates_view,
+    methods=['POST']
 )
