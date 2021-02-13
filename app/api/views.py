@@ -25,15 +25,17 @@ class GetDataApi(MethodView):
                     datas=TicketModel.query.filter_by(status = post_data.get('status')).order_by(TicketModel.updated_at.desc())
                 
                     #create a dict of results
+                    numCount = 0
                     for data in datas:
+                        numCount+=1
                         respObject={
-                            'username':data.user.username,
+                            'numCount': numCount,
                             'ticketId' : data.ticketId,
-                            'status' : data.status,
-                            'imageURL' : data.image,
+                            'username':data.user.username,
+                            'subject' : data.subject,
                             'category' : data.category,
                             'priority' : data.priority,
-                            'subject' : data.subject,
+                            'status' : data.status,
                             'created' : data.created_at.strftime("%d/%m/%y"),
                             'updated' : data.updated_at.strftime("%d/%m/%y")
                         }
@@ -54,12 +56,14 @@ class GetDataApi(MethodView):
                         datas=Assign_ticketModel.query.filter_by(status = post_data.get('status'), user_id = user_Id).order_by(Assign_ticketModel.assigned_on.desc())
                         
                         #create a dict of results
+                        numCount = 0
                         for data in datas:
+                            numCount+=1
                             respObject={
+                                'numCount':numCount,
                                 'username':data.user.username,
                                 'ticketId' : data.ticket_id,
                                 'status' : data.ticket.status,
-                                'imageURL' : data.ticket.image,
                                 'category' : data.ticket.category,
                                 'priority' : data.ticket.priority,
                                 'subject' : data.ticket.subject,
@@ -82,12 +86,14 @@ class GetDataApi(MethodView):
                         datas=TicketModel.query.filter_by(status = post_data.get('status'), user_id = user_Id).order_by(TicketModel.updated_at.desc())
                         
                         #create a dict of results
+                        numCount = 0
                         for data in datas:
+                            numCount+=1
                             respObject={
+                                'numCount':numCount,
                                 'username':data.user.username,
                                 'ticketId' : data.ticketId,
                                 'status' : data.status,
-                                'imageURL' : data.image,
                                 'category' : data.category,
                                 'priority' : data.priority,
                                 'subject' : data.subject,
@@ -110,12 +116,14 @@ class GetDataApi(MethodView):
                         datas=TicketModel.query.join(Assign_ticketModel, TicketModel.ticketId==Assign_ticketModel.ticket_id).filter(Assign_ticketModel.user_id == user_Id, TicketModel.status==post_data.get('status')).order_by(TicketModel.updated_at.desc())
                         
                         #create a dict of results
+                        numCount = 0
                         for data in datas:
+                            numCount+=1
                             respObject={
+                                'numCount': numCount,
                                 'username':data.user.username,
                                 'ticketId' : data.ticketId,
                                 'status' : data.status,
-                                'imageURL' : data.image,
                                 'category' : data.category,
                                 'priority' : data.priority,
                                 'subject' : data.subject,
@@ -138,12 +146,14 @@ class GetDataApi(MethodView):
                     datas=TicketModel.query.filter_by(status = post_data.get('status'), user_id = user_Id).order_by(TicketModel.updated_at.desc())
                 
                     #create a dict of results
+                    numCount = 0
                     for data in datas:
+                        numCount+=1
                         respObject={
+                            'numCount':numCount,
                             'username':data.user.username,
                             'ticketId' : data.ticketId,
                             'status' : data.status,
-                            'imageURL' : data.image,
                             'category' : data.category,
                             'priority' : data.priority,
                             'subject' : data.subject,

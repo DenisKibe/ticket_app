@@ -1,3 +1,29 @@
+function getData(cb_func) {
+  $.ajax({
+    url:window.location.origin+"/api/getdata",
+    method:'POST',
+    dataType:'json',
+    headers:{
+      'Content-Type':'application/json',
+      'Authorization':'Bearer '+sessionStorage.getItem('session')
+    },
+    data:JSON.stringify({'role':JSON.parse(sessionStorage.getItem('U')).data.role,'status':sessionStorage.getItem('status')}),
+    statusCode:{
+      401:function(){
+        toastr.error("Unauthorized! Please Login again");
+        sessionStorage.clear();
+        setTimeout(function () {
+          window.location="/";
+        }, 3000);
+      }
+    },
+    success:cb_func,
+    error:function(Err){
+      console.log(JSON.stringify(Err));
+      toastr.error('An Error occured. Please try again later');
+    }
+  });
+}
 $(document).ready(function(){
   //check if session is availabe
   if (sessionStorage.getItem('session') === null || sessionStorage.getItem('session')=="undefined") {
@@ -21,68 +47,51 @@ $(document).ready(function(){
       return false;
     }
     else{
-      $.ajax({
-        url:window.location.origin+"/api/search",
-        method:'POST',
-        dataType:'json',
-        headers:{
-          'Content-Type':'application/json',
-          'Authorization':'Bearer '+sessionStorage.getItem('session')
-        },
-        data:JSON.stringify({'field':field,'vall':vall,'role':JSON.parse(sessionStorage.getItem('U')).data.role}),
-        statusCode:{
-          401:function(){
-            toastr.error("Unauthorized! Please Login again");
-            sessionStorage.clear();
-            setTimeout(function () {
-              window.location="/";
-            }, 3000);
+      getData(function( data ) {
+        console.log(JSON.parse(JSON.stringify(data)));
+
+        data = JSON.parse(JSON.stringify(data));
+        $('#ticketTable').DataTable().destroy();
+
+    	$('#ticketTable').DataTable( {
+        data:data,
+        columns:[
+          {
+            data:"numCount"
+          },
+          {
+            data:"ticketId"
+          },
+          {
+
+            data:"username"
+          },
+          {
+
+            data:"subject"
+          },
+          {
+
+            data:"category"
+          },
+          {
+
+            data:"priority"
+          },
+          {
+
+            data:"status"
+          },
+          {
+            data:"created"
+          },
+          {
+            data:"updated"
           }
-        },
-        success:function(Resp){
-          console.log(JSON.parse(JSON.stringify(Resp)));
-          $('#content').empty();
-          let r= JSON.parse(JSON.stringify(Resp));
-          let z=0;
-          for ( var key in r){
-            if(r.hasOwnProperty(key)){
-              z++;
-              var colorP,colorS
-
-              if (r[key].priority == "HIGH"){
-                colorP='badge-success';
-              }
-              else if(r[key].priority == "MEDIUM"){
-                colorP='badge-info';
-              }
-              else{
-                colorP = 'badge-light';
-              }
-
-              if (r[key].status == 'NEW'){
-                colorS="badge-primary";
-              }
-              else if(r[key].status == 'CLOSED'){
-                colorS="badge-danger";
-              }
-              else if (r[key].status == 'ASSIGNED'){
-                colorS="badge-warning";
-              }
-              else if(r[key].status == 'SOLVED'){
-                colorS="badge-secondary";
-              }
-              else{
-                colorS="badge-default";
-              }
-              $('#content').append('<tr><td scope="row">'+z+'</td><td>'+r[key].ticketId+'</td><td>'+r[key].username+'</td><td style="white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:4px;">'+r[key].subject+'</td><td>'+r[key].category+'</td><td><span class="badge badge-pill '+colorP+'">'+r[key].priority+'</span></td><td><span class="badge badge-pill '+colorS+'">'+r[key].status+'</span></td><td>'+r[key].created+'</td><td>'+r[key].updated+'</td><td><a href="viewticket.html" id="'+r[key].ticketId+'"class="btn btn-outline-info btn-rounded btn-sm px-2" style="font-size:10px;">&#9998</a></td></tr>');
-            }
-          }
-
-        },
-        error:function(Err){
-          console.log(JSON.stringify(Err));
-          toastr.error('An Error occured. Please try again later');
-        }
+        ],
+        "pagingType": "full"
+    	});
+      $('.dataTables_length').addClass('bs-select');
       });
     }
   })
@@ -96,68 +105,46 @@ $(document).ready(function(){
     }else{
       sessionStorage.status=$("#titleT").val();
 
-      $.ajax({
-        url:window.location.origin+"/api/getdata",
-        method:'POST',
-        dataType:'json',
-        headers:{
-          'Content-Type':'application/json',
-          'Authorization':'Bearer '+sessionStorage.getItem('session')
-        },
-        data:JSON.stringify({'role':JSON.parse(sessionStorage.getItem('U')).data.role,'status':$("#titleT").val()}),
-        statusCode:{
-          401:function(){
-            toastr.error("Unauthorized! Please Login again");
-            sessionStorage.clear();
-            setTimeout(function () {
-              window.location="/";
-            }, 3000);
-          }
-        },
-        success:function(Resp){
-          console.log(JSON.parse(JSON.stringify(Resp)));
-          let r= JSON.parse(JSON.stringify(Resp));
-          $('#content').html('');
-          let z=0;
-          for ( var key in r){
-            if(r.hasOwnProperty(key)){
-              z++;
-              var colorP,colorS
+      getData(function( data ) {
+        console.log(JSON.parse(JSON.stringify(data)));
 
-              if (r[key].priority == "HIGH"){
-                colorP='badge-success';
-              }
-              else if(r[key].priority == "MEDIUM"){
-                colorP='badge-info';
-              }
-              else{
-                colorP = 'badge-light';
-              }
+        data = JSON.parse(JSON.stringify(data));
+        $('#ticketTable').DataTable().destroy();
 
-              if (r[key].status == 'NEW'){
-                colorS="badge-primary";
-              }
-              else if(r[key].status == 'CLOSED'){
-                colorS="badge-danger";
-              }
-              else if (r[key].status == 'ASSIGNED'){
-                colorS="badge-warning";
-              }
-              else if(r[key].status == 'SOLVED'){
-                colorS="badge-secondary";
-              }
-              else{
-                colorS="badge-default";
-              }
-              $('#content').append('<tr><td scope="row">'+z+'</td><td>'+r[key].ticketId+'</td><td>'+r[key].username+'</td><td style="white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:4px;">'+r[key].subject+'</td><td>'+r[key].category+'</td><td><span class="badge badge-pill '+colorP+'">'+r[key].priority+'</span></td><td><span class="badge badge-pill '+colorS+'">'+r[key].status+'</span></td><td>'+r[key].created+'</td><td>'+r[key].updated+'</td><td><a href="viewticket.html" id="'+r[key].ticketId+'"class="btn btn-outline-info btn-rounded btn-sm px-2" style="font-size:10px;">&#9998</a></td></tr>');
+      	$('#ticketTable').DataTable( {
+          data:data,
+          columns:[
+            {
+              data:"numCount"
+            },
+            {
+              data:"ticketId"
+            },
+            {
+              data:"username"
+            },
+            {
+              data:"subject"
+            },
+            {
+              data:"category"
+            },
+            {
+              data:"priority"
+            },
+            {
+              data:"status"
+            },
+            {
+              data:"created"
+            },
+            {
+              data:"updated"
             }
-          }
-
-        },
-        error:function(Err){
-          console.log(JSON.stringify(Err));
-          toastr.error('An Error occured. Please try again later');
-        }
+          ],
+          "pagingType": "full"
+      	});
+        $('.dataTables_length').addClass('bs-select');
       });
     }
   });
@@ -169,69 +156,8 @@ $(document).ready(function(){
   $('#usernameS').html(JSON.parse(sessionStorage.getItem('U')).data.username)
   $('#userRole').html(JSON.parse(sessionStorage.getItem('U')).data.role)
 
-  //on enter start to get content
-  $.ajax({
-    url:window.location.origin+"/api/getdata",
-    method:'POST',
-    dataType:'json',
-    headers:{
-      'Content-Type':'application/json',
-      'Authorization':'Bearer '+sessionStorage.getItem('session')
-    },
-    data:JSON.stringify({'role':JSON.parse(sessionStorage.getItem('U')).data.role,'status':sessionStorage.getItem('status')}),
-    statusCode:{
-      401:function(){
-        toastr.error("Unauthorized! Please Login again");
-        sessionStorage.clear();
-        setTimeout(function () {
-          window.location="/";
-        }, 3000);
-      }
-    },
-    success:function(Resp){
-      console.log(JSON.parse(JSON.stringify(Resp)));
-      let r= JSON.parse(JSON.stringify(Resp));
-      let z=0;
-      for ( var key in r){
-        if(r.hasOwnProperty(key)){
-          z++;
-          var colorP,colorS
 
-          if (r[key].priority == "HIGH"){
-            colorP='badge-success';
-          }
-          else if(r[key].priority == "MEDIUM"){
-            colorP='badge-info';
-          }
-          else{
-            colorP = 'badge-light';
-          }
 
-          if (r[key].status == 'NEW'){
-            colorS="badge-primary";
-          }
-          else if(r[key].status == 'CLOSED'){
-            colorS="badge-danger";
-          }
-          else if (r[key].status == 'ASSIGNED'){
-            colorS="badge-warning";
-          }
-          else if(r[key].status == 'SOLVED'){
-            colorS="badge-secondary";
-          }
-          else{
-            colorS="badge-default";
-          }
-          $('#content').append('<tr><td scope="row">'+z+'</td><td>'+r[key].ticketId+'</td><td>'+r[key].username+'</td><td style="white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:4px;">'+r[key].subject+'</td><td>'+r[key].category+'</td><td><span class="badge badge-pill '+colorP+'">'+r[key].priority+'</span></td><td><span class="badge badge-pill '+colorS+'">'+r[key].status+'</span></td><td>'+r[key].created+'</td><td>'+r[key].updated+'</td><td><a href="viewticket.html" id="'+r[key].ticketId+'"class="btn btn-outline-info btn-rounded btn-sm px-2" style="font-size:10px;">&#9998</a></td></tr>');
-        }
-      }
-
-    },
-    error:function(Err){
-      console.log(JSON.stringify(Err));
-      toastr.error('An Error occured. Please try again later');
-    }
-  });
 
   //for filter on keyup start to search
   $('#filterT').on('keyup', function(){
@@ -243,15 +169,58 @@ $(document).ready(function(){
   });
 
 
-  jQuery(document).delegate("#content a[href='viewticket.html']","click",function(event){
-			//event.preventDefault();
+    //on enter start to get content
+  getData(function( data ) {
+    console.log(JSON.parse(JSON.stringify(data)));
 
-			let BtnId=$(this).attr('id');
+    data = JSON.parse(JSON.stringify(data));
 
-      sessionStorage.BtnId=BtnId;
+	$('#ticketTable').DataTable( {
+    data:data,
+    columns:[
+      {
+        data:"numCount"
+      },
+      {
+        data:"ticketId"
+      },
+      {
+        data:"username"
+      },
+      {
+        data:"subject"
+      },
+      {
+        data:"category"
+      },
+      {
+        data:"priority"
+      },
+      {
+        data:"status"
+      },
+      {
+        data:"created"
+      },
+      {
+        data:"updated"
+      }
+    ],
+    "pagingType": "full",
+    select:{
+      style:'single'
+    }
 
-    });
+	});
+  $('.dataTables_length').addClass('bs-select');
+  });
 
+  $('#ticketTable tbody').on("click","tr",function(){
+
+    sessionStorage.BtnId = $(this).find('td:nth-child(2)').html();
+
+    window.location = "/viewticket.html";
+  })
 
 
 })

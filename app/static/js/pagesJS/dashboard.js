@@ -15,6 +15,15 @@ $(document).ready(function(){
         'Authorization':'Bearer '+sessionStorage.getItem('session')
 			},
       data:false,
+      statusCode:{
+        401:function(){
+          toastr.error("Unauthorized! Please Login again");
+          sessionStorage.clear();
+          setTimeout(function () {
+            window.location="/";
+          }, 3000);
+        }
+      },
 			success:function(ResponseBody){
 
 				let r =JSON.parse(JSON.stringify(ResponseBody));
@@ -118,10 +127,25 @@ $(document).ready(function(){
           'Authorization':'Bearer '+sessionStorage.getItem('session')
   			},
         data:false,
+        statusCode:{
+          401:function(){
+            toastr.error("Unauthorized! Please Login again");
+            sessionStorage.clear();
+            setTimeout(function () {
+              window.location="/";
+            }, 3000);
+          }
+        },
   			success:function(ResponseBody){
 
   				let r =JSON.parse(JSON.stringify(ResponseBody));
   				console.log(JSON.stringify(ResponseBody));
+          $('#totalT').html(r.totalT);
+          $('#newT').html(r.newT);
+          $('#closedT').html(r.closedT);
+          $('#solvedT').html(r.solvedT);
+          $('#unsolvedT').html(r.unsolvedT);
+          $('#assignedT').html(r.assignedT);
           test([r.newT,r.assignedT,r.solvedT,r.unsolvedT, r.closedT]);
   			},
   			error:function(error){
@@ -180,10 +204,26 @@ $(document).ready(function(){
             'Authorization':'Bearer '+sessionStorage.getItem('session')
     			},
           data:JSON.stringify({'start':start,'end':end}),
+          statusCode:{
+            401:function(){
+              toastr.error("Unauthorized! Please Login again");
+              sessionStorage.clear();
+              setTimeout(function () {
+                window.location="/";
+              }, 3000);
+            }
+          },
           success:function(ResponseBody){
             let r =JSON.parse(JSON.stringify(ResponseBody));
             console.log(JSON.stringify(ResponseBody));
+            $('#totalT').html(r.totalT);
+            $('#newT').html(r.newT);
+            $('#closedT').html(r.closedT);
+            $('#solvedT').html(r.solvedT);
+            $('#unsolvedT').html(r.unsolvedT);
+            $('#assignedT').html(r.assignedT);
             test([r.newT,r.assignedT,r.solvedT,r.unsolvedT, r.closedT]);
+
 
           },
           error:function(err){

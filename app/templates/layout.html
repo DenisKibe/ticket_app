@@ -13,6 +13,10 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
   <!-- Material Design Bootstrap -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mdb.min.css') }}">
+  <!-- for dataTables -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/addons/datatables.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/addons/datatables-select.min.css') }}">
+
   {% if request.endpoint == 'login' %}
   <!-- Your custom styles (optional) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
@@ -67,6 +71,10 @@
   <script type="text/javascript" src="{{  url_for('static',filename='js/bootstrap.min.js') }}"></script>
   <!-- MDB core JavaScript -->
   <script type="text/javascript" src="{{  url_for('static',filename='js/mdb.min.js') }}"></script>
+  <!-- datatables -->
+  <script type="text/javascript" src="{{  url_for('static',filename='js/addons/datatables.min.js') }}"></script>
+  <script type="text/javascript" src="{{  url_for('static',filename='js/addons/datatables-select.min.js') }}"></script>
+
   {% if not request.endpoint == 'login' %}
   <!-- Your custom scripts (optional) -->
   <script type="text/javascript" src="{{  url_for('static',filename='js/custom.js') }}"></script>
